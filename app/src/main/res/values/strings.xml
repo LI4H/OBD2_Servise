@@ -10,4 +10,6 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="obd_status_text">Отключено</string>
+    <string name="btn_connection_text">Подключиться</string>
 </resources>

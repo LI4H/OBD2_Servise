@@ -39,6 +39,11 @@ android {
 }
 
 dependencies {
+    //obd2
+   implementation(libs.kotlin.obd.api)//implementation("com.github.eltonvs:kotlin-obd-api:1.3.0")
+   // implementation("com.github.eltonvs:kotlin-obd-api:1.3.0")
+
+    //
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
