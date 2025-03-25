@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.obd_servise.R
 import com.example.obd_servise.databinding.FragmentHomeBinding
+import com.example.obd_servise.ui.deviceSelection.DeviceSelectionFragment
 
 class HomeFragment : Fragment() {
 
@@ -28,10 +31,13 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+
+        binding.connectBtn.setOnClickListener {
+            // NavController для навигации
+            findNavController().navigate(R.id.action_homeFragment_to_deviceSelectionFragment)
         }
+
+
         return root
     }
 
