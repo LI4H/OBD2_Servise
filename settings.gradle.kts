@@ -9,10 +9,13 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+
         maven("https://jitpack.io")
+
 
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -25,4 +28,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "OBD_Servise"
 include(":app")
- 

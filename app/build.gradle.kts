@@ -39,10 +39,9 @@ android {
 }
 
 dependencies {
+
     // Kolin OBD API
     implementation("com.github.eltonvs:kotlin-obd-api:1.3.0")
-
-
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

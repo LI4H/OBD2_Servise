@@ -8,6 +8,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" /> <!-- Для работы с Bluetooth на устройствах Android 12+ -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" /> <!-- Для сканирования устройств на Android 12+ -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" /> <!-- Для рекламы Bluetooth устройств на Android 12+ -->
+
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
