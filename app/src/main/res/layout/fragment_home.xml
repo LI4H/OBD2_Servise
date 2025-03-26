@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment"
-    android:background="@color/black">
+    android:background="@color/colorPrimaryVariant">
 
 
     <LinearLayout
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:text="Отключено"
             android:textAlignment="center"
-            android:textColor="@color/red"
+            android:textColor="@color/colorPrimary"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -56,17 +56,18 @@
 
         <Button
             android:id="@+id/connectBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
             android:layout_marginEnd="16dp"
             android:text="Подключить"
-            style="@style/BlackYellowButton"/>
+           android:background="@drawable/btn1"/>
 
         <Button
             android:id="@+id/demoBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Демо" />
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:text="Демо"
+            android:background="@drawable/btn1"/>
     </LinearLayout>
 
 
