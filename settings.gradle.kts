@@ -9,7 +9,10 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
-        maven("https://jitpack.io") // Обязательно добавляем JitPack для всех зависимостей
+
+        maven("https://jitpack.io")
+
+
     }
 }
 
@@ -18,7 +21,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://jitpack.io") // Обязательно добавляем JitPack для всех зависимостей
+        maven("https://jitpack.io")
+
     }
 }
 

@@ -39,11 +39,9 @@ android {
 }
 
 dependencies {
-    //obd2
-   implementation(libs.kotlin.obd.api)//implementation("com.github.eltonvs:kotlin-obd-api:1.3.0")
-   // implementation("com.github.eltonvs:kotlin-obd-api:1.3.0")
 
-    //
+    // Kolin OBD API
+    implementation("com.github.eltonvs:kotlin-obd-api:1.3.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -53,6 +51,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.media3.common.ktx)
+    implementation(libs.filament.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

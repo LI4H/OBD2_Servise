@@ -1,3 +1,7 @@
+
+//import com.example.obd_servise.obd_connection.api.command.engine.SpeedCommand
+//import com.example.obd_servise.obd_connection.api.connection.ObdDeviceConnection
+//import com.example.obd_servise.obd_connection.api.command.ObdCommand
 //import com.github.eltonvs.obd.command.engine.SpeedCommand
 //import com.github.eltonvs.obd.connection.ObdDeviceConnection
 //import com.github.eltonvs.obd.command.ObdCommand
