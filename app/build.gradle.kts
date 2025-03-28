@@ -39,23 +39,30 @@ android {
 }
 
 dependencies {
-
     // Kolin OBD API
     implementation("com.github.eltonvs:kotlin-obd-api:1.3.0")
     // lifeChart
-    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation(libs.mpandroidchart)
+    // Lifecycle ViewModel and LiveData
+    implementation(libs.androidx.lifecycle.viewmodel.ktx.v260)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx.v260)
 
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+
+    // AndroidX libraries
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.media3.common.ktx)
     implementation(libs.filament.android)
     implementation(libs.androidx.legacy.support.v4)
+
+    // Testing dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
