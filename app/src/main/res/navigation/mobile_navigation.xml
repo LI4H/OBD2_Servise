@@ -14,6 +14,11 @@
         android:id="@+id/action_homeFragment_to_deviceSelectionFragment"
         app:destination="@id/deviceSelectionFragment" />
        </fragment>
+    <fragment
+        android:id="@+id/nav_dynamics"
+        android:name="com.example.obd_servise.ui.dynamics.DynamicsFragment"
+        android:label="@string/menu_dynamics"
+        tools:layout="@layout/fragment_dynamics" />
 
     <fragment
         android:id="@+id/nav_statistics"
@@ -26,6 +31,17 @@
         android:name="com.example.obd_servise.ui.errors.ErrorsFragment"
         android:label="@string/menu_errors"
         tools:layout="@layout/fragment_errors" />
+    <fragment
+        android:id="@+id/nav_info"
+        android:name="com.example.obd_servise.ui.info.InfoFragment"
+        android:label="@string/menu_info"
+        tools:layout="@layout/fragment_info" />
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.example.obd_servise.ui.settings.SettingsFragment"
+        android:label="@string/menu_settings"
+        tools:layout="@layout/fragment_settings" />
+
     <fragment
         android:id="@+id/deviceSelectionFragment"
         android:name="com.example.obd_servise.ui.deviceSelection.DeviceSelectionFragment"

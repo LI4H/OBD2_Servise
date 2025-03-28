@@ -68,6 +68,15 @@
             android:layout_height="40dp"
             android:text="Демо"
             android:background="@drawable/btn1"/>
+
+        <Button
+            android:id="@+id/exitDemoBtn"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:text="Закрыть демо"
+            android:background="@drawable/btn1"
+            android:visibility="gone" />
+
     </LinearLayout>
 
 
