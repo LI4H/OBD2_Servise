@@ -8,8 +8,15 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_dynamics">Dynamics</string>
+    <string name="menu_statistics">Statistics</string>
+    <string name="menu_errors">Errors</string>
+    <string name="menu_info">Info</string>
+    <string name="menu_settings">Settings</string>
+
+
+    <string name="instruction">Инструкция по подключению: \n1. Заглушите двигатель\n2. Вставьте разъем OBD\n3. Подключитесь через Bluetooth</string>
     <string name="obd_status_text">Отключено</string>
     <string name="btn_connection_text">Подключиться</string>
+
 </resources>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.statistics.StatisticsFragment"
+    android:background="@color/black">
+
+    <!-- Контейнер для статистики -->
+    <GridLayout
+        android:id="@+id/stats_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:columnCount="3"
+        android:rowCount="2">
+
+        <!--        карточки-->
+        <include layout="@layout/item_stat_block1" />
+
+        <include layout="@layout/item_stat_block2" />
+
+        <include layout="@layout/item_stat_block3" />
+
+        <include layout="@layout/item_stat_block4" />
+
+        <include layout="@layout/item_stat_block5" />
+
+        <include layout="@layout/item_stat_block6" />
+    </GridLayout>
+
+    <!-- Горизонтальный скролл для фильтров -->
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stats_grid">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:id="@+id/filter_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
+                <RadioButton
+                    android:id="@+id/radio_all_time"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="@drawable/btn2_selected1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="Все время"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/radio_today"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="@drawable/btn2_selected1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="Сегодня"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/radio_7_days"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="@drawable/btn2_selected1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="7 дней"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/radio_14_days"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="@drawable/btn2_selected1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="14 дней"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/radio_30_days"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="@drawable/btn2_selected1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="30 дней"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/radio_90_days"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="@drawable/btn2_selected1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="90 дней"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/radio_360_days"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="@drawable/btn2_selected1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="360 дней"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </RadioGroup>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- График -->
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/stats_chart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+
+        android:layout_marginTop="224dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+</androidx.constraintlayout.widget.ConstraintLayout>
