@@ -1,8 +1,11 @@
 package com.example.obd_servise.ui.errors
 
+import android.bluetooth.BluetoothSocket
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.obd_servise.obd_connection.api.connection.ObdDeviceConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,38 +14,74 @@ import kotlinx.coroutines.launch
 
 data class ErrorItem(
     val code: String,
-    val status: String,
+    val error_status: String,
     val description: String
 )
 
-class ErrorsViewModel(private val obdDeviceConnection: ObdDeviceConnection) : ViewModel() {
-
-    private val _errors = MutableLiveData<List<ErrorItem>>().apply { value = emptyList() }
+class ErrorsViewModel : ViewModel() {
+    private val _errors = MutableLiveData<List<ErrorItem>>(emptyList())
     val errors: LiveData<List<ErrorItem>> = _errors
 
-    private var allErrors: MutableList<ErrorItem> = mutableListOf()
 
-    private val troubleCodesManager = TroubleCodesManager(obdDeviceConnection)
+    private val allErrors = mutableListOf<ErrorItem>()
+    fun initializeConnection(
+        bluetoothSocket: BluetoothSocket?,
+        isDemoActive: Boolean,
+        isConnected: Boolean,
+        onConnectionInitialized: (ObdDeviceConnection?) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val obdConnection = bluetoothSocket?.let {
+                try {
+                    ObdDeviceConnection(it.inputStream, it.outputStream)
+                } catch (e: Exception) {
+                    Log.e("ErrorsViewModel", "Error creating ObdDeviceConnection", e)
+                    null
+                }
+            }
+            onConnectionInitialized(obdConnection)
 
-    fun loadErrors(obdDeviceConnection: ObdDeviceConnection) {
+            loadErrors(obdConnection, isDemoActive, isConnected)
+        }
+    }
+
+    fun loadErrors(
+        obdDeviceConnection: ObdDeviceConnection?,
+        isDemo: Boolean,
+        isConnected: Boolean
+    ) {
+        if (!isDemo && !isConnected) {
+            // Если нет соединения и не в демо-режиме, не выполняем запрос
+            updateErrors(listOf(ErrorItem("NO_CONN", "Нет соединения", "OBD не подключен")))
+            return
+        }
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val codes = troubleCodesManager.getTroubleCodes()
+                val errorsList = when {
+                    isDemo -> generateDemoErrors()
+                    else -> fetchErrorsFromObd(obdDeviceConnection)
+                }
+
                 withContext(Dispatchers.Main) {
-                    allErrors.clear()
-                    allErrors.addAll(codes.map { code ->
-                        ErrorItem(
-                            code = code,
-                            status = "Новая ошибка", // Здесь можно добавить логику для определения статуса
-                            description = "Описание ошибки" // Здесь можно добавить описание ошибки
-                        )
-                    })
-                    _errors.value = allErrors
+                    updateErrors(errorsList)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
+    }
+
+    private suspend fun fetchErrorsFromObd(obdDeviceConnection: ObdDeviceConnection?): List<ErrorItem> {
+        // Реализуйте получение ошибок с устройства OBD
+        // Для примера, вернем пустой список
+        return emptyList()
+    }
+
+    private fun updateErrors(errorsList: List<ErrorItem>) {
+        allErrors.clear()
+        allErrors.addAll(errorsList)
+        _errors.value = allErrors
     }
 
     fun addError(error: ErrorItem) {
@@ -53,6 +92,24 @@ class ErrorsViewModel(private val obdDeviceConnection: ObdDeviceConnection) : Vi
     fun removeError(error: ErrorItem) {
         allErrors.remove(error)
         _errors.value = allErrors
+    }
+
+    private fun generateDemoErrors(): List<ErrorItem> {
+        return listOf(
+            ErrorItem("P0301", "Ошибка зажигания", "Пропуски зажигания в цилиндре 1"),
+            ErrorItem(
+                "P0420",
+                "Проблема с катализатором",
+                "Эффективность катализатора ниже порога"
+            ),
+            ErrorItem("P0171", "Бедная смесь", "Система топливоподачи слишком бедная (банк 1)"),
+            ErrorItem(
+                "P0500",
+                "Ошибка датчика скорости",
+                "Неисправность датчика скорости автомобиля"
+            ),
+            ErrorItem("C1201", "Проблема с тормозной системой", "Ошибка в системе ABS или ESC")
+        )
     }
 
     fun clearAllErrors() {

@@ -36,7 +36,7 @@ class ErrorsAdapter(private val errors: MutableList<ErrorItem>) : RecyclerView.A
 
         fun bind(error: ErrorItem) {
             errorCode.text = error.code
-            errorStatus.text = error.status
+            errorStatus.text = error.error_status
             errorDescription.text = error.description
 
             deleteButton.visibility = View.GONE
