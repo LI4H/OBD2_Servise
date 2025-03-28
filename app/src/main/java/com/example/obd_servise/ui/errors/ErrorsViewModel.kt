@@ -1,16 +1,27 @@
 package com.example.obd_servise.ui.errors
 
+import android.Manifest
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.annotation.RequiresPermission
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.obd_servise.obd_connection.api.connection.ObdDeviceConnection
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.UUID
 
 data class ErrorItem(
     val code: String,
@@ -19,50 +30,103 @@ data class ErrorItem(
 )
 
 class ErrorsViewModel : ViewModel() {
+
     private val _errors = MutableLiveData<List<ErrorItem>>(emptyList())
     val errors: LiveData<List<ErrorItem>> = _errors
 
-
     private val allErrors = mutableListOf<ErrorItem>()
-    fun initializeConnection(
-        bluetoothSocket: BluetoothSocket?,
-        isDemoActive: Boolean,
-        isConnected: Boolean,
-        onConnectionInitialized: (ObdDeviceConnection?) -> Unit
-    ) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val obdConnection = bluetoothSocket?.let {
-                try {
-                    ObdDeviceConnection(it.inputStream, it.outputStream)
-                } catch (e: Exception) {
-                    Log.e("ErrorsViewModel", "Error creating ObdDeviceConnection", e)
-                    null
+    private var obdDeviceConnection: ObdDeviceConnection? = null
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    fun checkBluetoothPermissions(context: Context): Boolean {
+        val bluetoothConnectPermission = ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.BLUETOOTH_CONNECT
+        )
+        val bluetoothScanPermission = ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.BLUETOOTH_SCAN
+        )
+        return bluetoothConnectPermission == PackageManager.PERMISSION_GRANTED &&
+                bluetoothScanPermission == PackageManager.PERMISSION_GRANTED
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    fun initializeObdDeviceConnection(context: Context, isConnected: Boolean): BluetoothSocket? {
+        if (!isConnected) return null
+
+        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        if (bluetoothAdapter == null) {
+            Toast.makeText(context, "Bluetooth не поддерживается", Toast.LENGTH_SHORT).show()
+            return null
+        }
+
+        if (!checkBluetoothPermissions(context)) {
+            Toast.makeText(context, "Нет разрешений на Bluetooth", Toast.LENGTH_SHORT).show()
+            return null
+        }
+
+        return try {
+            val pairedDevices: Set<BluetoothDevice> = bluetoothAdapter.bondedDevices
+            for (device in pairedDevices) {
+                if (device.name.contains(
+                        "OBD",
+                        ignoreCase = true
+                    ) || device.address == "your_device_address"
+                ) {
+                    return createRfcommSocket(device, context)
                 }
             }
-            onConnectionInitialized(obdConnection)
-
-            loadErrors(obdConnection, isDemoActive, isConnected)
+            Toast.makeText(context, "Не найдено подходящее OBD устройство", Toast.LENGTH_SHORT)
+                .show()
+            null
+        } catch (e: SecurityException) {
+            Log.e("ErrorsViewModel", "Ошибка доступа к Bluetooth", e)
+            Toast.makeText(context, "Ошибка доступа к Bluetooth", Toast.LENGTH_SHORT).show()
+            null
         }
     }
 
-    fun loadErrors(
-        obdDeviceConnection: ObdDeviceConnection?,
-        isDemo: Boolean,
+
+    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+    private fun createRfcommSocket(device: BluetoothDevice, context: Context): BluetoothSocket? {
+        val MY_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb")
+        return try {
+            device.createRfcommSocketToServiceRecord(MY_UUID)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(context, "Ошибка подключения к устройству", Toast.LENGTH_SHORT).show()
+            null
+        }
+    }
+
+    fun initializeConnection(
+        bluetoothSocket: BluetoothSocket?,
+        isDemoActive: Boolean,
         isConnected: Boolean
     ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            obdDeviceConnection = bluetoothSocket?.let {
+                try {
+                    ObdDeviceConnection(it.inputStream, it.outputStream)
+                } catch (e: Exception) {
+                    Log.e("ErrorsViewModel", "Ошибка создания ObdDeviceConnection", e)
+                    null
+                }
+            }
+            loadErrors(isDemoActive, isConnected)
+        }
+    }
+
+    fun loadErrors(isDemo: Boolean, isConnected: Boolean) {
         if (!isDemo && !isConnected) {
-            // Если нет соединения и не в демо-режиме, не выполняем запрос
             updateErrors(listOf(ErrorItem("NO_CONN", "Нет соединения", "OBD не подключен")))
             return
         }
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val errorsList = when {
-                    isDemo -> generateDemoErrors()
-                    else -> fetchErrorsFromObd(obdDeviceConnection)
-                }
-
+                val errorsList = if (isDemo) generateDemoErrors() else fetchErrorsFromObd()
                 withContext(Dispatchers.Main) {
                     updateErrors(errorsList)
                 }
@@ -72,26 +136,25 @@ class ErrorsViewModel : ViewModel() {
         }
     }
 
-    private suspend fun fetchErrorsFromObd(obdDeviceConnection: ObdDeviceConnection?): List<ErrorItem> {
+    private suspend fun fetchErrorsFromObd(): List<ErrorItem> {
         // Реализуйте получение ошибок с устройства OBD
-        // Для примера, вернем пустой список
         return emptyList()
     }
 
     private fun updateErrors(errorsList: List<ErrorItem>) {
         allErrors.clear()
         allErrors.addAll(errorsList)
-        _errors.value = allErrors
+        _errors.postValue(allErrors)
     }
 
     fun addError(error: ErrorItem) {
         allErrors.add(error)
-        _errors.value = allErrors
+        _errors.postValue(allErrors)
     }
 
     fun removeError(error: ErrorItem) {
         allErrors.remove(error)
-        _errors.value = allErrors
+        _errors.postValue(allErrors)
     }
 
     private fun generateDemoErrors(): List<ErrorItem> {
@@ -114,13 +177,15 @@ class ErrorsViewModel : ViewModel() {
 
     fun clearAllErrors() {
         allErrors.clear()
-        _errors.value = allErrors
+        _errors.postValue(allErrors)
     }
 
     fun filterErrors(query: String) {
-        _errors.value = if (query.isEmpty()) allErrors else allErrors.filter {
-            it.code.contains(query, ignoreCase = true) ||
-                    it.description.contains(query, ignoreCase = true)
-        }
+        _errors.postValue(if (query.isEmpty()) allErrors else allErrors.filter {
+            it.code.contains(query, ignoreCase = true) || it.description.contains(
+                query,
+                ignoreCase = true
+            )
+        })
     }
 }
