@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:text="Подключение к ELM:"
+            android:text="@string/connectionText"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20sp" />
@@ -36,7 +36,7 @@
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Отключено"
+            android:text="@string/status_home"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp" />
@@ -59,21 +59,21 @@
             android:layout_width="150dp"
             android:layout_height="40dp"
             android:layout_marginEnd="16dp"
-            android:text="Подключить"
+            android:text="@string/connectBtn"
            android:background="@drawable/btn1"/>
 
         <Button
             android:id="@+id/demoBtn"
             android:layout_width="150dp"
             android:layout_height="40dp"
-            android:text="Демо"
+            android:text="@string/demoBtn"
             android:background="@drawable/btn1"/>
 
         <Button
             android:id="@+id/exitDemoBtn"
             android:layout_width="300dp"
             android:layout_height="40dp"
-            android:text="Закрыть демо"
+            android:text="@string/exitDemoBtn"
             android:background="@drawable/btn1"
             android:visibility="gone" />
 

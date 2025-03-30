@@ -48,7 +48,7 @@ class DeviceSelectionFragment : Fragment() {
 
         // Показываем инструкцию по подключению
         val connectionGuide = binding.root.findViewById<TextView>(R.id.connectionGuide)
-        connectionGuide.text = "Инструкция по подключению: \n1. Заглушите двигатель\n2. Вставьте разъем OBD\n3. Подключитесь через Bluetooth"
+        connectionGuide.text = getString(R.string.instruction)
 
         // Проверяем разрешения через PermissionHelper
         if (permissionHelper.hasBluetoothPermissions()) {
@@ -73,19 +73,22 @@ class DeviceSelectionFragment : Fragment() {
 
         // Если Bluetooth выключен, перенаправляем в настройки
         if (!bluetoothAdapter.isEnabled) {
-            connectionStatus.text = "Bluetooth не включен. Перейдите в настройки."
+            connectionStatus.text = getString(R.string.bluetooth_not_enabled)
             val intent = Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS)
             startActivity(intent)
         } else {
-            connectionStatus.text = "Статус подключения: Подключаемся..."
+            connectionStatus.text = getString(R.string.connecting_status)
             Handler().postDelayed({
-                // Попытка подключиться к OBD-устройству
                 val pairedDevices = obdBluetoothManager.getPairedDevices()
                 if (pairedDevices.isNullOrEmpty()) {
-                    connectionStatus.text = "Не найдено сопряжённых устройств."
-                    Toast.makeText(requireContext(), "Не найдено OBD-устройств", Toast.LENGTH_SHORT).show()
+                    connectionStatus.text = getString(R.string.no_paired_devices)
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.no_obd_devices),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
-                    val device = pairedDevices.firstOrNull() // Просто берём первое устройство
+                    val device = pairedDevices.firstOrNull()
                     if (device != null) {
                         connectToObdDevice(device)
                     }
@@ -95,19 +98,24 @@ class DeviceSelectionFragment : Fragment() {
     }
 
     private fun connectToObdDevice(device: BluetoothDevice) {
-        // Подключение к OBD-устройству
         val isConnected = obdBluetoothManager.connectToDevice(device)
 
         if (isConnected) {
-            connectionStatus.text = "Подключение успешно!"
-            Toast.makeText(requireContext(), "Подключено к OBD-устройству", Toast.LENGTH_SHORT).show()
-
-            // Дополнительные действия после подключения, например, отправка команды
-            val response = obdBluetoothManager.sendCommand("ATZ") // Пример команды для сброса
+            connectionStatus.text = getString(R.string.connection_successful)
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.connected_to_obd),
+                Toast.LENGTH_SHORT
+            ).show()
+            val response = obdBluetoothManager.sendCommand("ATZ")
             android.util.Log.d("DeviceSelectionFragment", "OBD Response: $response")
         } else {
-            connectionStatus.text = "Ошибка подключения"
-            Toast.makeText(requireContext(), "Ошибка подключения к OBD-устройству", Toast.LENGTH_SHORT).show()
+            connectionStatus.text = getString(R.string.connection_error)
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.connection_error_obd),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }

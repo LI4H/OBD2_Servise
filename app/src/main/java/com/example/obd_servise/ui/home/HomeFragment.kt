@@ -54,15 +54,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             binding.connectBtn.visibility = View.GONE
             binding.demoBtn.visibility = View.GONE
             binding.exitDemoBtn.visibility = View.VISIBLE
-            binding.status.text = "Демо"
+            binding.status.text = getString(R.string.demoBtn)
         } else {
             binding.connectBtn.visibility = View.VISIBLE
             binding.demoBtn.visibility = View.VISIBLE
             binding.exitDemoBtn.visibility = View.GONE
-            binding.status.text = if (isConnected == true) "Подключено к OBD" else "Отключено"
-            binding.connectBtn.text = if (isConnected == true) "Отключиться" else "Подключиться"
+            binding.status.text =
+                if (isConnected == true) getString(R.string.connected_to_obd) else getString(R.string.status_home)
+            binding.connectBtn.text =
+                if (isConnected == true) getString(R.string.disconnect) else getString(R.string.btn_connection_text)
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
