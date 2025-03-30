@@ -28,7 +28,7 @@
             android:id="@+id/connectionStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Статус подключения: Ожидает"
+            android:text="@string/connectionStatus"
             android:layout_below="@id/connectionGuide"
             android:layout_margin="16dp"
             android:textSize="16sp"

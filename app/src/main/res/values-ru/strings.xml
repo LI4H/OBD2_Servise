@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">OBD_Servise</string>
+    <string name="action_settings">Настройки</string>
+
+    <string name="menu_home">Главная</string>
+    <string name="menu_dynamics">Динамика</string>
+    <string name="menu_statistics">Статистика</string>
+    <string name="menu_errors">Ошибки</string>
+    <string name="menu_info">Инфо</string>
+    <string name="menu_settings">Настройки</string>
+
+
+    <string name="instruction">Инструкция по подключению: \n1. Заглушите двигатель\n2. Вставьте разъем OBD\n3. Подключитесь через Bluetooth</string>
+    <string name="obd_status_text">Отключено</string>
+    <string name="btn_connection_text">Подключиться</string>
+    <string name="rad_all">Все время</string>
+    <string name="rad_today">Сегодня</string>
+    <string name="rad_7_days">7 дней</string>
+    <string name="rad_14_days">14 дней</string>
+    <string name="rad_30_days">30 дней</string>
+    <string name="rad_90_days">90 дней</string>
+    <string name="rad_360_days">360 дней</string>
+    <string name="del_error">Удалить</string>
+
+    <string name="stat_title1">Ср. Расход топлива</string>
+    <string name="stat_unit1">Л/100км</string>
+    <string name="stat_title2">Средняя скорость</string>
+    <string name="stat_unit2">км/ч</string>
+    <string name="stat_title3">Моточасы</string>
+    <string name="stat_unit3">ч.</string>
+    <string name="stat_title4">Пройденный путь</string>
+    <string name="stat_unit4">км</string>
+    <string name="stat_title5">Использовано топлива</string>
+    <string name="stat_unit5">Л</string>
+    <string name="stat_title6">Стоимость топлива</string>
+    <string name="stat_unit6">Br</string>
+    <string name="connectionText">Подключение к ELM:</string>
+    <string name="status_home">Отключено</string>
+    <string name="connectBtn">Подключить</string>
+    <string name="demoBtn">Демо</string>
+    <string name="exitDemoBtn">Закрыть демо</string>
+    <string name="searchErrors">Поиск...</string>
+    <string name="resetAllBtn">Сбросить все</string>
+    <string name="connectionStatus">Статус подключения: Ожидает</string>
+    <string name="tv_language">Выбрать язык:</string>
+
+    <string name="bluetooth_not_enabled">Bluetooth не включен. Перейдите в настройки.</string>
+    <string name="connecting_status">Статус подключения: Подключаемся...</string>
+    <string name="no_paired_devices">Не найдено сопряжённых устройств.</string>
+    <string name="no_obd_devices">Не найдено OBD-устройств.</string>
+    <string name="connection_successful">Подключение успешно!</string>
+    <string name="connected_to_obd">Подключено к OBD-устройству</string>
+    <string name="connection_error">Ошибка подключения</string>
+    <string name="connection_error_obd">Ошибка подключения к OBD-устройству</string>
+
+</resources>

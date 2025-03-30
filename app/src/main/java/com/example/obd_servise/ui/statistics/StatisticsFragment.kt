@@ -1,5 +1,6 @@
 package com.example.obd_servise.ui.statistics
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -17,6 +18,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import kotlin.random.Random
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -61,30 +63,63 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         // Инициализация графика
         statsChart = binding.root.findViewById(R.id.stats_chart)
 
-        // Настроим график
         statsChart.apply {
             description.isEnabled = false
             setTouchEnabled(true)
             setPinchZoom(true)
-            isDragEnabled = true
+
+            // Настройка осей
             axisLeft.setDrawGridLines(true)
+            axisLeft.axisMinimum = 0f
+            axisLeft.axisMaximum = 1f
+            axisLeft.granularity = 0.1f // Шаг 0.1 для оси Y
+
             axisRight.setDrawGridLines(false)
+            axisRight.isEnabled = false
+
             xAxis.setDrawGridLines(false)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
-            axisLeft.axisMinimum = 0f
-            axisRight.isEnabled = false
+            xAxis.granularity = 1f // Шаг 1 для оси X
+
+            // Установка подписей для оси X
+            val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+            val months = listOf(
+                "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+                "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+            )
+            val labels = (currentMonth downTo currentMonth - 11).map {
+                months[(it + 12) % 12]
+            }.reversed()
+
+            xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+            xAxis.labelCount = labels.size // Ровно 12 месяцев
+
+            // Удаление легенды (цветные кубики)
+            legend.isEnabled = false // Отключение отображения легенды
+
+            // Настройка пустого состояния
+            setNoDataText("")
         }
 
+
         // Установим фильтр на 7 дней по умолчанию
-        val filterGroup = binding.filterGroup
-        filterGroup.check(R.id.radio_7_days)  // Устанавливаем фильтр на 7 дней по умолчанию
+        //   val filterGroup = binding.filterGroup
+        //   filterGroup.check(R.id.radio_7_days)  // Устанавливаем фильтр на 7 дней по умолчанию
         // Наблюдаем за статусом демо-режима и обновляем график
         homeViewModel.isDemoActive.observe(viewLifecycleOwner, { isDemoActive ->
             if (isDemoActive) {
                 updateChartWithDemoData()
                 statisticsViewModel.demoModeEnabled()
             } else {
-                clearChart()
+                clearChart()   // Устанавливаем фиктивные данные вместо полного очищения графика
+                val entries = listOf(Entry(0f, 0f))
+                val dataSet = LineDataSet(entries, "No Data").apply {
+                    color = Color.GRAY
+                    setDrawCircles(false)
+                    setDrawValues(false)
+                }
+                statsChart.data = LineData(dataSet)
+                statsChart.invalidate() // Перерисовываем график
                 statisticsViewModel.demoModeDisabled()
             }
         })
@@ -160,7 +195,7 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
         val sdf = SimpleDateFormat("MM-dd", Locale.getDefault())
         val calendar = Calendar.getInstance()
-        for (i in 0 until 360) {  // Создаем 10 точек данных для каждой линии
+        for (i in 0 until 7) {  // Создаем 10 точек данных для каждой линии
             val x = i.toFloat()
             val date = sdf.format(calendar.time)
             // Разные случайные значения для каждой линии
@@ -184,55 +219,55 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         val dataSet1 = LineDataSet(entries1, "Расход топлива").apply {
             color = resources.getColor(R.color.blue)
             valueTextColor = resources.getColor(R.color.white)
-            lineWidth = 2f
+            lineWidth = 4f
             setDrawCircles(true)
-            setCircleColor(resources.getColor(R.color.white))
-            circleRadius = 4f
+            setCircleColor(resources.getColor(R.color.colorPrimary))
+            circleRadius = 2f
         }
 
         val dataSet2 = LineDataSet(entries2, "Средняя скорость").apply {
-            color = resources.getColor(R.color.grey2)
+            color = resources.getColor(R.color.orange)
             valueTextColor = resources.getColor(R.color.white)
-            lineWidth = 2f
+            lineWidth = 4f
             setDrawCircles(true)
-            setCircleColor(resources.getColor(R.color.white))
-            circleRadius = 4f
+            setCircleColor(resources.getColor(R.color.colorPrimary))
+            circleRadius = 2f
         }
 
         val dataSet3 = LineDataSet(entries3, "Моточасы").apply {
             color = resources.getColor(R.color.yellow)
             valueTextColor = resources.getColor(R.color.white)
-            lineWidth = 2f
+            lineWidth = 4f
             setDrawCircles(true)
-            setCircleColor(resources.getColor(R.color.white))
-            circleRadius = 4f
+            setCircleColor(resources.getColor(R.color.colorPrimary))
+            circleRadius = 2f
         }
 
         val dataSet4 = LineDataSet(entries4, "Пройденный путь").apply {
             color = resources.getColor(R.color.red)
             valueTextColor = resources.getColor(R.color.white)
-            lineWidth = 2f
+            lineWidth = 4f
             setDrawCircles(true)
-            setCircleColor(resources.getColor(R.color.white))
-            circleRadius = 4f
+            setCircleColor(resources.getColor(R.color.colorPrimary))
+            circleRadius = 2f
         }
 
         val dataSet5 = LineDataSet(entries5, "Использовано топлива").apply {
             color = resources.getColor(R.color.purple)
             valueTextColor = resources.getColor(R.color.white)
-            lineWidth = 2f
+            lineWidth = 4f
             setDrawCircles(true)
-            setCircleColor(resources.getColor(R.color.white))
-            circleRadius = 4f
+            setCircleColor(resources.getColor(R.color.colorPrimary))
+            circleRadius = 2f
         }
 
         val dataSet6 = LineDataSet(entries6, "Стоимость топлива").apply {
             color = resources.getColor(R.color.green)
             valueTextColor = resources.getColor(R.color.white)
-            lineWidth = 2f
+            lineWidth = 4f
             setDrawCircles(true)
-            setCircleColor(resources.getColor(R.color.white))
-            circleRadius = 4f
+            setCircleColor(resources.getColor(R.color.colorPrimary))
+            circleRadius = 2f
         }
 
         // Добавляем данные в график
