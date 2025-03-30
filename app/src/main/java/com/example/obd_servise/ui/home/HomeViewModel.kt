@@ -1,6 +1,7 @@
 package com.example.obd_servise.ui.home
 
 import android.Manifest
+import android.app.Application
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.pm.PackageManager
@@ -11,6 +12,7 @@ import androidx.annotation.RequiresPermission
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.obd_servise.R
 import com.example.obd_servise.obd_connection.ui.obd.ObdViewModel
 
 class HomeViewModel : ViewModel() {
@@ -75,7 +77,7 @@ class HomeViewModel : ViewModel() {
                 bluetoothAdapter.enable()
             }
         } else {
-            showToast("Необходимо предоставить разрешение на доступ к Bluetooth")
+            showToast(R.string.bluetooth_permission_required.toString())
             return
         }
 
@@ -85,10 +87,10 @@ class HomeViewModel : ViewModel() {
         obdDevice?.let {
             obdViewModel.connectToDevice(it)
             _connectionStatus.postValue(true)
-            showToast("Подключение к OBD устройству")
+            showToast(R.string.connecting_to_obd.toString())
         } ?: run {
             _connectionStatus.postValue(false)
-            showToast("OBD устройство не найдено")
+            showToast(R.string.obd_device_not_found.toString())
         }
     }
 
@@ -103,8 +105,10 @@ class HomeViewModel : ViewModel() {
                 null
             }
         } catch (e: SecurityException) {
-            showToast("Ошибка доступа к Bluetooth: ${e.message}")
+            showToast(R.string.bluetooth_access_error.toString())//, e.message
+
             null
         }
     }
+
 }

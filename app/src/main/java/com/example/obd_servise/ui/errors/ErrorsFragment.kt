@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.obd_servise.R
 import com.example.obd_servise.databinding.FragmentErrorsBinding
 import com.example.obd_servise.ui.home.HomeViewModel
 
@@ -40,8 +41,13 @@ class ErrorsFragment : Fragment() {
             ) {
                 initializeObdConnection()
             } else {
-                Toast.makeText(requireContext(), "Разрешения для Bluetooth не получены", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.bluetooth_permission_denied),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+
         }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
@@ -95,10 +101,14 @@ class ErrorsFragment : Fragment() {
                 homeViewModel.connectionStatus.value == true
             )
         } catch (e: SecurityException) {
-            Log.e("ErrorsFragment", "Ошибка доступа к Bluetooth", e)
-            Toast.makeText(requireContext(), "Ошибка доступа к Bluetooth", Toast.LENGTH_SHORT)
-                .show()
+            Log.e("ErrorsFragment", getString(R.string.bluetooth_access_error), e)
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.bluetooth_access_error),
+                Toast.LENGTH_SHORT
+            ).show()
         }
+
     }
 
 
@@ -123,9 +133,14 @@ class ErrorsFragment : Fragment() {
     private fun setupClearAllButton() {
         binding.resetAllBtn.setOnClickListener {
             errorsViewModel.clearAllErrors()
-            Toast.makeText(requireContext(), "Все ошибки сброшены", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.all_errors_cleared),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

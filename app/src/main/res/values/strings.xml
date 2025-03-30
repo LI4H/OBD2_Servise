@@ -1,18 +1,13 @@
 <resources>
     <string name="app_name">OBD_Servise</string>
-    <string name="action_settings">Settings</string>
-
+    <!--Меню-->
     <string name="menu_home">Home</string>
     <string name="menu_dynamics">Dynamics</string>
     <string name="menu_statistics">Statistics</string>
     <string name="menu_errors">Errors</string>
     <string name="menu_info">Info</string>
     <string name="menu_settings">Settings</string>
-
-
-    <string name="instruction">Connection instructions: \n1. Turn off the engine\n2. Insert the connector OBD\n3. Connect via Bluetooth</string>
-    <string name="obd_status_text">Disconnected</string>
-    <string name="btn_connection_text">Connect</string>
+    <!--Фильтры-->
     <string name="rad_all">All time</string>
     <string name="rad_today">Today</string>
     <string name="rad_7_days">7 days</string>
@@ -21,36 +16,142 @@
     <string name="rad_90_days">90 days</string>
     <string name="rad_360_days">360 days</string>
     <string name="del_error">Delete</string>
-
+    <!--Статистика-->
     <string name="stat_title1">Avg. fuel consumption</string>
     <string name="stat_unit1">L/100km</string>
     <string name="stat_title2">Average speed</string>
     <string name="stat_unit2">km/h</string>
     <string name="stat_title3">Engine hours</string>
-    <string name="stat_unit3">ч.</string>
+    <string name="stat_unit3">h</string>
     <string name="stat_title4">The path taken</string>
     <string name="stat_unit4">km</string>
     <string name="stat_title5">Fuel used</string>
     <string name="stat_unit5">L</string>
     <string name="stat_title6">Fuel cost</string>
     <string name="stat_unit6">Br</string>
-    <string name="connectionText">Connecting to ELM:</string>
-    <string name="status_home">Disconnected</string>
+    <!--Кнопки-->
+    <string name="btn_connection_text">Connect</string>
+    <string name="disconnect">Disconnect</string>
     <string name="connectBtn">Connect</string>
     <string name="demoBtn">Demo</string>
     <string name="exitDemoBtn">Close demo</string>
-    <string name="searchErrors">Search...</string>
     <string name="resetAllBtn">Reset everything</string>
+    <string name="searchErrors">Search...</string>
+    <!--Статус-->
+    <string name="obd_status_text">Disconnected</string>
     <string name="connectionStatus">Connection status: Waiting</string>
-    <string name="tv_language">Select language:</string>
-
-    <string name="bluetooth_not_enabled">Bluetooth is not enabled. Go to settings.</string>
     <string name="connecting_status">Connection status: Connecting...</string>
-    <string name="no_paired_devices">No paired devices found.</string>
-    <string name="no_obd_devices">No OBD devices found.</string>
+    <string name="connectionText">Connecting to ELM:</string>
+    <string name="status_home">Disconnected</string>
     <string name="connection_successful">Connection successful!</string>
     <string name="connected_to_obd">Connected to OBD device</string>
     <string name="connection_error">Connection error</string>
     <string name="connection_error_obd">Error connecting to OBD device</string>
+    <string name="bluetooth_not_enabled">Bluetooth is not enabled. Go to settings.</string>
+    <!--Инструкция-->
+    <string name="instruction">Connection instructions: \n1. Turn off the engine\n2. Insert the OBD connector\n3. Connect via Bluetooth</string>
+    <!--Уведомления-->
+    <string name="all_errors_cleared">All errors cleared</string>
 
+    <string name="no_paired_devices">No paired devices found.</string>
+    <string name="devise_connect_error">Device connection error</string>
+    <string name="no_obd_devices">No OBD devices found.</string>
+    <string name="obd_device_not_found">OBD device not found</string>
+
+    <string name="connecting_to_obd">Connecting to OBD device</string>
+
+    <string name="bluetooth_access_error">Bluetooth access error: %1$s</string>
+    <string name="bluetooth_permission_denied">Bluetooth permissions not granted</string>
+    <string name="bluetooth_not_supported">Bluetooth is not supported</string>
+    <string name="bluetooth_no_permissions">No Bluetooth permissions</string>
+    <string name="bluetooth_permission_required">You must grant permission to access Bluetooth</string>
+
+    <!--TextView иное-->
+    <string name="tv_language">Select language:</string>
 </resources>
+
+    <!--<resources>-->
+    <!--    <string name="app_name">OBD_Servise</string>-->
+    <!--    &lt;!&ndash;Меню&ndash;&gt;-->
+    <!--    <string name="menu_home">Home</string>-->
+    <!--    <string name="menu_dynamics">Dynamics</string>-->
+    <!--    <string name="menu_statistics">Statistics</string>-->
+    <!--    <string name="menu_errors">Errors</string>-->
+    <!--    <string name="menu_info">Info</string>-->
+    <!--    <string name="menu_settings">Settings</string>-->
+
+
+    <!--    <string name="instruction">Connection instructions: \n1. Turn off the engine\n2. Insert the connector OBD\n3. Connect via Bluetooth</string>-->
+    <!--    <string name="obd_status_text">Disconnected</string>-->
+    <!--    <string name="btn_connection_text">Connect</string>-->
+    <!--    <string name="rad_all">All time</string>-->
+    <!--    <string name="rad_today">Today</string>-->
+    <!--    <string name="rad_7_days">7 days</string>-->
+    <!--    <string name="rad_14_days">14 days</string>-->
+    <!--    <string name="rad_30_days">30 days</string>-->
+    <!--    <string name="rad_90_days">90 days</string>-->
+    <!--    <string name="rad_360_days">360 days</string>-->
+    <!--    <string name="del_error">Delete</string>-->
+
+    <!--    <string name="stat_title1">Avg. fuel consumption</string>-->
+    <!--    <string name="stat_unit1">L/100km</string>-->
+    <!--    <string name="stat_title2">Average speed</string>-->
+    <!--    <string name="stat_unit2">km/h</string>-->
+    <!--    <string name="stat_title3">Engine hours</string>-->
+    <!--    <string name="stat_unit3">ч.</string>-->
+    <!--    <string name="stat_title4">The path taken</string>-->
+    <!--    <string name="stat_unit4">km</string>-->
+    <!--    <string name="stat_title5">Fuel used</string>-->
+    <!--    <string name="stat_unit5">L</string>-->
+    <!--    <string name="stat_title6">Fuel cost</string>-->
+    <!--    <string name="stat_unit6">Br</string>-->
+    <!--    <string name="connectionText">Connecting to ELM:</string>-->
+    <!--    <string name="status_home">Disconnected</string>-->
+    <!--    <string name="connectBtn">Connect</string>-->
+    <!--    <string name="demoBtn">Demo</string>-->
+    <!--    <string name="exitDemoBtn">Close demo</string>-->
+    <!--    <string name="searchErrors">Search...</string>-->
+    <!--    <string name="resetAllBtn">Reset everything</string>-->
+    <!--    <string name="connectionStatus">Connection status: Waiting</string>-->
+    <!--    <string name="tv_language">Select language:</string>-->
+
+    <!--    <string name="bluetooth_not_enabled">Bluetooth is not enabled. Go to settings.</string>-->
+    <!--    <string name="connecting_status">Connection status: Connecting...</string>-->
+    <!--    <string name="no_paired_devices">No paired devices found.</string>-->
+    <!--    <string name="no_obd_devices">No OBD devices found.</string>-->
+    <!--    <string name="connection_successful">Connection successful!</string>-->
+    <!--    <string name="connected_to_obd">Connected to OBD device</string>-->
+    <!--    <string name="connection_error">Connection error</string>-->
+    <!--    <string name="connection_error_obd">Error connecting to OBD device</string>-->
+
+    <!--    <string name="disconnect">Disconnect</string>-->
+    <!--    <string name="bluetooth_permission_required">You must grant permission to access Bluetooth</string>-->
+    <!--    <string name="connecting_to_obd">Connecting to OBD device</string>-->
+    <!--    <string name="obd_device_not_found">OBD device not found</string>-->
+    <!--    <string name="bluetooth_access_error">Bluetooth access error: %1$s</string>-->
+
+    <!--    <string name="bluetooth_permission_denied">Bluetooth permissions not granted</string>-->
+    <!--    <string name="all_errors_cleared">All errors cleared</string>-->
+    <!--    <string name="bluetooth_not_supported">Bluetooth is not supported</string>-->
+    <!--    <string name="bluetooth_no_permissions">No Bluetooth permissions</string>-->
+    <!--    <string name="devise_connect_error">Device connection error</string>-->
+    <!--<resources>-->
+    <!--    <string name="no_connection_title">No connection</string>-->
+    <!--    <string name="no_connection_description">OBD is not connected</string>-->
+
+    <!--    <string name="error_ignition_misfire">Ignition misfire</string>-->
+    <!--    <string name="error_ignition_misfire_description">Misfire detected in cylinder 1</string>-->
+
+    <!--    <string name="error_catalyst_efficiency">Catalyst efficiency issue</string>-->
+    <!--    <string name="error_catalyst_efficiency_description">Catalyst efficiency below threshold</string>-->
+
+    <!--    <string name="error_lean_fuel_mixture">Lean fuel mixture</string>-->
+    <!--    <string name="error_lean_fuel_mixture_description">Fuel system too lean (Bank 1)</string>-->
+
+    <!--    <string name="error_speed_sensor">Speed sensor error</string>-->
+    <!--    <string name="error_speed_sensor_description">Vehicle speed sensor malfunction</string>-->
+
+    <!--    <string name="error_brake_system">Brake system issue</string>-->
+    <!--    <string name="error_brake_system_description">Error in ABS or ESC system</string>-->
+
+

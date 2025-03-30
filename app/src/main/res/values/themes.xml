@@ -11,21 +11,9 @@
         <item name="colorOnSecondary">@color/colorPrimaryVariant</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
-        <!-- Делаем стиль кнопки глобальным -->
-<!--        <item name="buttonStyle">@style/BlackYellowButton</item>-->
     </style>
 
-    <!-- Стиль кнопки -->
-<!--    <style name="BlackYellowButton" parent="Widget.MaterialComponents.Button">-->
-<!--        <item name="android:background">@drawable/button_black_yellow</item>-->
-<!--        <item name="android:backgroundTint">@null</item> &lt;!&ndash; Отключает Material-цвет &ndash;&gt;-->
-<!--        <item name="android:textColor">#FFD700</item>-->
-<!--        <item name="android:insetLeft">0dp</item>-->
-<!--        <item name="android:insetRight">0dp</item>-->
-<!--        <item name="android:insetTop">0dp</item>-->
-<!--        <item name="android:insetBottom">0dp</item>-->
-<!--        <item name="rippleColor">@android:color/transparent</item> &lt;!&ndash; Убирает ripple-эффект &ndash;&gt;-->
-<!--    </style>-->
+
     <style name="Theme.OBD_Servise.AppBarOverlay">
         <!-- Пример настроек для AppBarOverlay -->
         <item name="windowActionBar">false</item>

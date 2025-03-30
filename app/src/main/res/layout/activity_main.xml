@@ -8,12 +8,14 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+    <!-- Главный контент -->
     <include
         android:id="@+id/app_bar_main"
         layout="@layout/app_bar_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- Навигационная панель -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="match_parent"
@@ -28,7 +30,6 @@
         android:gravity="center"
         app:itemIconTint="@color/nav_icon_color"
         app:itemTextColor="@color/nav_icon_color">
-
 
         <!-- Обертка для основного меню и футера -->
         <LinearLayout
@@ -47,5 +48,17 @@
         </LinearLayout>
 
     </com.google.android.material.navigation.NavigationView>
+
+    <!-- ProgressBar, который будет отображаться при загрузке -->
+    <!-- Закрепляем на нижней части экрана -->
+    <!--    <ProgressBar-->
+    <!--        android:id="@+id/progressBar"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:visibility="gone"-->
+    <!--        android:indeterminate="false"-->
+    <!--        android:progressDrawable="@drawable/progress_bar"-->
+    <!--        android:layout_gravity="bottom"-->
+    <!--    android:layout_alignParentBottom="true" />-->
 
 </androidx.drawerlayout.widget.DrawerLayout>

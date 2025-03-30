@@ -16,6 +16,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.obd_servise.R
 import com.example.obd_servise.obd_connection.api.connection.ObdDeviceConnection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,12 +58,20 @@ class ErrorsViewModel : ViewModel() {
 
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if (bluetoothAdapter == null) {
-            Toast.makeText(context, "Bluetooth не поддерживается", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.bluetooth_not_supported),
+                Toast.LENGTH_SHORT
+            ).show()
             return null
         }
 
         if (!checkBluetoothPermissions(context)) {
-            Toast.makeText(context, "Нет разрешений на Bluetooth", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.bluetooth_no_permissions),
+                Toast.LENGTH_SHORT
+            ).show()
             return null
         }
 
@@ -73,29 +82,41 @@ class ErrorsViewModel : ViewModel() {
                         "OBD",
                         ignoreCase = true
                     ) || device.address == "your_device_address"
-                ) {
+                ) {//todo
                     return createRfcommSocket(device, context)
                 }
             }
-            Toast.makeText(context, "Не найдено подходящее OBD устройство", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.obd_device_not_found),
+                Toast.LENGTH_SHORT
+            ).show()
             null
         } catch (e: SecurityException) {
-            Log.e("ErrorsViewModel", "Ошибка доступа к Bluetooth", e)
-            Toast.makeText(context, "Ошибка доступа к Bluetooth", Toast.LENGTH_SHORT).show()
+            Log.e("ErrorsViewModel", context.getString(R.string.bluetooth_access_error), e)
+            Toast.makeText(
+                context,
+                context.getString(R.string.bluetooth_access_error),
+                Toast.LENGTH_SHORT
+            ).show()
             null
         }
     }
 
 
+
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     private fun createRfcommSocket(device: BluetoothDevice, context: Context): BluetoothSocket? {
-        val MY_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb")
+        val MY_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb")//todo
         return try {
             device.createRfcommSocketToServiceRecord(MY_UUID)
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(context, "Ошибка подключения к устройству", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.devise_connect_error),
+                Toast.LENGTH_SHORT
+            ).show()
             null
         }
     }
@@ -120,9 +141,19 @@ class ErrorsViewModel : ViewModel() {
 
     fun loadErrors(isDemo: Boolean, isConnected: Boolean) {
         if (!isDemo && !isConnected) {
-            updateErrors(listOf(ErrorItem("NO_CONN", "Нет соединения", "OBD не подключен")))
+            updateErrors(
+                listOf(
+                    ErrorItem(
+                        "NO_CONN",
+                        "No connection",
+                        "OBD is not connected"
+                    )
+                )
+            )
             return
         }
+
+
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -159,21 +190,38 @@ class ErrorsViewModel : ViewModel() {
 
     private fun generateDemoErrors(): List<ErrorItem> {
         return listOf(
-            ErrorItem("P0301", "Ошибка зажигания", "Пропуски зажигания в цилиндре 1"),
             ErrorItem(
-                "P0420",
-                "Проблема с катализатором",
-                "Эффективность катализатора ниже порога"
+                "P0301_Demo",
+                "Ignition misfire",
+                "Misfire detected in cylinder 1"
             ),
-            ErrorItem("P0171", "Бедная смесь", "Система топливоподачи слишком бедная (банк 1)"),
+
             ErrorItem(
-                "P0500",
-                "Ошибка датчика скорости",
-                "Неисправность датчика скорости автомобиля"
+                "P0420_Demo",
+                "Catalyst efficiency issue",
+                "Catalyst efficiency below threshold"
             ),
-            ErrorItem("C1201", "Проблема с тормозной системой", "Ошибка в системе ABS или ESC")
+
+            ErrorItem(
+                "P0171_Demo",
+                "Lean fuel mixture",
+                "Fuel system too lean (Bank 1)"
+            ),
+
+            ErrorItem(
+                "P0500_Demo",
+                "Speed sensor error",
+                "Vehicle speed sensor malfunction"
+            ),
+
+            ErrorItem(
+                "C1201_Demo",
+                "Brake system issue",
+                "Error in ABS or ESC system"
+            )
         )
     }
+
 
     fun clearAllErrors() {
         allErrors.clear()
