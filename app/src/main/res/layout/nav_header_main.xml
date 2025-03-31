@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:contentDescription="nav_header_desc"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@drawable/red_white" />
+        app:srcCompat="@drawable/header" />
 
     <!--    <TextView-->
 <!--        android:layout_width="match_parent"-->

@@ -33,8 +33,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
+        val sharedPreferences = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val theme = sharedPreferences.getString("theme", "classic")
+
+        when (theme) {
+            "classic" -> setTheme(R.style.Theme_OBD_Servise)
+            "yellow" -> setTheme(R.style.Theme_OBD_Servise_Yellow)
+        }
+        super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

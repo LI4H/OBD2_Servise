@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@color/colorPrimaryVariant"
+    android:background="?attr/colorPrimaryVariant"
     tools:context=".ui.settings.SettingsFragment">
 
     <TextView
@@ -43,4 +43,27 @@
             android:textColor="@android:color/white" />
     </RadioGroup>
 
+    <RadioGroup
+        android:id="@+id/radioGroupTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/radioGroupLanguage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radioClassic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Classic"
+            android:textColor="@android:color/white" />
+
+        <RadioButton
+            android:id="@+id/radioYellow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yellow"
+            android:textColor="@android:color/white" />
+    </RadioGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>

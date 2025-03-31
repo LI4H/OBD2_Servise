@@ -11,8 +11,9 @@
         <item name="colorOnSecondary">@color/colorPrimaryVariant</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
+        <item name="navIconColor">@color/nav_icon_color</item>
+        <item name="menuItemBackground">@drawable/menu_item_background</item>
     </style>
-
 
     <style name="Theme.OBD_Servise.AppBarOverlay">
         <!-- Пример настроек для AppBarOverlay -->
@@ -26,6 +27,21 @@
         <item name="popupMenuStyle">@style/Widget.AppCompat.PopupMenu</item>
         <item name="android:popupMenuStyle">@style/Widget.AppCompat.PopupMenu</item>
         <!-- Добавьте другие необходимые параметры -->
+    </style>
+
+
+    <!-- Yellow Theme -->
+    <style name="Theme.OBD_Servise.Yellow" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/yellowPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/yellowSecondary</item>
+        <item name="colorSecondaryVariant">@color/yellowSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <item name="navIconColor">@color/nav_icon_color_yellow</item>
+        <item name="menuItemBackground">@drawable/menu_item_background_yellow</item>
     </style>
 
 </resources>

@@ -22,4 +22,13 @@ class SettingsViewModel : ViewModel() {
     fun changeLanguage(languageCode: String) {
         sharedPreferences?.edit()?.putString("language", languageCode)?.apply()
     }
+
+    fun getCurrentTheme(): String {
+        return sharedPreferences?.getString("theme", "classic") ?: "classic"
+    }
+
+    fun setTheme(theme: String) {
+        sharedPreferences?.edit()?.putString("theme", theme)?.apply()
+    }
+
 }

@@ -33,6 +33,7 @@ class SettingsFragment : Fragment() {
         settingsViewModel.initSharedPreferences(requireContext())
 
         setupLanguageSelection()
+        setupThemeSelection()
 
         return root
     }
@@ -50,6 +51,30 @@ class SettingsFragment : Fragment() {
                 binding.radioEnglish.id -> changeLanguage("en")
                 binding.radioRussian.id -> changeLanguage("ru")
             }
+        }
+    }
+    private fun setupThemeSelection() {
+        val currentTheme = settingsViewModel.getCurrentTheme()
+
+        when (currentTheme) {
+            "classic" -> binding.radioClassic.isChecked = true
+            "yellow" -> binding.radioYellow.isChecked = true
+        }
+
+        binding.radioGroupTheme.setOnCheckedChangeListener { _, checkedId ->
+            val newTheme = when (checkedId) {
+                binding.radioClassic.id -> "classic"
+                binding.radioYellow.id -> "yellow"
+                else -> "classic"
+            }
+
+            settingsViewModel.setTheme(newTheme)
+
+            // Перезапуск активности для применения новой темы
+            val intent = Intent(requireActivity(), MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            requireActivity().finish()
         }
     }
 
