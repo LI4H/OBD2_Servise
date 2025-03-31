@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    base colors-->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
-
-<!--    cyberpunk colors-->
+    <color name="white">#FFFFFFFF</color>
+    <color name="grey">#121212</color>
+    <!--    cyberpunk colors classic-->
     <color name="colorPrimary">#CD2D37</color>
     <color name="colorPrimaryVariant">#060B04</color>
     <color name="colorSecondary">#6E1C1C</color>
     <color name="colorSecondaryVariant">#180002</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="grey">#121212</color>
+    <!--    cyberpunk colors yellow-->
+    <color name="yellowPrimary">#FEFD3C</color>
+    <color name="yellowPrimaryVariant">#060B04</color>
+    <color name="yellowSecondary">#B89B1E</color>
+    <color name="yellowSecondaryVariant">#3A2F00</color>
     <!--    chart colors-->
     <color name="grey2">#959595</color>
-
     <color name="blue">#2196F3</color>
     <color name="orange">#FF5722</color>
     <color name="yellow">#FFEB3B</color>
     <color name="red">#E91E63</color>
     <color name="purple">#673AB7</color>
     <color name="green">#8BC34A</color>
-
 
 </resources>

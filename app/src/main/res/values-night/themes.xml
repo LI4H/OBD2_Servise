@@ -10,21 +10,10 @@
         <item name="colorOnSecondary">@color/colorPrimaryVariant</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
-        <!-- Применение стиля ко всем кнопкам -->
-<!--        <item name="buttonStyle">@style/BlackYellowButton</item>-->
+        <item name="navIconColor">@color/nav_icon_color</item>
+        <item name="menuItemBackground">@drawable/menu_item_background</item>
     </style>
 
-    <!-- Стиль кнопки -->
-<!--    <style name="BlackYellowButton" parent="Widget.MaterialComponents.Button">-->
-<!--        <item name="android:background">@drawable/button_black_yellow</item>-->
-<!--        <item name="android:backgroundTint">@null</item>-->
-<!--        <item name="android:textColor">#FFD700</item>-->
-<!--        <item name="android:insetLeft">0dp</item>-->
-<!--        <item name="android:insetRight">0dp</item>-->
-<!--        <item name="android:insetTop">0dp</item>-->
-<!--        <item name="android:insetBottom">0dp</item>-->
-<!--        <item name="rippleColor">@android:color/transparent</item>-->
-<!--    </style>-->
     <style name="Theme.OBD_Servise.AppBarOverlay">
         <!-- Пример настроек для AppBarOverlay -->
         <item name="windowActionBar">false</item>
@@ -38,4 +27,20 @@
         <item name="android:popupMenuStyle">@style/Widget.AppCompat.PopupMenu</item>
         <!-- Добавьте другие необходимые параметры -->
     </style>
+
+    <!-- Yellow Theme -->
+    <style name="Theme.OBD_Servise.Yellow" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/yellowPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/yellowSecondary</item>
+        <item name="colorSecondaryVariant">@color/yellowSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <item name="navIconColor">@color/nav_icon_color_yellow</item>
+        <item name="menuItemBackground">@drawable/menu_item_background_yellow</item>
+    </style>
+
+
 </resources>

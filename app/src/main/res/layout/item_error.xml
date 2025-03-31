@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="8dp"
-    android:background="@color/colorSecondary">
+    android:background="@drawable/error_item_background">
 
     <TextView
         android:id="@+id/errorCode"
@@ -42,6 +42,7 @@
         android:layout_height="wrap_content"
         android:text="@string/del_error"
         android:visibility="gone"
+        android:textColor="?attr/colorOnPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

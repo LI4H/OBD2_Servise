@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment"
-    android:background="@color/colorPrimaryVariant">
+    android:background="?attr/colorPrimaryVariant">
 
 
     <LinearLayout
@@ -19,7 +19,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.494"
             app:layout_constraintStart_toStartOf="parent"
-
         >
 
         <TextView
@@ -38,7 +37,7 @@
             android:layout_height="wrap_content"
             android:text="@string/status_home"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
+            android:textColor="?attr/colorPrimary"
             android:textSize="20sp" />
 
     </LinearLayout>
