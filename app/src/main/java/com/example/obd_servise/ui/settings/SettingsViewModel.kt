@@ -2,7 +2,12 @@ package com.example.obd_servise.ui.settings
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SettingsViewModel : ViewModel() {
 
@@ -13,22 +18,39 @@ class SettingsViewModel : ViewModel() {
         sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
     }
 
-    // Получение текущего языка
+    //текущий язык
     fun getCurrentLanguage(): String {
-        return sharedPreferences?.getString("language", "en") ?: "en"
-    }
-
-    // Смена языка
-    fun changeLanguage(languageCode: String) {
-        sharedPreferences?.edit()?.putString("language", languageCode)?.apply()
+        val language = sharedPreferences?.getString("language", "en") ?: "en"
+        return language
     }
 
     fun getCurrentTheme(): String {
-        return sharedPreferences?.getString("theme", "classic") ?: "classic"
+        val theme = sharedPreferences?.getString("theme", "classic") ?: "classic"
+        return theme
+    }
+    // Смена языка
+    fun changeLanguage(languageCode: String, callback: () -> Unit) {
+
+        // изменение языка в фоновом потоке
+        viewModelScope.launch(Dispatchers.IO) {
+            sharedPreferences?.edit()?.putString("language", languageCode)?.apply()
+
+            // Обновляем конфигурацию ресурса на главном потоке
+            withContext(Dispatchers.Main) {
+                callback() //callback для обновления UI
+            }
+        }
     }
 
     fun setTheme(theme: String) {
-        sharedPreferences?.edit()?.putString("theme", theme)?.apply()
-    }
 
+        // изменение темы в фоновом потоке
+        viewModelScope.launch(Dispatchers.IO) {
+            sharedPreferences?.edit()?.putString("theme", theme)?.apply()
+
+            // Обновляем UI на главном потоке
+            withContext(Dispatchers.Main) {}
+        }
+    }
 }
+

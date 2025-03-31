@@ -8,17 +8,21 @@
     android:background="?attr/colorPrimaryVariant"
     tools:context=".ui.settings.SettingsFragment">
 
+    <!-- Заголовок для выбора языка -->
     <TextView
         android:id="@+id/tv_language"
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
         android:text="@string/tv_language"
         android:textSize="18sp"
         android:textColor="@android:color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
 
+    <!-- Группа радиокнопок для выбора языка -->
     <RadioGroup
         android:id="@+id/radioGroupLanguage"
         android:layout_width="wrap_content"
@@ -26,44 +30,90 @@
         app:layout_constraintTop_toBottomOf="@id/tv_language"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:layout_marginBottom="24dp"
+        android:weightSum="2">
 
         <RadioButton
             android:id="@+id/radioEnglish"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="-15dp"
+            android:paddingEnd="12dp"
+            android:button="@null"
             android:text="English"
-            android:textColor="@android:color/white" />
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryVariant"
+            android:background="?attr/btn3left"
+            android:gravity="center" />
+
+        <!-- btn3_white_left -> btn3_red_left/btn3_yellow_left -->
 
         <RadioButton
             android:id="@+id/radioRussian"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:layout_marginStart="-15dp"
+            android:paddingStart="12dp"
             android:text="Русский"
-            android:textColor="@android:color/white" />
+            android:button="@null"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryVariant"
+            android:background="?attr/btn3right"
+            android:gravity="center" />
+
+        <!-- btn3_white -> btn3_red_right/btn3_yellow_right -->
     </RadioGroup>
 
+
+    <!-- Заголовок для выбора темы -->
+    <TextView
+        android:id="@+id/tv_theme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_theme"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/radioGroupLanguage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Группа радиокнопок для выбора темы -->
     <RadioGroup
         android:id="@+id/radioGroupTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/radioGroupLanguage"
+        app:layout_constraintTop_toBottomOf="@id/tv_theme"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/radioClassic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="-15dp"
+            android:paddingEnd="12dp"
+            android:button="@null"
             android:text="Classic"
-            android:textColor="@android:color/white" />
+            android:gravity="center"
+            android:background="?attr/btn3left"
+            android:textColor="@color/colorPrimaryVariant" />
 
         <RadioButton
             android:id="@+id/radioYellow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="-15dp"
+            android:paddingStart="12dp"
+            android:button="@null"
             android:text="Yellow"
-            android:textColor="@android:color/white" />
+            android:gravity="center"
+            android:background="?attr/btn3right"
+            android:textColor="@color/colorPrimaryVariant" />
     </RadioGroup>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

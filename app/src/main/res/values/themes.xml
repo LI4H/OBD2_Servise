@@ -13,6 +13,9 @@
 
         <item name="navIconColor">@color/nav_icon_color</item>
         <item name="menuItemBackground">@drawable/menu_item_background</item>
+
+        <item name="btn3left">@drawable/btn3_selector_red_left</item>
+        <item name="btn3right">@drawable/btn3_selector_red_right</item>
     </style>
 
     <style name="Theme.OBD_Servise.AppBarOverlay">
@@ -42,6 +45,9 @@
 
         <item name="navIconColor">@color/nav_icon_color_yellow</item>
         <item name="menuItemBackground">@drawable/menu_item_background_yellow</item>
+
+        <item name="btn3left">@drawable/btn3_selector_yellow_left</item>
+        <item name="btn3right">@drawable/btn3_selector_yellow_right</item>
     </style>
 
 </resources>

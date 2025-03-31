@@ -1,0 +1,8 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Состояние, когда кнопка нажата -->
+    <item android:state_pressed="true" android:drawable="@drawable/btn3_red" />
+    <!-- Состояние, когда кнопка не нажата -->
+    <!-- Состояние, когда кнопка выбрана -->
+    <item android:state_checked="true" android:drawable="@drawable/btn3_red" />
+    <item android:drawable="@drawable/btn3_white" />
+</selector>

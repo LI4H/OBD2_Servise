@@ -7,6 +7,7 @@
     <string name="menu_errors">Ошибки</string>
     <string name="menu_info">Инфо</string>
     <string name="menu_settings">Настройки</string>
+    <string name="menu_devise_selection">Подключение к устройству</string>
     <!--Фильтры-->
     <string name="rad_all">Все время</string>
     <string name="rad_today">Сегодня</string>
@@ -68,25 +69,6 @@
 
     <!--TextView иное-->
     <string name="tv_language">Выбрать язык:</string>
-
-
-    <!--    <string name="no_connection_title">Нет соединения</string>-->
-    <!--    <string name="no_connection_description">OBD не подключен</string>-->
-
-    <!--    <string name="error_ignition_misfire">Ошибка зажигания</string>-->
-    <!--    <string name="error_ignition_misfire_description">Пропуски зажигания в цилиндре 1</string>-->
-
-    <!--    <string name="error_catalyst_efficiency">Проблема с катализатором</string>-->
-    <!--    <string name="error_catalyst_efficiency_description">Эффективность катализатора ниже порога</string>-->
-
-    <!--    <string name="error_lean_fuel_mixture">Бедная смесь</string>-->
-    <!--    <string name="error_lean_fuel_mixture_description">Система топливоподачи слишком бедная (банк 1)</string>-->
-
-    <!--    <string name="error_speed_sensor">Ошибка датчика скорости</string>-->
-    <!--    <string name="error_speed_sensor_description">Неисправность датчика скорости автомобиля</string>-->
-
-    <!--    <string name="error_brake_system">Проблема с тормозной системой</string>-->
-    <!--    <string name="error_brake_system_description">Ошибка в системе ABS или ESC</string>-->
-
+    <string name="tv_theme">Выбрать тему:</string>
 
 </resources>
