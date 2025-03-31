@@ -2,4 +2,8 @@
 <resources>
     <attr name="navIconColor" format="color" />
     <attr name="menuItemBackground" format="reference" />
+
+    <!-- Атрибут для фона двойной кнопки -->
+    <attr name="btn3left" format="reference" />
+    <attr name="btn3right" format="reference" />
 </resources>

@@ -70,9 +70,27 @@ class StatisticsViewModel : ViewModel() {
     }
 
 
-    // Функция для форматирования числа до 1 знака после запятой
-    private fun formatDouble(value: Double): Double {
-        return String.format("%.1f", value).toDouble()
+    // Функция для форматирования числа
+    private fun formatDouble(value: Any?): Double {
+        return try {
+            when (value) {
+                is String -> value.replace(",", ".").toDouble()
+                is Double -> String.format("%.1f", value).replace(",", ".").toDouble()
+                is Float -> String.format("%.1f", value).replace(",", ".").toDouble()
+                is Int -> value.toDouble()
+                is Long -> value.toDouble()
+                else -> {
+                    Log.e(
+                        "StatisticsViewModel",
+                        "Unexpected type: ${value?.javaClass?.simpleName}, value: $value"
+                    )
+                    0.0
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("StatisticsViewModel", "Error formatting value: $value", e)
+            0.0
+        }
     }
 }
 

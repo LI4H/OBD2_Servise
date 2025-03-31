@@ -45,6 +45,6 @@
     <fragment
         android:id="@+id/deviceSelectionFragment"
         android:name="com.example.obd_servise.ui.deviceSelection.DeviceSelectionFragment"
-        android:label="fragment_device_selection"
+        android:label="@string/menu_devise_selection"
         tools:layout="@layout/fragment_device_selection" />
 </navigation>

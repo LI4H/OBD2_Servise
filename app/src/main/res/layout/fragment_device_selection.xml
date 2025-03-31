@@ -3,39 +3,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.deviceSelection.DeviceSelectionFragment"
     android:background="?attr/colorPrimaryVariant">
 
-
-
-    <LinearLayout
+    <!-- Использование ConstraintLayout для удобства выравнивания -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:padding="16dp">
 
+        <!-- Текст с инструкциями -->
         <TextView
             android:id="@+id/connectionGuide"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_margin="16dp"
-            android:scrollHorizontally="false"
             android:text="@string/instruction"
-            android:textSize="16sp"
-            android:textColor="@color/white"/>
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
 
+        <!-- Статус соединения -->
         <TextView
             android:id="@+id/connectionStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/connectionStatus"
-            android:layout_below="@id/connectionGuide"
-            android:layout_margin="16dp"
-            android:textSize="16sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="40dp"
+            app:layout_constraintStart_toStartOf="parent"
 
-    </LinearLayout>
+            />
 
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

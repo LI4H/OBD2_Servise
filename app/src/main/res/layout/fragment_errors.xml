@@ -20,9 +20,11 @@
         android:padding="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:inputType="text" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:background="@drawable/edittext_border"
         android:id="@+id/errorsList"
         android:layout_width="0dp"
         android:layout_height="0dp"
