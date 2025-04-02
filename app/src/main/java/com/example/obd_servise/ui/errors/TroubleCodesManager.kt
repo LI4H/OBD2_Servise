@@ -1,9 +1,12 @@
 package com.example.obd_servise.ui.errors
 
-import com.example.obd_servise.obd_connection.api.command.ObdCommand
+//import com.example.obd_servise.obd_connection.api.command.ObdCommand
 import com.example.obd_servise.obd_connection.api.command.control.ResetTroubleCodesCommand
-import com.example.obd_servise.obd_connection.api.connection.ObdDeviceConnection
+//import com.example.obd_servise.obd_connection.ui.obd.ObdDeviceConnection
 import java.util.regex.Pattern
+import com.github.eltonvs.obd.command.ObdCommand
+import com.github.eltonvs.obd.command.ObdResponse
+import com.github.eltonvs.obd.connection.ObdDeviceConnection
 
 class TroubleCodesManager(private val obdInterface: ObdDeviceConnection) {
 
@@ -48,10 +51,10 @@ class TroubleCodesManager(private val obdInterface: ObdDeviceConnection) {
 
     suspend fun resetTroubleCodes() {
         try {
-            obdInterface.run(
-                ResetTroubleCodesCommand(),
-                delayTime = 1000L // Пример задержки в 1 секунду
-            )
+//            obdInterface.run(
+//                ResetTroubleCodesCommand(),
+//                delayTime = 1000L // Пример задержки в 1 секунду
+//            )
         } catch (e: Exception) {
             // Логируем ошибку, если не удалось сбросить коды
         }

@@ -17,7 +17,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.obd_servise.R
-import com.example.obd_servise.obd_connection.api.connection.ObdDeviceConnection
+import com.github.eltonvs.obd.command.ObdCommand
+import com.github.eltonvs.obd.command.ObdResponse
+import com.github.eltonvs.obd.connection.ObdDeviceConnection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -129,7 +131,10 @@ class ErrorsViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             obdDeviceConnection = bluetoothSocket?.let {
                 try {
-                    ObdDeviceConnection(it.inputStream, it.outputStream)
+                    com.github.eltonvs.obd.connection.ObdDeviceConnection(
+                        it.inputStream,
+                        it.outputStream
+                    )
                 } catch (e: Exception) {
                     Log.e("ErrorsViewModel", "Ошибка создания ObdDeviceConnection", e)
                     null
