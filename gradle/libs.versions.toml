@@ -20,6 +20,8 @@ navigationUiKtx = "2.8.5"
 media3CommonKtx = "1.5.1"
 filamentAndroid = "1.17.1"
 legacySupportV4 = "1.0.0"
+firebaseCrashlyticsBuildtools = "3.0.3"
+lifecycleViewmodelAndroid = "2.8.7"
 
 [libraries]
 
@@ -43,6 +45,8 @@ androidx-media3-common-ktx = { group = "androidx.media3", name = "media3-common-
 filament-android = { group = "com.google.ar.sceneform", name = "filament-android", version.ref = "filamentAndroid" }
 androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
+firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
+androidx-lifecycle-viewmodel-android = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-android", version.ref = "lifecycleViewmodelAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

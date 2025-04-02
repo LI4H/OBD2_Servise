@@ -28,6 +28,10 @@ enum class ObdProtocols(val displayName: String, internal val command: String) {
     SAE_J1939_CAN("SAE J1939 (CAN 29/250)", "A"),
 }
 
+val selectedProtocol =
+    com.example.obd_servise.obd_connection.api.command.ObdProtocols.ISO_15765_4_CAN
+val selectedTimingMode =
+    com.example.obd_servise.obd_connection.api.command.AdaptiveTimingMode.AUTO_1
 enum class AdaptiveTimingMode(val displayName: String, internal val command: String) {
     OFF("Off", "0"),
     AUTO_1("Auto 1", "1"),

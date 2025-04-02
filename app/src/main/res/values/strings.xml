@@ -33,17 +33,26 @@
     <!--Кнопки-->
     <string name="btn_connection_text">Connect</string>
     <string name="disconnect">Disconnect</string>
+    <!--Todo Кнопки Home-->
     <string name="connectBtn">Connect</string>
+    <string name="exitConnectBtn">exit connect</string>
     <string name="demoBtn">Demo</string>
     <string name="exitDemoBtn">Close demo</string>
+    <!--Todo Кнопки Home-->
     <string name="resetAllBtn">Reset everything</string>
     <string name="searchErrors">Search...</string>
     <!--Статус-->
     <string name="obd_status_text">Disconnected</string>
     <string name="connectionStatus">Connection status: Waiting</string>
     <string name="connecting_status">Connection status: Connecting...</string>
-    <string name="connectionText">Connecting to ELM:</string>
-    <string name="status_home">Disconnected</string>
+    <!--Todo Самое важное-->
+    <string name="connectionELMText">Connecting to ELM:</string>
+    <string name="statusELM">Disconnected</string>
+
+    <string name="connectionECUText">Connection to ECU:</string>
+    <string name="statusECU">Disconnected</string>
+    <!--Todo Самое важное -->
+
     <string name="connection_successful">Connection successful!</string>
     <string name="connected_to_obd">Connected to OBD device</string>
     <string name="connection_error">Connection error</string>
@@ -70,5 +79,13 @@
     <!--TextView иное-->
     <string name="tv_language">Select language:</string>
     <string name="tv_theme">Select theme:</string>
+    <string name="connected_to_ecu">подключено к ecu</string>
+    <string name="connected_to_elm">подключено к elm</string>
+    <string name="connecting_to_ecu">идет подключение к ecu</string>
+    <string name="connecting_to_elm">идет подключение к елм\n</string>
+    <string name="no_error">ошибок нет!(conn-fragment)</string>
+    <string name="error_connecting_to_elm">ошибка подключения к elm\n</string>
+    <string name="error_connecting_to_ecu">ошибка подключения к ecu</string>
+
 
 </resources>
