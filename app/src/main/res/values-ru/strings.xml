@@ -44,8 +44,8 @@
     <string name="searchErrors">Поиск...</string>
     <!--Статус-->
     <string name="obd_status_text">Отключено</string>
-    <string name="connectionStatus">Статус подключения: Ожидает</string>
-    <string name="connecting_status">Статус подключения: Подключаемся...</string>
+    <!--    <string name="connectionStatus">Статус подключения: Ожидает</string>-->
+    <!--    <string name="connecting_status">Статус подключения: Подключаемся...</string>-->
     <!--Todo Самое важное -->
     <string name="connectionELMText">Подключение к ELM:</string>
     <string name="statusELM">Отключено</string>

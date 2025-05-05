@@ -43,8 +43,8 @@
     <string name="searchErrors">Search...</string>
     <!--Статус-->
     <string name="obd_status_text">Disconnected</string>
-    <string name="connectionStatus">Connection status: Waiting</string>
-    <string name="connecting_status">Connection status: Connecting...</string>
+    <!--    <string name="connectionStatus">Connection status: Waiting</string>-->
+    <!--    <string name="connecting_status">Connection status: Connecting...</string>-->
     <!--Todo Самое важное-->
     <string name="connectionELMText">Connecting to ELM:</string>
     <string name="statusELM">Disconnected</string>
@@ -79,11 +79,11 @@
     <!--TextView иное-->
     <string name="tv_language">Select language:</string>
     <string name="tv_theme">Select theme:</string>
-    <string name="connected_to_ecu">подключено к ecu</string>
-    <string name="connected_to_elm">подключено к elm</string>
-    <string name="connecting_to_ecu">идет подключение к ecu</string>
-    <string name="connecting_to_elm">идет подключение к елм\n</string>
-    <string name="no_error">ошибок нет!(conn-fragment)</string>
+    <string name="connected_to_ecu">Connected(ECU)</string>
+    <string name="connected_to_elm">Connected(ELM)</string>
+    <string name="connecting_to_ecu">Trying to connect(ECU)</string>
+    <string name="connecting_to_elm">Trying to connect(ELM)</string>
+    <string name="no_error">Errors not found(conn-fragment)</string>
     <string name="error_connecting_to_elm">ошибка подключения к elm\n</string>
     <string name="error_connecting_to_ecu">ошибка подключения к ecu</string>
 
