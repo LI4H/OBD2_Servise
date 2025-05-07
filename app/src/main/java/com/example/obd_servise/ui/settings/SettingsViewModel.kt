@@ -13,44 +13,41 @@ class SettingsViewModel : ViewModel() {
 
     private var sharedPreferences: SharedPreferences? = null
 
-    // Инициализация SharedPreferences
     fun initSharedPreferences(context: Context) {
         sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
     }
 
-    //текущий язык
     fun getCurrentLanguage(): String {
-        val language = sharedPreferences?.getString("language", "en") ?: "en"
-        return language
+        return sharedPreferences?.getString("language", "en") ?: "en"
     }
 
     fun getCurrentTheme(): String {
-        val theme = sharedPreferences?.getString("theme", "classic") ?: "classic"
-        return theme
+        return sharedPreferences?.getString("theme", "classic") ?: "classic"
     }
-    // Смена языка
-    fun changeLanguage(languageCode: String, callback: () -> Unit) {
 
-        // изменение языка в фоновом потоке
+    fun changeLanguage(languageCode: String, callback: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             sharedPreferences?.edit()?.putString("language", languageCode)?.apply()
-
-            // Обновляем конфигурацию ресурса на главном потоке
             withContext(Dispatchers.Main) {
-                callback() //callback для обновления UI
+                callback()
             }
         }
     }
 
     fun setTheme(theme: String) {
-
-        // изменение темы в фоновом потоке
         viewModelScope.launch(Dispatchers.IO) {
             sharedPreferences?.edit()?.putString("theme", theme)?.apply()
-
-            // Обновляем UI на главном потоке
             withContext(Dispatchers.Main) {}
         }
     }
-}
 
+    // ✅ Сохраняем индекс текущей секции
+    fun setLastSectionIndex(index: Int) {
+        sharedPreferences?.edit()?.putInt("last_section_index", index)?.apply()
+    }
+
+    // ✅ Получаем индекс текущей секции
+    fun getLastSectionIndex(): Int {
+        return sharedPreferences?.getInt("last_section_index", 0) ?: 0
+    }
+}

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="?attr/colorPrimaryVariant">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/inputName"
+            android:hint="Название авто"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textColorHint="@color/grey2"
+            android:inputType="textCapWords"
+            android:textSize="20sp"
+
+            />
+
+        <EditText
+            android:id="@+id/inputMileage"
+            android:hint="Пробег (км)"
+            android:inputType="number"
+            android:textColor="@color/white"
+            android:textColorHint="@color/grey2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/inputFuelPrice"
+            android:hint="Цена топлива (Р/л)"
+            android:textColor="@color/white"
+            android:textColorHint="@color/grey2"
+            android:inputType="numberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:text="Тип топлива:"
+
+            android:paddingStart="4dp"
+            android:textSize="18sp"
+            android:textColor="@color/grey2"
+            android:textColorHint="@color/grey2"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/inputFuelTypeSpinner"
+            android:layout_width="match_parent"
+            android:textColor="@color/white"
+            android:outlineAmbientShadowColor="@color/white"
+            android:textColorHint="@color/white"
+            android:layout_height="wrap_content"
+            android:popupBackground="@drawable/spinner_dropdown_background" />
+
+        <EditText
+            android:id="@+id/inputConsumption"
+            android:hint="Расход на 100 км"
+            android:inputType="numberDecimal"
+            android:textColor="@color/white"
+            android:textColorHint="@color/grey2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/buttonNext"
+            android:text="Продолжить"
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>

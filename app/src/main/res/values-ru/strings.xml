@@ -80,13 +80,17 @@
     <!--TextView иное-->
     <string name="tv_language">Выбрать язык:</string>
     <string name="tv_theme">Выбрать тему:</string>
-    <string name="connected_to_ecu">подключено к ecu</string>
-    <string name="connected_to_elm">подключено к elm</string>
-    <string name="connecting_to_ecu">идет подключение к ecu</string>
-    <string name="connecting_to_elm">идет подключение к елм\n</string>
-    <string name="no_error">ошибок нет!(conn-fragment)</string>
-    <string name="error_connecting_to_elm">ошибка подключения к elm\n</string>
-    <string name="error_connecting_to_ecu">ошибка подключения к ecu</string>
+    <string name="connected_to_ecu">Подключено к ecu</string>
+    <string name="connected_to_elm">Подключено к elm</string>
+    <string name="connecting_to_ecu">Идет подключение к ecu</string>
+    <string name="connecting_to_elm">Идет подключение к елм\n</string>
+    <string name="no_error">Ошибок нет!(conn-fragment)</string>
+    <string name="error_connecting_to_elm">Ошибка подключения к elm\n</string>
+    <string name="error_connecting_to_ecu">Ошибка подключения к ecu</string>
+    <string name="menu_cars">Мои автомобили</string>
+    <string name="menu_car_input">CarInput</string>
+    <string name="menu_car_servise_info">CarServise</string>
+    <string name="buttonAddCar">Добавить авто</string>
 
 
 </resources>

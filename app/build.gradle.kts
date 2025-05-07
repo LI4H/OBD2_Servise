@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    //id("androidx.navigation.safeargs.kotlin") version "2.7.7"
+    //id("com.android.application")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -8,7 +11,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.obd_servise"
+        applicationId = "com.LICH.Projects"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -36,9 +39,16 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    packaging {
+        resources {
+            excludes += "/META-INF/{LICENSE.md,LICENSE-notice.md}"
+        }
+    }
 }
 
 dependencies {
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
     // Kolin OBD API
     implementation("com.github.eltonvs:kotlin-obd-api:1.3.0")
     // lifeChart
@@ -63,6 +73,9 @@ dependencies {
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.lifecycle.viewmodel.android)
+    implementation(libs.androidx.preference)
+    implementation(libs.firebase.database.ktx)
+    implementation(libs.screenshot.validation.junit.engine)
 
     // Testing dependencies
     testImplementation(libs.junit)
