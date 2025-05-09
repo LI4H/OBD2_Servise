@@ -13,6 +13,38 @@ class SettingsViewModel : ViewModel() {
 
     private var sharedPreferences: SharedPreferences? = null
 
+    //----------------------------------------------------------------------------------------
+    fun getNotificationsEnabled(): Boolean {
+        return sharedPreferences?.getBoolean("notifications_enabled", false) ?: false
+    }
+
+    fun setNotificationsEnabled(enabled: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            sharedPreferences?.edit()?.putBoolean("notifications_enabled", enabled)?.apply()
+        }
+    }
+
+    fun getNotificationMethods(): Set<String> {
+        return sharedPreferences?.getStringSet("notification_methods", setOf()) ?: setOf()
+    }
+
+    fun setNotificationMethods(methods: Set<String>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            sharedPreferences?.edit()?.putStringSet("notification_methods", methods)?.apply()
+        }
+    }
+
+    fun getNotificationEmail(): String {
+        return sharedPreferences?.getString("notification_email", "") ?: ""
+    }
+
+    fun setNotificationEmail(email: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            sharedPreferences?.edit()?.putString("notification_email", email)?.apply()
+        }
+    }
+
+    //----------------------------------------------------------------------------------------
     fun initSharedPreferences(context: Context) {
         sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
     }

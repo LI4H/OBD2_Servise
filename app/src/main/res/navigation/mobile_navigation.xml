@@ -87,6 +87,15 @@
         android:name="com.example.obd_servise.ui.statistics.AddTripFragment"
         android:label="AddTripFragment"
         tools:layout="@layout/fragment_add_trip" />
+    <fragment
+        android:id="@+id/allTripsFragment"
+        android:name="com.example.obd_servise.ui.statistics.AllTripsFragment"
+        android:label="Мои поездки"
+        tools:layout="@layout/fragment_all_trips" />
+
+    <action
+        android:id="@+id/action_statisticsFragment_to_allTripsFragment"
+        app:destination="@id/allTripsFragment" />
 
 
 </navigation>

@@ -1,21 +1,3 @@
-//package com.example.obd_servise.ui.statistics
-//
-//import androidx.lifecycle.LiveData
-//import androidx.lifecycle.ViewModel
-//import dagger.hilt.android.lifecycle.HiltViewModel
-//import javax.inject.Inject
-//
-//@HiltViewModel
-//class StatisticsViewModel @Inject constructor(
-//    private val tripDao: TripDao
-//) : ViewModel() {
-//
-//    fun getTripsForCar(carId: Int): LiveData<List<TripEntity>> {
-//        return tripDao.getTripsByCarId(carId)
-//    }
-//}
-
-
 package com.example.obd_servise.ui.statistics
 
 import androidx.lifecycle.LiveData
@@ -46,13 +28,10 @@ class StatisticsViewModel @Inject constructor() : ViewModel() {
                         trip?.let {
                             // Добавляем дату из ключа (если нужно)
                             tripsList.add(it.copy(date = tripSnapshot.key ?: ""))
-//                            val tripWithDate = it.copy(date = tripSnapshot.key ?: "")
-//                            tripsList.add(tripWithDate)
                         }
                     }
                     // Сортируем по дате (от новых к старым)
                     _trips.value = tripsList.sortedByDescending { it.date }
-//                    _trips.value = tripsList.sortedBy { it.date }
                 }
 
                 override fun onCancelled(error: DatabaseError) {

@@ -211,19 +211,84 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingHorizontal="5dp"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/layout_statistics"
-            android:paddingHorizontal="5dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Раздел Уведомления пока пуст"
-                android:textColor="@android:color/white"
-                android:layout_marginTop="32dp"
-                android:layout_gravity="center_horizontal" />
+                android:orientation="horizontal"
+                android:paddingVertical="16dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Получать уведомления"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <Switch
+                    android:id="@+id/switch_notifications_enabled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/notification_options_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Способ получения:"
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="8dp" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="На телефон"
+                    android:textColor="@android:color/white" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="На почту"
+                    android:textColor="@android:color/white" />
+
+                <LinearLayout
+                    android:id="@+id/email_input_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_marginTop="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Получать уведомления на эту почту:"
+                        android:textColor="@android:color/white" />
+
+                    <EditText
+                        android:id="@+id/et_notification_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:background="@drawable/menu_item_background"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
