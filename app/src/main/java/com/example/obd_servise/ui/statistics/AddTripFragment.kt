@@ -1,0 +1,149 @@
+package com.example.obd_servise.ui.statistics
+
+import android.app.DatePickerDialog
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.obd_servise.databinding.FragmentAddTripBinding
+import com.google.firebase.database.FirebaseDatabase
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
+import javax.inject.Inject
+
+@AndroidEntryPoint
+class AddTripFragment : Fragment() {
+//    @Inject
+//    lateinit var tripDao: TripDao
+//
+
+    private var _binding: FragmentAddTripBinding? = null
+    private val binding get() = _binding!!
+
+    private var selectedDate: String = ""
+    //  private val carId = "selected_car_id" // подставь ID выбранной машины из настроек
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentAddTripBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setupDatePicker()
+        binding.saveTripButton.setOnClickListener { saveTrip() }
+    }
+
+    private fun getSelectedCarId(onResult: (String?) -> Unit) {
+        val carsRef = FirebaseDatabase.getInstance().getReference("cars")
+        carsRef.orderByChild("isSelected").equalTo(1.0).get().addOnSuccessListener { snapshot ->
+            val selectedCarSnapshot = snapshot.children.firstOrNull()
+            val selectedCarId = selectedCarSnapshot?.key
+            onResult(selectedCarId)
+        }.addOnFailureListener {
+            onResult(null)
+        }
+    }
+
+    private fun setupDatePicker() {
+        binding.dateEditText.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            DatePickerDialog(
+                requireContext(),
+                { _, year, month, dayOfMonth ->
+                    val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    calendar.set(year, month, dayOfMonth)
+                    selectedDate = format.format(calendar.time)
+                    binding.dateEditText.setText(selectedDate)
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+    }
+
+    private fun saveTrip() {
+        val distance = binding.distanceEditText.text.toString().toDoubleOrNull()
+        val fuelUsed = binding.fuelEditText.text.toString().toDoubleOrNull()
+        val engineHours = binding.hoursEditText.text.toString().toDoubleOrNull()
+
+        if (selectedDate.isEmpty() || distance == null || fuelUsed == null || engineHours == null || engineHours == 0.0) {
+            Toast.makeText(
+                requireContext(),
+                "Пожалуйста, заполните все поля корректно",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        getSelectedCarId { carId ->
+            if (carId == null) {
+                Toast.makeText(requireContext(), "Не выбран автомобиль", Toast.LENGTH_SHORT).show()
+                return@getSelectedCarId
+            }
+
+            val dbRef = FirebaseDatabase.getInstance().getReference("cars/$carId/fuelPrice")
+            dbRef.get().addOnSuccessListener {
+                val fuelPrice = it.getValue(Double::class.java) ?: 0.0
+
+                val avgSpeed = distance / engineHours
+                val fuelConsumption = (fuelUsed / distance) * 100
+                val fuelCost = fuelUsed * fuelPrice
+
+                val tripData = mapOf(
+                    "date" to selectedDate, // сохраняем как строку
+                    "distance" to distance,
+                    "fuelUsed" to fuelUsed,
+                    "engineHours" to engineHours,
+                    "avgSpeed" to avgSpeed,
+                    "fuelConsumption" to fuelConsumption,
+                    "fuelCost" to fuelCost
+                )
+
+                val tripRef = FirebaseDatabase.getInstance()
+                    .getReference("cars/$carId/trips/$selectedDate")
+
+                tripRef.setValue(tripData).addOnSuccessListener {
+                    Toast.makeText(requireContext(), "Поездка сохранена", Toast.LENGTH_SHORT).show()
+                    findNavController().navigateUp()
+                }.addOnFailureListener {
+                    Toast.makeText(requireContext(), "Ошибка сохранения", Toast.LENGTH_SHORT).show()
+                }
+
+                val timestamp = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    .parse(selectedDate)?.time ?: System.currentTimeMillis()
+
+//                val entity = TripEntity(
+//                    carId = carId.toIntOrNull() ?: -1,
+//                    date = timestamp,
+//                    fuelConsumption = fuelConsumption,
+//                    averageSpeed = avgSpeed,
+//                    distance = distance,
+//                    fuelUsed = fuelUsed,
+//                    fuelCost = fuelCost,
+//                    engineHours = engineHours
+//                )
+
+//                lifecycleScope.launch {
+//                    tripDao.insertTrip(entity)
+//                }
+
+            }
+        }
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}

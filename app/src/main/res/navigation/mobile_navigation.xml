@@ -24,7 +24,12 @@
         android:id="@+id/nav_statistics"
         android:name="com.example.obd_servise.ui.statistics.StatisticsFragment"
         android:label="@string/menu_statistics"
-        tools:layout="@layout/fragment_statistics" />
+        tools:layout="@layout/fragment_statistics">
+        <action
+            android:id="@+id/action_statisticsFragment_to_addTripFragment"
+            app:destination="@id/addTripFragment" />
+    </fragment>
+
 
     <fragment
         android:id="@+id/nav_errors"
@@ -77,6 +82,11 @@
     <action
         android:id="@+id/carFragment"
         app:destination="@id/nav_car" />
+    <fragment
+        android:id="@+id/addTripFragment"
+        android:name="com.example.obd_servise.ui.statistics.AddTripFragment"
+        android:label="AddTripFragment"
+        tools:layout="@layout/fragment_add_trip" />
 
 
 </navigation>

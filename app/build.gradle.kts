@@ -4,6 +4,9 @@ plugins {
     //id("androidx.navigation.safeargs.kotlin") version "2.7.7"
     //id("com.android.application")
     id("com.google.gms.google-services")
+
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -47,10 +50,23 @@ android {
 }
 
 dependencies {
+    //def room_version = "2.6.1"
+
+    implementation(libs.kotlinx.metadata.jvm)
+
+
+// Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.room.runtime.android)
+    kapt(libs.hilt.compiler)
+
+
+
+
     // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
+    implementation(platform(libs.firebase.bom))
     // Kolin OBD API
-    implementation("com.github.eltonvs:kotlin-obd-api:1.3.0")
+    implementation(libs.kotlin.obd.api)
     // lifeChart
     implementation(libs.mpandroidchart)
     // Lifecycle ViewModel and LiveData
@@ -76,6 +92,7 @@ dependencies {
     implementation(libs.androidx.preference)
     implementation(libs.firebase.database.ktx)
     implementation(libs.screenshot.validation.junit.engine)
+    implementation(libs.androidx.room.common.jvm)
 
     // Testing dependencies
     testImplementation(libs.junit)

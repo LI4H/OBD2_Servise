@@ -3,6 +3,7 @@ package com.example.obd_servise.ui.car
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.obd_servise.ui.statistics.TripEntity
 import com.google.firebase.database.*
 
 data class Car(
@@ -16,7 +17,9 @@ data class Car(
     val cabinFilterKm: Int = 0,
     val nextServiceKm: Int = 0,
     @get:PropertyName("isSelected") @set:PropertyName("isSelected")
-    var isSelected: Int = 0 // 🔥 Новое поле
+    var isSelected: Int = 0, // 🔥 Новое поле
+    val trips: Map<String, TripEntity>? = null
+
 )
 
 
@@ -107,6 +110,21 @@ class CarViewModel : ViewModel() {
             nextServiceKm = nextServiceKm,
             isSelected = isSelected
         )
+    }
+    fun getSelectedCar(callback: (Car?) -> Unit) {
+        dbRef.orderByChild("isSelected").equalTo(1.0)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val car = snapshot.children.firstOrNull()?.getValue(Car::class.java)
+                    car?.let {
+                        callback(it.copy(id = snapshot.children.first().key ?: ""))
+                    } ?: callback(null)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    callback(null)
+                }
+            })
     }
 
     fun selectCarForStats(carId: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
