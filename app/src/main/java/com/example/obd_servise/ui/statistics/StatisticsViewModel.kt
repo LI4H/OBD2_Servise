@@ -45,11 +45,14 @@ class StatisticsViewModel @Inject constructor() : ViewModel() {
                         val trip = tripSnapshot.getValue(TripEntity::class.java)
                         trip?.let {
                             // Добавляем дату из ключа (если нужно)
-                            val tripWithDate = it.copy(date = tripSnapshot.key ?: "")
-                            tripsList.add(tripWithDate)
+                            tripsList.add(it.copy(date = tripSnapshot.key ?: ""))
+//                            val tripWithDate = it.copy(date = tripSnapshot.key ?: "")
+//                            tripsList.add(tripWithDate)
                         }
                     }
-                    _trips.value = tripsList.sortedBy { it.date }
+                    // Сортируем по дате (от новых к старым)
+                    _trips.value = tripsList.sortedByDescending { it.date }
+//                    _trips.value = tripsList.sortedBy { it.date }
                 }
 
                 override fun onCancelled(error: DatabaseError) {

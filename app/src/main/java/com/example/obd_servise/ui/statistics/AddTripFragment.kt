@@ -19,15 +19,12 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddTripFragment : Fragment() {
-//    @Inject
-//    lateinit var tripDao: TripDao
-//
 
     private var _binding: FragmentAddTripBinding? = null
     private val binding get() = _binding!!
 
     private var selectedDate: String = ""
-    //  private val carId = "selected_car_id" // подставь ID выбранной машины из настроек
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -121,21 +118,6 @@ class AddTripFragment : Fragment() {
 
                 val timestamp = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                     .parse(selectedDate)?.time ?: System.currentTimeMillis()
-
-//                val entity = TripEntity(
-//                    carId = carId.toIntOrNull() ?: -1,
-//                    date = timestamp,
-//                    fuelConsumption = fuelConsumption,
-//                    averageSpeed = avgSpeed,
-//                    distance = distance,
-//                    fuelUsed = fuelUsed,
-//                    fuelCost = fuelCost,
-//                    engineHours = engineHours
-//                )
-
-//                lifecycleScope.launch {
-//                    tripDao.insertTrip(entity)
-//                }
 
             }
         }

@@ -112,23 +112,11 @@
                 android:textSize="12sp" />
 
             <RadioButton
-                android:id="@+id/radio_today"
-                android:layout_width="100dp"
-                android:layout_height="35dp"
-                android:layout_marginEnd="2dp"
-                android:background="@drawable/btn2_ne_selected"
-                android:button="@null"
-                android:gravity="center"
-                android:text="@string/rad_today"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <RadioButton
                 android:id="@+id/radio_7_days"
                 android:layout_width="100dp"
                 android:layout_height="35dp"
                 android:layout_marginEnd="2dp"
-                android:background="@drawable/btn2_ne_selected"
+                android:background="@drawable/btn2_selected"
                 android:button="@null"
                 android:gravity="center"
                 android:text="@string/rad_7_days"
