@@ -10,7 +10,12 @@ import com.example.obd_servise.R
 import com.example.obd_servise.ui.statistics.TripsAdapter
 import com.example.obd_servise.databinding.FragmentAllTripsBinding
 import com.example.obd_servise.ui.car.CarViewModel
+import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,10 +35,51 @@ class AllTripsFragment : Fragment(R.layout.fragment_all_trips) {
         _binding = FragmentAllTripsBinding.bind(view)
 
         setupRecyclerView()
+        setupDatePicker()
         observeTrips()
 
-        binding.btnBack.setOnClickListener {
-            findNavController().popBackStack()
+
+    }
+
+    private fun setupDatePicker() {
+        binding.etSearchDate.setOnClickListener {
+            showDatePickerDialog()
+        }
+    }
+
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Выберите дату")
+            .setSelection(calendar.timeInMillis)
+            .build()
+        datePicker.addOnPositiveButtonClickListener { selectedDate ->
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val selectedDateStr = dateFormat.format(Date(selectedDate))
+            binding.etSearchDate.setText(selectedDateStr)
+            filterTripsByDate(selectedDateStr)
+        }
+
+        datePicker.show(parentFragmentManager, "DATE_PICKER")
+    }
+
+    private fun filterTripsByDate(date: String) {
+        carViewModel.getSelectedCar { selectedCar ->
+            selectedCar?.let { car ->
+                statisticsViewModel.getTripsForCar(car.id)
+                statisticsViewModel.trips.observe(viewLifecycleOwner) { trips ->
+                    val filteredTrips = trips.filter { it.date == date }
+                    if (filteredTrips.isEmpty()) {
+                        binding.emptyState.text = "Нет поездок за выбранную дату"
+                        binding.emptyState.visibility = View.VISIBLE
+                        binding.recyclerView.visibility = View.GONE
+                    } else {
+                        binding.emptyState.visibility = View.GONE
+                        binding.recyclerView.visibility = View.VISIBLE
+                        (binding.recyclerView.adapter as TripsAdapter).updateData(filteredTrips)
+                    }
+                }
+            }
         }
     }
 
@@ -41,14 +87,22 @@ class AllTripsFragment : Fragment(R.layout.fragment_all_trips) {
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = TripsAdapter(emptyList()) { trip ->
-                // Обработка клика на поездку (если нужно)
+                navigateToTripDetails(trip)
             }
         }
     }
 
+    private fun navigateToTripDetails(trip: TripEntity) {
+//        val action = AllTripsFragmentDirections.actionAllTripsFragmentToTripDetailsFragment(
+//            tripId = trip.id ?: "",
+//            carId = selectedCarId
+        //  )
+        //   findNavController().navigate(action)
+    }
     private fun observeTrips() {
         carViewModel.getSelectedCar { selectedCar ->
             selectedCar?.let { car ->
+                //selectedCarId = car.id
                 statisticsViewModel.getTripsForCar(car.id)
                 statisticsViewModel.trips.observe(viewLifecycleOwner) { trips ->
                     if (trips.isEmpty()) {

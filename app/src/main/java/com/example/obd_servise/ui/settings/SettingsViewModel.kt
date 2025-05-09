@@ -3,8 +3,14 @@ package com.example.obd_servise.ui.settings
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.obd_servise.ui.statistics.TripEntity
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -73,6 +79,7 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
+
     // ✅ Сохраняем индекс текущей секции
     fun setLastSectionIndex(index: Int) {
         sharedPreferences?.edit()?.putInt("last_section_index", index)?.apply()
@@ -82,4 +89,6 @@ class SettingsViewModel : ViewModel() {
     fun getLastSectionIndex(): Int {
         return sharedPreferences?.getInt("last_section_index", 0) ?: 0
     }
+
 }
+

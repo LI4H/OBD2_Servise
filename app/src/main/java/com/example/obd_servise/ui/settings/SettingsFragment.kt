@@ -232,12 +232,16 @@ class SettingsFragment : Fragment() {
         when (currentTheme) {
             "classic" -> binding.radioClassic.isChecked = true
             "yellow" -> binding.radioYellow.isChecked = true
+            "green" -> binding.radioGreen.isChecked = true
+            "violet" -> binding.radioViolet.isChecked = true
         }
 
         binding.radioGroupTheme.setOnCheckedChangeListener { _, checkedId ->
             val newTheme = when (checkedId) {
                 binding.radioClassic.id -> "classic"
                 binding.radioYellow.id -> "yellow"
+                binding.radioGreen.id -> "green"
+                binding.radioViolet.id -> "violet"
                 else -> "classic"
             }
 

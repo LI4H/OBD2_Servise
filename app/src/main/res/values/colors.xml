@@ -19,6 +19,21 @@
     <color name="yellowPrimaryVariant">#060B04</color>
     <color name="yellowSecondary">#B89B1E</color>
     <color name="yellowSecondaryVariant">#3A2F00</color>
+    <!--    cyberpunk colors green-->
+    <color name="greenPrimary">#4CAF50</color>
+    <color name="greenPrimaryVariant">#060B04</color>
+    <color name="greenSecondary">#26620F</color>
+    <color name="greenSecondaryVariant">#093A00</color>
+    <!--    cyberpunk colors violet-->
+    <color name="violetPrimary">#6A2ED3</color>
+    <color name="violetPrimaryVariant">#060B04</color>
+    <color name="violetSecondary">#471997</color>
+    <color name="violetSecondaryVariant">#270D54</color>
+    <!--    cyberpunk colors grey-->
+    <color name="greyPrimary">#959595</color>
+    <color name="greyPrimaryVariant">#060B04</color>
+    <color name="greySecondary">#494949</color>
+    <color name="greySecondaryVariant">#2C2C2C</color>
     <!--    chart colors-->
     <color name="grey2">#959595</color>
     <color name="blue">#2196F3</color>
@@ -27,5 +42,4 @@
     <color name="red">#E91E63</color>
     <color name="purple">#673AB7</color>
     <color name="green">#8BC34A</color>
-
 </resources>

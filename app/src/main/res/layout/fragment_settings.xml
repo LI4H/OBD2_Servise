@@ -93,19 +93,44 @@
 
                 <RadioButton
                     android:id="@+id/radioClassic"
-                    android:layout_width="100dp"
+                    android:layout_width="70dp"
                     android:layout_height="35dp"
                     android:text="Classic"
                     android:button="@null"
+                    android:layout_marginEnd="-15dp"
                     android:gravity="center"
                     android:background="?attr/btn3left"
                     android:textColor="@color/colorPrimaryVariant" />
 
                 <RadioButton
+                    android:id="@+id/radioViolet"
+                    android:layout_width="70dp"
+                    android:layout_height="35dp"
+                    android:text="Violet"
+
+                    android:button="@null"
+                    android:gravity="center"
+                    android:background="?attr/btn3right"
+                    android:textColor="@color/colorPrimaryVariant" />
+
+                <RadioButton
                     android:id="@+id/radioYellow"
-                    android:layout_width="100dp"
+                    android:layout_width="70dp"
                     android:layout_height="35dp"
                     android:text="Yellow"
+                    android:layout_marginEnd="-15dp"
+                    android:button="@null"
+                    android:layout_marginStart="5dp"
+                    android:gravity="center"
+                    android:background="?attr/btn3left"
+                    android:textColor="@color/colorPrimaryVariant" />
+
+                <RadioButton
+                    android:id="@+id/radioGreen"
+                    android:layout_width="70dp"
+                    android:layout_height="35dp"
+                    android:text="Green"
+
                     android:button="@null"
                     android:gravity="center"
                     android:background="?attr/btn3right"

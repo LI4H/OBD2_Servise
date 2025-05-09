@@ -47,6 +47,40 @@
         <item name="btn3left">@drawable/btn3_selector_yellow_left</item>
         <item name="btn3right">@drawable/btn3_selector_yellow_right</item>
     </style>
+    <!-- Green Theme -->
+    <style name="Theme.OBD_Servise.Green" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/greenPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/greenSecondary</item>
+        <item name="colorSecondaryVariant">@color/greenSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <item name="navIconColor">@color/nav_icon_color_green</item>
+        <item name="menuItemBackground">@drawable/menu_item_background_green
+        </item><!-- отредактировать! -->
+
+        <item name="btn3left">@drawable/btn3_selector_red_left</item><!-- отредактировать! -->
+        <item name="btn3right">@drawable/btn3_selector_red_right</item><!-- отредактировать! -->
+    </style>
+    <!-- Violet Theme -->
+    <style name="Theme.OBD_Servise.Violet" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/violetPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/violetSecondary</item>
+        <item name="colorSecondaryVariant">@color/violetSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <item name="navIconColor">@color/nav_icon_color_violet</item>
+        <item name="menuItemBackground">@drawable/menu_item_background_green
+        </item><!-- отредактировать! -->
+
+        <item name="btn3left">@drawable/btn3_selector_red_left</item><!-- отредактировать! -->
+        <item name="btn3right">@drawable/btn3_selector_red_right</item><!-- отредактировать! -->
+    </style>
 
 
 </resources>

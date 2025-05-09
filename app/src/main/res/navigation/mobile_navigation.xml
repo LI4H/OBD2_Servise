@@ -96,6 +96,21 @@
     <action
         android:id="@+id/action_statisticsFragment_to_allTripsFragment"
         app:destination="@id/allTripsFragment" />
+    <fragment
+        android:id="@+id/tripDetailsFragment"
+        android:name="com.example.obd_servise.ui.statistics.TripDetailsFragment"
+        android:label="Детали поездки"
+        tools:layout="@layout/fragment_trip_details">
+        <argument
+            android:name="tripId"
+            app:argType="string" />
+        <argument
+            android:name="carId"
+            app:argType="string" />
+    </fragment>
 
+    <action
+        android:id="@+id/action_allTripsFragment_to_tripDetailsFragment"
+        app:destination="@id/tripDetailsFragment" />
 
 </navigation>

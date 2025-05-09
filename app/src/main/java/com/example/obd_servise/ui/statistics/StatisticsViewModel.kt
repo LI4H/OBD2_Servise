@@ -17,7 +17,40 @@ class StatisticsViewModel @Inject constructor() : ViewModel() {
     private val database = FirebaseDatabase.getInstance()
     private val _trips = MutableLiveData<List<TripEntity>>()
     val trips: LiveData<List<TripEntity>> = _trips
+    fun getTripDetails(carId: String, tripId: String): LiveData<TripEntity?> {
+        val result = MutableLiveData<TripEntity?>()
+        database.getReference("cars/$carId/trips/$tripId")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    result.value = snapshot.getValue(TripEntity::class.java)
+                }
 
+                override fun onCancelled(error: DatabaseError) {
+                    result.value = null
+                }
+            })
+        return result
+    }
+
+//    fun updateTrip(carId: String, trip: TripEntity): LiveData<Boolean> {
+//        val result = MutableLiveData<Boolean>()
+//        database.getReference("cars/$carId/trips/${trip.id}")
+//            .setValue(trip)
+//            .addOnCompleteListener { task ->
+//                result.value = task.isSuccessful
+//            }
+//        return result
+//    }
+
+    fun deleteTrip(carId: String, tripId: String): LiveData<Boolean> {
+        val result = MutableLiveData<Boolean>()
+        database.getReference("cars/$carId/trips/$tripId")
+            .removeValue()
+            .addOnCompleteListener { task ->
+                result.value = task.isSuccessful
+            }
+        return result
+    }
     fun getTripsForCar(carId: String) {
         database.getReference("cars/$carId/trips")
             .addValueEventListener(object : ValueEventListener {

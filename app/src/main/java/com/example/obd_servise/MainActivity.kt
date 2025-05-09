@@ -49,6 +49,9 @@ class MainActivity : AppCompatActivity() {
         when (theme) {
             "classic" -> setTheme(R.style.Theme_OBD_Servise)
             "yellow" -> setTheme(R.style.Theme_OBD_Servise_Yellow)
+            "green" -> setTheme(R.style.Theme_OBD_Servise_Green)
+            "violet" -> setTheme(R.style.Theme_OBD_Servise_Violet)
+
         }
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
