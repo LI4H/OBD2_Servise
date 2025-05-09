@@ -24,13 +24,27 @@
         android:id="@+id/nav_statistics"
         android:name="com.example.obd_servise.ui.statistics.StatisticsFragment"
         android:label="@string/menu_statistics"
-        tools:layout="@layout/fragment_statistics" />
+        tools:layout="@layout/fragment_statistics">
+        <action
+            android:id="@+id/action_statisticsFragment_to_addTripFragment"
+            app:destination="@id/addTripFragment" />
+    </fragment>
+
 
     <fragment
         android:id="@+id/nav_errors"
         android:name="com.example.obd_servise.ui.errors.ErrorsFragment"
         android:label="@string/menu_errors"
         tools:layout="@layout/fragment_errors" />
+    <fragment
+        android:id="@+id/nav_car"
+        android:name="com.example.obd_servise.ui.car.CarFragment"
+        android:label="@string/menu_cars"
+        tools:layout="@layout/fragment_car">
+        <action
+            android:id="@+id/action_carFragment_to_carInputFragment"
+            app:destination="@id/carInputFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_info"
         android:name="com.example.obd_servise.ui.info.InfoFragment"
@@ -47,4 +61,32 @@
         android:name="com.example.obd_servise.ui.connection.ConnectionFragment"
         android:label="@string/menu_devise_selection"
         tools:layout="@layout/fragment_connection" />
+    <fragment
+        android:id="@+id/carInputFragment"
+        android:name="com.example.obd_servise.ui.car.CarInputFragment"
+        android:label="@string/menu_car_input"
+        tools:layout="@layout/fragment_car_input">
+        <argument
+            android:name="carId"
+            app:argType="string"
+            android:defaultValue="" />
+        <action
+            android:id="@+id/action_carInputFragment_to_carServiceInfoFragment"
+            app:destination="@id/nav_carServiceInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_carServiceInfoFragment"
+        android:name="com.example.obd_servise.ui.car.CarServiceInfoFragment"
+        android:label="@string/menu_car_servise_info"
+        tools:layout="@layout/fragment_car_service_info" />
+    <action
+        android:id="@+id/carFragment"
+        app:destination="@id/nav_car" />
+    <fragment
+        android:id="@+id/addTripFragment"
+        android:name="com.example.obd_servise.ui.statistics.AddTripFragment"
+        android:label="AddTripFragment"
+        tools:layout="@layout/fragment_add_trip" />
+
+
 </navigation>

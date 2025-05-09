@@ -1,6 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    //id("androidx.navigation.safeargs.kotlin") version "2.7.7"
+    //id("com.android.application")
+    id("com.google.gms.google-services")
+
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -8,7 +14,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.obd_servise"
+        applicationId = "com.LICH.Projects"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -36,11 +42,31 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    packaging {
+        resources {
+            excludes += "/META-INF/{LICENSE.md,LICENSE-notice.md}"
+        }
+    }
 }
 
 dependencies {
+    //def room_version = "2.6.1"
+
+    implementation(libs.kotlinx.metadata.jvm)
+
+
+// Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.room.runtime.android)
+    kapt(libs.hilt.compiler)
+
+
+
+
+    // Import the Firebase BoM
+    implementation(platform(libs.firebase.bom))
     // Kolin OBD API
-    implementation("com.github.eltonvs:kotlin-obd-api:1.3.0")
+    implementation(libs.kotlin.obd.api)
     // lifeChart
     implementation(libs.mpandroidchart)
     // Lifecycle ViewModel and LiveData
@@ -63,6 +89,10 @@ dependencies {
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.lifecycle.viewmodel.android)
+    implementation(libs.androidx.preference)
+    implementation(libs.firebase.database.ktx)
+    implementation(libs.screenshot.validation.junit.engine)
+    implementation(libs.androidx.room.common.jvm)
 
     // Testing dependencies
     testImplementation(libs.junit)

@@ -22,7 +22,9 @@ import com.example.obd_servise.ui.home.HomeViewModel
 import com.google.android.material.navigation.NavigationView
 import java.util.*
 import com.example.obd_servise.obd_connection.bluetooth.SharedViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -64,6 +66,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_dynamics,
                 R.id.nav_statistics,
                 R.id.nav_errors,
+                R.id.nav_car,
                 R.id.nav_info,
                 R.id.nav_settings
             ), drawerLayout

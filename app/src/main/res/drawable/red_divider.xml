@@ -1,0 +1,15 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Основной черный фон -->
+
+
+    <!-- Красная линия снизу -->
+    <item
+        android:top="45dp"
+        android:left="2dp"
+        android:right="2dp">
+        <shape>
+            <size android:height="1dp" />
+            <solid android:color="?attr/colorPrimary" />
+        </shape>
+    </item>
+</layer-list>

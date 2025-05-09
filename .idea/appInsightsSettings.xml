@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.LICH.Projects" />
+                  <option name="mobileSdkAppId" value="1:1040360164901:android:632b5f4ed8612984f5b9cc" />
+                  <option name="projectId" value="obd-servise" />
+                  <option name="projectNumber" value="1040360164901" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1040360164901",
+    "project_id": "obd-servise",
+    "storage_bucket": "obd-servise.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1040360164901:android:632b5f4ed8612984f5b9cc",
+        "android_client_info": {
+          "package_name": "com.LICH.Projects"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDK3jP8PwKqtNd97xxuUZknN9DkBWQrXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
