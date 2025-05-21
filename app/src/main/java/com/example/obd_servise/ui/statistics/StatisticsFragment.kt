@@ -56,10 +56,17 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
                 selectedCar?.let { car ->
                     statisticsViewModel.getTripsForCar(car.id)
                     statisticsViewModel.trips.observe(viewLifecycleOwner) { trips ->
-                        if (trips.isEmpty()) {
-                            Toast.makeText(context, "Поездок еще нет", Toast.LENGTH_SHORT).show()
-                        } else {
-                            findNavController().navigate(R.id.action_statisticsFragment_to_allTripsFragment)
+                        trips?.let { nonNullTrips ->
+                            if (nonNullTrips.isEmpty()) {
+                                Toast.makeText(context, "Поездок еще нет", Toast.LENGTH_SHORT)
+                                    .show()
+                            } else {
+                                // Проверяем текущий destination
+                                val currentDest = findNavController().currentDestination?.id
+                                if (currentDest != R.id.allTripsFragment) {
+                                    findNavController().navigate(R.id.action_statisticsFragment_to_allTripsFragment)
+                                }
+                            }
                         }
                     }
                 }

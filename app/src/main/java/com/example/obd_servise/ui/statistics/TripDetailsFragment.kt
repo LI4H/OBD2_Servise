@@ -47,10 +47,10 @@ class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
                 binding.apply {
                     tvDate.text = formatDate(it.date)
                     etDistance.setText(it.distance.toString())
-//                    etAvgSpeed.setText(it.avgSpeed.toString())
-//                    etFuelUsed.setText(it.fuelUsed.toString())
-//                    etFuelCost.setText(it.fuelCost.toString())
-//                    etEngineHours.setText(it.engineHours.toString())
+                    etAvgSpeed.setText(it.avgSpeed.toString())
+                    etFuelUsed.setText(it.fuelUsed.toString())
+                    etFuelCost.setText(it.fuelCost.toString())
+                    etEngineHours.setText(it.engineHours.toString())
                 }
             }
         }
@@ -68,23 +68,24 @@ class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
 
     private fun saveTripChanges() {
         val updatedTrip = TripEntity(
-            // id = tripId,
+            id = tripId,
+            carId = carId,
             date = binding.tvDate.text.toString(),
             distance = binding.etDistance.text.toString().toDoubleOrNull() ?: 0.0,
-//            avgSpeed = binding.etAvgSpeed.text.toString().toDoubleOrNull() ?: 0.0,
-//            fuelUsed = binding.etFuelUsed.text.toString().toDoubleOrNull() ?: 0.0,
-//            fuelCost = binding.etFuelCost.text.toString().toDoubleOrNull() ?: 0.0,
-//            engineHours = binding.etEngineHours.text.toString().toDoubleOrNull() ?: 0.0
+            avgSpeed = binding.etAvgSpeed.text.toString().toDoubleOrNull() ?: 0.0,
+            fuelUsed = binding.etFuelUsed.text.toString().toDoubleOrNull() ?: 0.0,
+            fuelCost = binding.etFuelCost.text.toString().toDoubleOrNull() ?: 0.0,
+            engineHours = binding.etEngineHours.text.toString().toDoubleOrNull() ?: 0.0
         )
 
-//        statisticsViewModel.updateTrip(carId, updatedTrip).observe(viewLifecycleOwner) { success ->
-//            if (success) {
-//                Toast.makeText(context, "Поездка обновлена", Toast.LENGTH_SHORT).show()
-//                findNavController().popBackStack()
-//            } else {
-//                Toast.makeText(context, "Ошибка при обновлении", Toast.LENGTH_SHORT).show()
-//            }
-//        }
+        statisticsViewModel.updateTrip(carId, updatedTrip).observe(viewLifecycleOwner) { success ->
+            if (success) {
+                Toast.makeText(context, "Поездка обновлена", Toast.LENGTH_SHORT).show()
+                findNavController().popBackStack()
+            } else {
+                Toast.makeText(context, "Ошибка при обновлении", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun deleteTrip() {

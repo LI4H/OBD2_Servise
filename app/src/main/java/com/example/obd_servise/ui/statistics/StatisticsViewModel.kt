@@ -32,15 +32,15 @@ class StatisticsViewModel @Inject constructor() : ViewModel() {
         return result
     }
 
-//    fun updateTrip(carId: String, trip: TripEntity): LiveData<Boolean> {
-//        val result = MutableLiveData<Boolean>()
-//        database.getReference("cars/$carId/trips/${trip.id}")
-//            .setValue(trip)
-//            .addOnCompleteListener { task ->
-//                result.value = task.isSuccessful
-//            }
-//        return result
-//    }
+    fun updateTrip(carId: String, trip: TripEntity): LiveData<Boolean> {
+        val result = MutableLiveData<Boolean>()
+        database.getReference("cars/$carId/trips/${trip.id}")
+            .setValue(trip)
+            .addOnCompleteListener { task ->
+                result.value = task.isSuccessful
+            }
+        return result
+    }
 
     fun deleteTrip(carId: String, tripId: String): LiveData<Boolean> {
         val result = MutableLiveData<Boolean>()

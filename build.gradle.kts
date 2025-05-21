@@ -3,8 +3,12 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
     id("com.google.gms.google-services") version "4.4.2" apply false
-
     id("com.google.dagger.hilt.android") version "2.55" apply false
-    //id ("kotlin-kapt") version "1.9.0" apply false
 
+}
+buildscript {
+    dependencies {
+        // Safe Args
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.7.5")
+    }
 }

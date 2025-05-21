@@ -17,11 +17,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 @AndroidEntryPoint
 class AllTripsFragment : Fragment(R.layout.fragment_all_trips) {
 
@@ -29,6 +24,7 @@ class AllTripsFragment : Fragment(R.layout.fragment_all_trips) {
     private val carViewModel: CarViewModel by activityViewModels()
     private var _binding: FragmentAllTripsBinding? = null
     private val binding get() = _binding!!
+    private lateinit var selectedCarId: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -93,27 +89,34 @@ class AllTripsFragment : Fragment(R.layout.fragment_all_trips) {
     }
 
     private fun navigateToTripDetails(trip: TripEntity) {
-//        val action = AllTripsFragmentDirections.actionAllTripsFragmentToTripDetailsFragment(
-//            tripId = trip.id ?: "",
-//            carId = selectedCarId
-        //  )
-        //   findNavController().navigate(action)
+        val bundle = Bundle().apply {
+            putString("tripId", trip.id)
+            putString("carId", selectedCarId)
+        }
+        findNavController().navigate(R.id.action_allTripsFragment_to_tripDetailsFragment, bundle)
     }
     private fun observeTrips() {
         carViewModel.getSelectedCar { selectedCar ->
             selectedCar?.let { car ->
-                //selectedCarId = car.id
+                selectedCarId = car.id
                 statisticsViewModel.getTripsForCar(car.id)
                 statisticsViewModel.trips.observe(viewLifecycleOwner) { trips ->
-                    if (trips.isEmpty()) {
-                        binding.emptyState.visibility = View.VISIBLE
-                        binding.recyclerView.visibility = View.GONE
-                    } else {
-                        binding.emptyState.visibility = View.GONE
-                        binding.recyclerView.visibility = View.VISIBLE
-                        (binding.recyclerView.adapter as TripsAdapter).updateData(trips)
+                    trips?.let { nonNullTrips ->
+                        if (nonNullTrips.isEmpty()) {
+                            binding.emptyState.visibility = View.VISIBLE
+                            binding.recyclerView.visibility = View.GONE
+                        } else {
+                            binding.emptyState.visibility = View.GONE
+                            binding.recyclerView.visibility = View.VISIBLE
+                            (binding.recyclerView.adapter as? TripsAdapter)?.updateData(nonNullTrips)
+                        }
                     }
                 }
+            } ?: run {
+                // Обработка случая, когда selectedCar == null
+                binding.emptyState.text = "Автомобиль не выбран"
+                binding.emptyState.visibility = View.VISIBLE
+                binding.recyclerView.visibility = View.GONE
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.example.obd_servise.ui.statistics
 
 data class TripEntity(
+    val id: String = "",
     val carId: String = "",
     val date: String = "",
     val fuelConsumption: Double = 0.0,
