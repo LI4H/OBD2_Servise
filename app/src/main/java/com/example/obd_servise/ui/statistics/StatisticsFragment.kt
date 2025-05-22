@@ -75,7 +75,7 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         // Привязка блоков статистики
         bindStatBlocks()
 
-        // В методе onViewCreated замените наблюдение за Room на Firebase:
+        //
         carViewModel.getSelectedCar { selectedCar ->
             selectedCar?.let { car ->
                 updateUnitsBasedOnFuelType(car.fuelType)

@@ -15,8 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:textStyle="bold"
             android:layout_marginBottom="16dp" />
 
@@ -32,8 +32,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Дистанция (км)"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -50,8 +50,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Средняя скорость (км/ч)"
                 android:inputType="numberDecimal"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white" />
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Топливо использовано -->
@@ -67,8 +67,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Использовано топлива (л)"
                 android:inputType="numberDecimal"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white" />
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -85,8 +85,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Стоимость топлива (₽)"
                 android:inputType="numberDecimal"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white" />
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Моточасы -->
@@ -102,8 +102,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Моточасы"
                 android:inputType="numberDecimal"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white" />
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
 

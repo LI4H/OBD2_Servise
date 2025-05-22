@@ -1,38 +1,136 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/searchContainer"
+    <RadioGroup
+        android:id="@+id/filterGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radio_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Все время" />
+
+        <RadioButton
+            android:id="@+id/radio_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="День" />
+
+        <RadioButton
+            android:id="@+id/radio_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Месяц" />
+
+        <RadioButton
+            android:id="@+id/radio_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Год" />
+
+        <RadioButton
+            android:id="@+id/radio_range"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Диапазон" />
+    </RadioGroup>
+
+    <!-- Для выбора дня -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilSearchDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etSearchDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Поиск по дате поездки..."
-            android:inputType="none"
-            android:focusable="false" />
+            android:hint="Выберите дату"
+            android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Для выбора месяца и года -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilMonthYear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etMonthYear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Месяц и год"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Для выбора года -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilYear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etYear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Год"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Для выбора диапазона -->
+    <LinearLayout
+        android:id="@+id/rangeDateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etStartDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Начальная дата"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEndDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Конечная дата"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp" />
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/emptyState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Поездок еще нет"
-        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Нет поездок"
         android:visibility="gone" />
 </LinearLayout>
