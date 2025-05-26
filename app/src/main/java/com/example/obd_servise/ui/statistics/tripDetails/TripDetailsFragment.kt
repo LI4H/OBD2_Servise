@@ -1,27 +1,24 @@
-package com.example.obd_servise.ui.statistics
+package com.example.obd_servise.ui.statistics.tripDetails
 
-import android.app.DatePickerDialog
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.example.obd_servise.R
 import com.example.obd_servise.databinding.FragmentTripDetailsBinding
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import com.example.obd_servise.ui.statistics.StatisticsViewModel
+import com.example.obd_servise.ui.statistics.TripEntity
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import java.util.*
-import javax.inject.Inject
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+
 @AndroidEntryPoint
 class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
 
@@ -82,6 +79,7 @@ class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
             ).show()
         }
     }
+
     private fun loadTripData() {
         statisticsViewModel.getTripDetails(carId, tripId).observe(viewLifecycleOwner) { trip ->
             if (trip == null) {

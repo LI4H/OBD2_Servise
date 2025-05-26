@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.obd_servise.databinding.ItemTripBinding
+import com.example.obd_servise.ui.statistics.TripEntity
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

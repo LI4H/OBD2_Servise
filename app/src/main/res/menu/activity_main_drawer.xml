@@ -25,6 +25,10 @@
             android:icon="@drawable/ic_menu_cars"
             android:title="@string/menu_cars" />
         <item
+            android:id="@+id/nav_car_parts"
+            android:icon="@drawable/ic_menu_car_parts"
+            android:title="Комплектующие" />
+        <item
             android:id="@+id/nav_info"
             android:icon="@drawable/ic_menu_info"
             android:title="@string/menu_info" />

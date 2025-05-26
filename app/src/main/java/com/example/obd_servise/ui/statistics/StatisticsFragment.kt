@@ -12,6 +12,7 @@ import com.example.obd_servise.R
 import com.example.obd_servise.databinding.FragmentStatisticsBinding
 import com.example.obd_servise.ui.car.CarViewModel
 import com.example.obd_servise.ui.home.HomeViewModel
+import com.example.obd_servise.ui.statistics.TripEntity
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis

@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_statistics,
                 R.id.nav_errors,
                 R.id.nav_car,
+                R.id.nav_car_parts,
                 R.id.nav_info,
                 R.id.nav_settings
             ), drawerLayout

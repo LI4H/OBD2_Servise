@@ -1,4 +1,4 @@
-package com.example.obd_servise.ui.statistics
+package com.example.obd_servise.ui.statistics.addTrip
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -7,16 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.obd_servise.databinding.FragmentAddTripBinding
-import com.google.android.material.textfield.TextInputLayout
+import com.example.obd_servise.ui.statistics.TripEntity
 import com.google.firebase.database.FirebaseDatabase
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
-import javax.inject.Inject
+import java.util.Calendar
+import java.util.Locale
 
 @AndroidEntryPoint
 class AddTripFragment : Fragment() {
@@ -144,4 +142,3 @@ class AddTripFragment : Fragment() {
         _binding = null
     }
 }
-
