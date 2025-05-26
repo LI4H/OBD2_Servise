@@ -28,8 +28,6 @@ class CarViewModel : ViewModel() {
     // --- Поля ввода автомобиля ---
 
     var isSelected: Int = 0
-
-
     var name: String = ""
     var mileage: Int = 0
     var fuelPrice: Float = 0f

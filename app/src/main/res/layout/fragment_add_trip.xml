@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimaryVariant"
+
     android:padding="16dp">
 
     <LinearLayout
@@ -20,30 +19,28 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="?attr/colorOnPrimary"
-            app:boxStrokeWidth="2dp"
-            app:hintTextColor="?attr/colorOnPrimary">
+            app:boxStrokeWidth="1dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/dateEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Дата поездки"
-                android:textColor="?attr/colorOnPrimary"
-                android:textColorHint="?attr/colorOnPrimary"
+
+                android:textColorHint="@android:color/transparent"
                 android:focusable="false"
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Пройденное расстояние -->
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/distanceInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="?attr/colorOnPrimary"
-            app:boxStrokeWidth="2dp"
-            app:hintTextColor="?attr/colorOnPrimary">
+
+            app:boxStrokeWidth="1dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/distanceEditText"
@@ -51,19 +48,20 @@
                 android:layout_height="wrap_content"
                 android:hint="Пройденное расстояние (км)"
                 android:inputType="numberDecimal"
-                android:textColor="?attr/colorOnPrimary"
-                android:textColorHint="?attr/colorOnPrimary" />
+
+                android:textColorHint="@android:color/transparent" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Израсходовано топлива -->
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fuelInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="?attr/colorOnPrimary"
-            app:boxStrokeWidth="2dp"
-            app:hintTextColor="?attr/colorOnPrimary">
+            app:boxStrokeWidth="1dp"
+
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/fuelEditText"
@@ -71,19 +69,19 @@
                 android:layout_height="wrap_content"
                 android:hint="Израсходовано топлива (л)"
                 android:inputType="numberDecimal"
-                android:textColor="?attr/colorOnPrimary"
-                android:textColorHint="?attr/colorOnPrimary" />
+
+
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Моточасы -->
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/hoursInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="?attr/colorOnPrimary"
-            app:boxStrokeWidth="2dp"
-            app:hintTextColor="?attr/colorOnPrimary">
+            app:boxStrokeWidth="1dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/hoursEditText"
@@ -91,8 +89,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Моточасы"
                 android:inputType="numberDecimal"
-                android:textColor="?attr/colorOnPrimary"
-                android:textColorHint="?attr/colorOnPrimary" />
+                android:textColorHint="@android:color/transparent" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Кнопка сохранения -->
@@ -106,6 +103,5 @@
             app:backgroundTint="?attr/colorPrimary"
             android:background="@drawable/btn1"
             app:elevation="4dp" />
-
     </LinearLayout>
 </ScrollView>

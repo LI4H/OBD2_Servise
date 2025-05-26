@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CustomOutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <!-- Цвет текста на рамке -->
+        <item name="hintTextColor">@color/outline_hint_selector</item>
+        <!-- Цвет обводки -->
+        <item name="boxStrokeColor">@color/outline_selector</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <!-- Отключаем анимацию подсказки -->
+        <item name="hintAnimationEnabled">false</item>
+        <!-- Всегда показываем подсказку -->
+        <item name="hintEnabled">true</item>
+    </style>
+</resources>
