@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.obd_servise.databinding.FragmentAddTripBinding
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.FirebaseDatabase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -36,6 +37,21 @@ class AddTripFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupDatePicker()
         binding.saveTripButton.setOnClickListener { saveTrip() }
+
+        // Принудительно активируем подсказку для всех полей
+//        listOf(
+//            binding.dateInputLayout,
+//            binding.distanceInputLayout,
+//            binding.fuelInputLayout,
+//            binding.hoursInputLayout
+//        ).forEach { layout ->
+//            layout.post {
+//                // Эти строки гарантируют, что подсказка будет видна всегда
+//                layout.isHintAnimationEnabled = false
+//                layout.hint = layout.hint // Принудительное обновление
+//                layout.boxBackgroundMode = TextInputLayout.BOX_BACKGROUND_OUTLINE
+//            }
+//        }
     }
 
     private fun getSelectedCarId(onResult: (String?) -> Unit) {

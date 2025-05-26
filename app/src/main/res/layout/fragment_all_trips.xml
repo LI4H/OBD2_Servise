@@ -2,56 +2,106 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/black">
 
-    <RadioGroup
-        android:id="@+id/filterGroup"
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="8dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <RadioButton
-            android:id="@+id/radio_all"
+        <RadioGroup
+            android:id="@+id/filterGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Все время" />
+            android:orientation="horizontal"
+            android:padding="4dp">
 
-        <RadioButton
-            android:id="@+id/radio_day"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="День" />
+            <RadioButton
+                android:id="@+id/radio_all"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/btn2_ne_selected"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/rad_all"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
-        <RadioButton
-            android:id="@+id/radio_month"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Месяц" />
+            <RadioButton
+                android:id="@+id/radio_day"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/btn2_ne_selected"
+                android:button="@null"
+                android:gravity="center"
+                android:text="День"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
-        <RadioButton
-            android:id="@+id/radio_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Год" />
+            <RadioButton
+                android:id="@+id/radio_month"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/btn2_ne_selected"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/rad_30_days"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
-        <RadioButton
-            android:id="@+id/radio_range"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Диапазон" />
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/radio_year"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/btn2_ne_selected"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/rad_360_days"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <RadioButton
+                android:id="@+id/radio_range"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/btn2_ne_selected"
+                android:button="@null"
+                android:gravity="center"
+                android:text="Диапазон"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </RadioGroup>
+    </HorizontalScrollView>
 
     <!-- Для выбора дня -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilSearchDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:background="@color/black">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etSearchDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@drawable/edittext_border"
             android:hint="Выберите дату"
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -61,14 +111,20 @@
         android:id="@+id/tilMonthYear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:background="@color/black">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etMonthYear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Месяц и год"
-            android:inputType="none" />
+            android:inputType="none"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@drawable/edittext_border" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Для выбора года -->
@@ -76,14 +132,20 @@
         android:id="@+id/tilYear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:background="@color/black">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etYear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Год"
-            android:inputType="none" />
+            android:inputType="none"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@drawable/edittext_border" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Для выбора диапазона -->
@@ -92,39 +154,55 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:background="@color/black">
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etStartDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Начальная дата"
-                android:inputType="none" />
+                android:inputType="none"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:background="@drawable/edittext_border" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEndDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Конечная дата"
-                android:inputType="none" />
+                android:inputType="none"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:background="@drawable/edittext_border" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@drawable/edittext_border" />
 
     <TextView
         android:id="@+id/emptyState"
@@ -132,5 +210,8 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="Нет поездок"
-        android:visibility="gone" />
+        android:background="@drawable/edittext_border"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
 </LinearLayout>
