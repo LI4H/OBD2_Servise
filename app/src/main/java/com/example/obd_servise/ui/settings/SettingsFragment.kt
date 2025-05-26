@@ -1,6 +1,8 @@
 package com.example.obd_servise.ui.settings
 
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -62,9 +64,105 @@ class SettingsFragment : Fragment() {
         currentSectionIndex = settingsViewModel.getLastSectionIndex()
         showSection(currentSectionIndex)
 
+        //
+        setupNotificationSettings()
+
         return root
     }
 
+    private fun setupNotificationSettings() {
+        // Инициализация текущих настроек
+        binding.switchNotificationsEnabled.isChecked = settingsViewModel.getNotificationsEnabled()
+        updateNotificationOptionsVisibility()
+
+        val currentMethods = settingsViewModel.getNotificationMethods()
+        binding.checkboxPhone.isChecked = currentMethods.contains("phone")
+        binding.checkboxEmail.isChecked = currentMethods.contains("email")
+
+        binding.etNotificationEmail.setText(settingsViewModel.getNotificationEmail())
+        updateEmailInputVisibility()
+
+        // Обработчики событий
+        binding.switchNotificationsEnabled.setOnCheckedChangeListener { _, isChecked ->
+            settingsViewModel.setNotificationsEnabled(isChecked)
+            updateNotificationOptionsVisibility()
+        }
+
+        binding.checkboxPhone.setOnCheckedChangeListener { _, isChecked ->
+            val methods = settingsViewModel.getNotificationMethods().toMutableSet()
+            if (isChecked) {
+                methods.add("phone")
+                requestNotificationPermission()
+            } else {
+                methods.remove("phone")
+            }
+            settingsViewModel.setNotificationMethods(methods)
+        }
+
+        binding.checkboxEmail.setOnCheckedChangeListener { _, isChecked ->
+            val methods = settingsViewModel.getNotificationMethods().toMutableSet()
+            if (isChecked) {
+                methods.add("email")
+            } else {
+                methods.remove("email")
+            }
+            settingsViewModel.setNotificationMethods(methods)
+            updateEmailInputVisibility()
+        }
+
+        binding.etNotificationEmail.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                settingsViewModel.setNotificationEmail(binding.etNotificationEmail.text.toString())
+            }
+        }
+    }
+
+    private fun updateNotificationOptionsVisibility() {
+        val isEnabled = binding.switchNotificationsEnabled.isChecked
+        binding.notificationOptionsContainer.visibility = if (isEnabled) View.VISIBLE else View.GONE
+
+        // Отключаем/включаем чекбоксы в зависимости от состояния переключателя
+        binding.checkboxPhone.isEnabled = isEnabled
+        binding.checkboxEmail.isEnabled = isEnabled
+    }
+
+    private fun updateEmailInputVisibility() {
+        binding.emailInputContainer.visibility =
+            if (binding.checkboxEmail.isChecked) View.VISIBLE else View.GONE
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(
+                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                NOTIFICATION_PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            NOTIFICATION_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Разрешение получено
+                } else {
+                    // Разрешение не получено, можно показать объяснение
+                    binding.checkboxPhone.isChecked = false
+                    val methods = settingsViewModel.getNotificationMethods().toMutableSet()
+                    methods.remove("phone")
+                    settingsViewModel.setNotificationMethods(methods)
+                }
+            }
+        }
+    }
+
+    companion object {
+        private const val NOTIFICATION_PERMISSION_REQUEST_CODE = 1001
+    }
     private fun setupSectionNavigation() {
         binding.btnLeft.setOnClickListener {
             currentSectionIndex =
@@ -134,12 +232,16 @@ class SettingsFragment : Fragment() {
         when (currentTheme) {
             "classic" -> binding.radioClassic.isChecked = true
             "yellow" -> binding.radioYellow.isChecked = true
+            "green" -> binding.radioGreen.isChecked = true
+            "violet" -> binding.radioViolet.isChecked = true
         }
 
         binding.radioGroupTheme.setOnCheckedChangeListener { _, checkedId ->
             val newTheme = when (checkedId) {
                 binding.radioClassic.id -> "classic"
                 binding.radioYellow.id -> "yellow"
+                binding.radioGreen.id -> "green"
+                binding.radioViolet.id -> "violet"
                 else -> "classic"
             }
 

@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_statisticsFragment_to_addTripFragment"
             app:destination="@id/addTripFragment" />
+        <action
+            android:id="@+id/action_statisticsFragment_to_allTripsFragment"
+            app:destination="@id/allTripsFragment" />
     </fragment>
 
 
@@ -87,6 +90,26 @@
         android:name="com.example.obd_servise.ui.statistics.AddTripFragment"
         android:label="AddTripFragment"
         tools:layout="@layout/fragment_add_trip" />
-
+    <fragment
+        android:id="@+id/allTripsFragment"
+        android:name="com.example.obd_servise.ui.statistics.AllTripsFragment"
+        android:label="Мои поездки"
+        tools:layout="@layout/fragment_all_trips">
+    <action
+        android:id="@+id/action_allTripsFragment_to_tripDetailsFragment"
+        app:destination="@id/tripDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tripDetailsFragment"
+        android:name="com.example.obd_servise.ui.statistics.TripDetailsFragment"
+        android:label="Детали поездки"
+        tools:layout="@layout/fragment_trip_details">
+        <argument
+            android:name="tripId"
+            app:argType="string" />
+        <argument
+            android:name="carId"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

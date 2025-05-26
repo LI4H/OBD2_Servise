@@ -25,7 +25,6 @@ class AddTripFragment : Fragment() {
 
     private var selectedDate: String = ""
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -96,36 +95,37 @@ class AddTripFragment : Fragment() {
                 val fuelConsumption = (fuelUsed / distance) * 100
                 val fuelCost = fuelUsed * fuelPrice
 
-                val tripData = mapOf(
-                    "date" to selectedDate, // сохраняем как строку
-                    "distance" to distance,
-                    "fuelUsed" to fuelUsed,
-                    "engineHours" to engineHours,
-                    "avgSpeed" to avgSpeed,
-                    "fuelConsumption" to fuelConsumption,
-                    "fuelCost" to fuelCost
+                // Создаем объект TripEntity
+                val newTrip = TripEntity(
+                    id = FirebaseDatabase.getInstance().reference.child("trips").push().key ?: "",
+                    carId = carId,
+                    date = selectedDate,
+                    distance = distance,
+                    fuelUsed = fuelUsed,
+                    engineHours = engineHours,
+                    avgSpeed = avgSpeed,
+                    fuelConsumption = fuelConsumption,
+                    fuelCost = fuelCost,
+                    fuelPrice = fuelPrice
                 )
 
+                // Сохраняем поездку в Firebase
                 val tripRef = FirebaseDatabase.getInstance()
-                    .getReference("cars/$carId/trips/$selectedDate")
+                    .getReference("cars/$carId/trips/${newTrip.id}")
 
-                tripRef.setValue(tripData).addOnSuccessListener {
+                tripRef.setValue(newTrip).addOnSuccessListener {
                     Toast.makeText(requireContext(), "Поездка сохранена", Toast.LENGTH_SHORT).show()
                     findNavController().navigateUp()
                 }.addOnFailureListener {
                     Toast.makeText(requireContext(), "Ошибка сохранения", Toast.LENGTH_SHORT).show()
                 }
-
-                val timestamp = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    .parse(selectedDate)?.time ?: System.currentTimeMillis()
-
             }
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
+

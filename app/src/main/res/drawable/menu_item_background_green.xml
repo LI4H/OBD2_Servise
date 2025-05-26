@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Активный элемент -->
+    <item android:drawable="@drawable/btn2_selected1_green" android:state_checked="true" />
+
+    <!-- Нажатый элемент -->
+    <item android:drawable="@drawable/btn2_selected1_green" android:state_pressed="true" />
+
+    <!-- Обычный фон -->
+    <item android:drawable="@drawable/btn2_ne_selected1" />
+</selector>

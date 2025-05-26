@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -50,19 +51,41 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         binding.btnAddTrip.setOnClickListener {
             findNavController().navigate(R.id.action_statisticsFragment_to_addTripFragment)
         }
-
+        binding.btnMyTrips.setOnClickListener {
+            carViewModel.getSelectedCar { selectedCar ->
+                selectedCar?.let { car ->
+                    statisticsViewModel.getTripsForCar(car.id)
+                    statisticsViewModel.trips.observe(viewLifecycleOwner) { trips ->
+                        trips?.let { nonNullTrips ->
+                            if (nonNullTrips.isEmpty()) {
+                                Toast.makeText(context, "Поездок еще нет", Toast.LENGTH_SHORT)
+                                    .show()
+                            } else {
+                                // Проверяем текущий destination
+                                val currentDest = findNavController().currentDestination?.id
+                                if (currentDest != R.id.allTripsFragment) {
+                                    findNavController().navigate(R.id.action_statisticsFragment_to_allTripsFragment)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         // Привязка блоков статистики
         bindStatBlocks()
 
-        // В методе onViewCreated замените наблюдение за Room на Firebase:
+        //
         carViewModel.getSelectedCar { selectedCar ->
             selectedCar?.let { car ->
                 updateUnitsBasedOnFuelType(car.fuelType)
                 statisticsViewModel.getTripsForCar(car.id) // id теперь String
                 statisticsViewModel.trips.observe(viewLifecycleOwner) { trips ->
-                    updateChartWithTrips(trips)
-                    updateStatisticsBlocks(trips)
+                    val filteredTrips = filterTripsByPeriod(trips)
+                    updateChartWithTrips(filteredTrips)
+                    updateStatisticsBlocks(filteredTrips)
                 }
+
             }
         }
 
@@ -81,7 +104,20 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
                 R.id.radio_360_days -> FilterPeriod.LAST_360_DAYS
                 else -> FilterPeriod.LAST_7_DAYS
             }
+            val radioButtons = listOf(
+                binding.radioAllTime,
+                binding.radio7Days,
+                binding.radio14Days,
+                binding.radio30Days,
+                binding.radio90Days,
+                binding.radio360Days
+            )
 
+            radioButtons.forEach { radio ->
+                radio.setBackgroundResource(
+                    if (radio.isChecked) R.drawable.btn2_selected else R.drawable.btn2_ne_selected
+                )
+            }
             // Обновляем данные при изменении фильтра
             carViewModel.getSelectedCar { selectedCar ->
                 selectedCar?.let { car ->
@@ -144,9 +180,9 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
                 setDrawGridLines(true)
                 axisMinimum = 0f
                 granularity = 1f
-                textColor = Color.BLACK
+                textColor = Color.WHITE
                 textSize = 12f
-                axisLineColor = Color.BLACK
+                axisLineColor = Color.WHITE
                 axisLineWidth = 1f
                 setDrawAxisLine(true)
                 setDrawLabels(true)
@@ -160,13 +196,24 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
                 position = XAxis.XAxisPosition.BOTTOM
                 granularity = 1f
                 setDrawGridLines(false)
-                textColor = Color.BLACK
-                textSize = 10f
-                axisLineColor = Color.BLACK
+                textColor = Color.WHITE
+                textSize = 12f
+                axisLineColor = Color.WHITE
                 axisLineWidth = 1f
                 setDrawAxisLine(true)
                 setDrawLabels(true)
                 labelRotationAngle = -45f // Наклон подписей для лучшей читаемости
+
+                setAvoidFirstLastClipping(true) // Чтобы первая и последняя подписи не обрезались
+
+                // Добавляем верхнюю ось X для месяцев
+                val topXAxis = xAxis
+                topXAxis.position = XAxis.XAxisPosition.TOP
+                topXAxis.setDrawLabels(true)
+                topXAxis.setDrawAxisLine(false)
+                topXAxis.setDrawGridLines(false)
+                topXAxis.textColor = Color.WHITE
+
             }
 
             legend.isEnabled = false // Отключаем легенду (квадраты с цветами)
@@ -184,7 +231,11 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
             statsChart.setNoDataText("Нет данных за выбранный период")
             return
         }
-
+        // Фильтруем поездки - удаляем те, где все параметры нулевые
+        val filteredTrips = trips.filter { trip ->
+            trip.distance > 0 || trip.fuelUsed > 0 || trip.avgSpeed > 0 ||
+                    trip.fuelConsumption > 0 || trip.fuelCost > 0 || trip.engineHours > 0
+        }
         // Обратный порядок для отображения (от старых к новым)
         val sortedTrips = trips.sortedBy { it.date }
 
@@ -202,35 +253,122 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
             }
         }
 
-        // Создаем наборы данных для каждого параметра
+// Создаем наборы данных для каждого параметра
         val dataSets = listOf(
             createDataSet(
                 createEntries(sortedTrips, "fuelConsumption"),
-                Color.BLUE,
+                Color.parseColor("#2196F3"), // синий
                 "Расход топлива"
             ),
-            createDataSet(createEntries(sortedTrips, "avgSpeed"), Color.GREEN, "Средняя скорость"),
-            createDataSet(createEntries(sortedTrips, "distance"), Color.RED, "Дистанция"),
+            createDataSet(
+                createEntries(sortedTrips, "avgSpeed"),
+                Color.parseColor("#FF5722"), // оранжевый
+                "Средняя скорость"
+            ),
+            createDataSet(
+                createEntries(sortedTrips, "engineHours"),
+                Color.parseColor("#FFEB3B"), // жёлтый
+                "Моточасы"
+            ),
+            createDataSet(
+                createEntries(sortedTrips, "distance"),
+                Color.parseColor("#E91E63"), // красный
+                "Дистанция"
+            ),
             createDataSet(
                 createEntries(sortedTrips, "fuelUsed"),
-                Color.MAGENTA,
+                Color.parseColor("#673AB7"), // фиолетовый
                 "Использовано топлива"
             ),
-            createDataSet(createEntries(sortedTrips, "fuelCost"), Color.CYAN, "Стоимость топлива"),
-            createDataSet(createEntries(sortedTrips, "engineHours"), Color.YELLOW, "Моточасы")
+            createDataSet(
+                createEntries(sortedTrips, "fuelCost"),
+                Color.parseColor("#8BC34A"), // зелёный
+                "Стоимость топлива"
+            )
         )
+
 
         // Настройка осей
         statsChart.apply {
-            xAxis.valueFormatter = IndexAxisValueFormatter(sortedTrips.map { formatDate(it.date) })
-            xAxis.labelCount = minOf(sortedTrips.size, 10) // Не более 10 меток
+            // Форматирование дат для нижней оси X (дни)
+            xAxis.valueFormatter = object : ValueFormatter() {
+                override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                    val index = value.toInt()
+                    return if (index in sortedTrips.indices) {
+                        formatDay(sortedTrips[index].date)
+                    } else ""
+                }
+            }
+
+            // Форматирование для верхней оси X (месяцы)
+            (xAxis as XAxis).apply {
+                valueFormatter = object : ValueFormatter() {
+                    override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                        val index = value.toInt()
+                        return if (index in sortedTrips.indices) {
+                            formatMonth(sortedTrips[index].date)
+                        } else ""
+                    }
+                }
+            }
 
             data = LineData(dataSets)
             notifyDataSetChanged()
+
+            // Автомасштабирование
+            if (sortedTrips.size > 10) {
+                val scaleX = sortedTrips.size / 10f
+                viewPortHandler.setMaximumScaleX(scaleX)
+                setVisibleXRangeMaximum(10f)
+                moveViewToX(sortedTrips.size.toFloat())
+            }
+
             invalidate()
         }
     }
 
+    //
+//        // Настройка осей
+//        statsChart.apply {
+//            xAxis.valueFormatter = IndexAxisValueFormatter(sortedTrips.map { formatDate(it.date) })
+//            xAxis.labelCount = minOf(sortedTrips.size, 10) // Не более 10 меток
+//
+//            data = LineData(dataSets)
+//            notifyDataSetChanged()
+//
+//
+//            // Устанавливаем масштаб графика, если много данных
+//            if (sortedTrips.size > 10) {
+//                val scaleX = sortedTrips.size / 10f
+//                statsChart.viewPortHandler.setMaximumScaleX(scaleX)
+//                statsChart.setVisibleXRangeMaximum(10f)
+//                statsChart.moveViewToX(sortedTrips.size.toFloat())
+//            }
+//
+//
+//            invalidate()
+//        }
+//    }
+    private fun formatDay(dateString: String): String {
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val date = inputFormat.parse(dateString)
+            SimpleDateFormat("dd", Locale.getDefault()).format(date ?: Date())
+        } catch (e: Exception) {
+            dateString
+        }
+    }
+
+    private fun formatMonth(dateString: String): String {
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val date = inputFormat.parse(dateString)
+            val monthFormat = SimpleDateFormat("MMM", Locale.getDefault())
+            monthFormat.format(date ?: Date())
+        } catch (e: Exception) {
+            dateString
+        }
+    }
     private fun createEntries(trips: List<TripEntity>, field: String): List<Entry> {
         return trips.mapIndexed { index, trip ->
             val value = when (field) {
