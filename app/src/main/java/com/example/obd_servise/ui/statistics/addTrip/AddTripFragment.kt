@@ -2,6 +2,7 @@ package com.example.obd_servise.ui.statistics.addTrip
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +10,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.obd_servise.databinding.FragmentAddTripBinding
+import com.example.obd_servise.ui.car.CarPart
 import com.example.obd_servise.ui.statistics.TripEntity
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.util.*
 
 @AndroidEntryPoint
 class AddTripFragment : Fragment() {
@@ -25,7 +26,8 @@ class AddTripFragment : Fragment() {
     private var selectedDate: String = ""
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddTripBinding.inflate(inflater, container, false)
@@ -33,9 +35,9 @@ class AddTripFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupDatePicker()
         binding.saveTripButton.setOnClickListener { saveTrip() }
-
     }
 
     private fun getSelectedCarId(onResult: (String?) -> Unit) {
@@ -45,6 +47,7 @@ class AddTripFragment : Fragment() {
             val selectedCarId = selectedCarSnapshot?.key
             onResult(selectedCarId)
         }.addOnFailureListener {
+            Log.e("AddTripFragment", "Ошибка получения выбранного авто", it)
             onResult(null)
         }
     }
@@ -88,8 +91,8 @@ class AddTripFragment : Fragment() {
             }
 
             val dbRef = FirebaseDatabase.getInstance().getReference("cars/$carId/fuelPrice")
-            dbRef.get().addOnSuccessListener {
-                val fuelPrice = it.getValue(Double::class.java) ?: 0.0
+            dbRef.get().addOnSuccessListener { fuelPriceSnapshot ->
+                val fuelPrice = fuelPriceSnapshot.getValue(Double::class.java) ?: 0.0
 
                 val avgSpeed = distance / engineHours
                 val fuelConsumption = (fuelUsed / distance) * 100
@@ -115,12 +118,99 @@ class AddTripFragment : Fragment() {
 
                 tripRef.setValue(newTrip).addOnSuccessListener {
                     Toast.makeText(requireContext(), "Поездка сохранена", Toast.LENGTH_SHORT).show()
+
+                    // Обновляем общий пробег автомобиля
+                    updateCarMileage(carId, distance.toInt())
+
+                    // Обновляем пробег всех подходящих комплектующих
+                    updatePartsAfterTripAdded(carId, distance.toInt())
+
                     findNavController().navigateUp()
-                }.addOnFailureListener {
+                }.addOnFailureListener { e ->
+                    Log.e("AddTripFragment", "Ошибка сохранения поездки", e)
                     Toast.makeText(requireContext(), "Ошибка сохранения", Toast.LENGTH_SHORT).show()
                 }
+            }.addOnFailureListener { e ->
+                Log.e("AddTripFragment", "Ошибка получения fuelPrice", e)
+                Toast.makeText(
+                    requireContext(),
+                    "Ошибка получения цены топлива",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
+    }
+
+    /**
+     * Обновляет общий пробег автомобиля
+     */
+    private fun updateCarMileage(carId: String, tripDistance: Int) {
+        val carRef =
+            FirebaseDatabase.getInstance().getReference("cars").child(carId).child("mileage")
+
+        carRef.runTransaction(object : Transaction.Handler {
+            override fun doTransaction(mutableData: MutableData): Transaction.Result {
+                val currentMileage = mutableData.getValue(Long::class.java) ?: 0L
+                mutableData.value = currentMileage + tripDistance
+                return Transaction.success(mutableData)
+            }
+
+            override fun onComplete(
+                databaseError: DatabaseError?,
+                committed: Boolean,
+                dataSnapshot: DataSnapshot?
+            ) {
+                if (committed) {
+                    Log.d("AddTripFragment", "Пробег авто успешно обновлён")
+                } else {
+                    Log.e("AddTripFragment", "Ошибка обновления пробега авто")
+                }
+            }
+        })
+    }
+
+    /**
+     * Обновляет пробег у всех комплектующих, которые были добавлены до этой поездки
+     */
+    private fun updatePartsAfterTripAdded(carId: String, tripDistance: Int) {
+        val partsRef =
+            FirebaseDatabase.getInstance().getReference("cars").child(carId).child("parts")
+
+        partsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (partSnapshot in snapshot.children) {
+                    val part = partSnapshot.getValue(CarPart::class.java) ?: continue
+
+                    if (isTripAfterPartAdded(part.addedDate)) {
+                        val updatedCurrentMileage = part.currentMileage + tripDistance
+                        partsRef.child(part.id).child("currentMileage")
+                            .setValue(updatedCurrentMileage)
+                            .addOnFailureListener { e ->
+                                Log.e(
+                                    "AddTripFragment",
+                                    "Ошибка обновления детали: ${part.name}",
+                                    e
+                                )
+                            }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("AddTripFragment", "Ошибка при обновлении деталей: ${error.message}")
+            }
+        })
+    }
+
+    /**
+     * Проверяет, была ли поездка совершена после добавления детали
+     */
+    private fun isTripAfterPartAdded(addedDateString: String): Boolean {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val addedDate = sdf.parse(addedDateString) ?: return false
+        val today = Date()
+
+        return addedDate.before(today)
     }
 
     override fun onDestroyView() {
