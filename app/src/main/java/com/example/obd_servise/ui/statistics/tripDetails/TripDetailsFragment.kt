@@ -11,13 +11,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.obd_servise.R
 import com.example.obd_servise.databinding.FragmentTripDetailsBinding
+import com.example.obd_servise.ui.car.CarPart
 import com.example.obd_servise.ui.statistics.StatisticsViewModel
 import com.example.obd_servise.ui.statistics.TripEntity
+import com.google.firebase.database.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 @AndroidEntryPoint
 class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
@@ -27,26 +27,16 @@ class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
     private val binding get() = _binding!!
     private var tripId: String = ""
     private var carId: String = ""
+    private var oldDistance: Double = 0.0 // <-- Сохраняем старое расстояние для сравнения
     private val calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         tripId = arguments?.getString("tripId").orEmpty()
         carId = arguments?.getString("carId").orEmpty()
 
         Log.d("TRIP_DETAILS", "Received TripId: $tripId, CarId: $carId")
-
-        // Если tripId пустой, попробуем получить его из ViewModel
-        if (tripId.isEmpty()) {
-            val trips = statisticsViewModel.trips.value
-            if (!trips.isNullOrEmpty()) {
-                // Берем первую поездку (или другую логику выбора)
-                tripId = trips.first().id
-                Log.d("TRIP_DETAILS", "Got tripId from ViewModel: $tripId")
-            }
-        }
 
         if (tripId.isEmpty() || carId.isEmpty()) {
             Log.e("TRIP_DETAILS", "Missing tripId or carId")
@@ -87,6 +77,8 @@ class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
                 return@observe
             }
 
+            oldDistance = trip.distance // <-- Запоминаем старое значение distance
+
             binding.apply {
                 tvDate.text = formatDate(trip.date)
                 etDistance.setText(trip.distance.toString())
@@ -94,36 +86,42 @@ class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
                 etFuelUsed.setText(trip.fuelUsed.toString())
                 etFuelCost.setText(trip.fuelCost.toString())
                 etEngineHours.setText(trip.engineHours.toString())
+            }
 
-                try {
-                    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    val date = dateFormat.parse(trip.date)
-                    date?.let { calendar.time = it }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+            try {
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val date = dateFormat.parse(trip.date)
+                date?.let { calendar.time = it }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
 
     private fun saveTripChanges() {
+        val newDistanceStr = binding.etDistance.text.toString()
+        val newDistance = newDistanceStr.toDoubleOrNull() ?: return
+
         val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
 
         val updatedTrip = TripEntity(
             id = tripId,
             carId = carId,
             date = dateStr,
-            distance = binding.etDistance.text.toString().toDoubleOrNull() ?: 0.0,
+            distance = newDistance,
             avgSpeed = binding.etAvgSpeed.text.toString().toDoubleOrNull() ?: 0.0,
             fuelUsed = binding.etFuelUsed.text.toString().toDoubleOrNull() ?: 0.0,
             fuelCost = binding.etFuelCost.text.toString().toDoubleOrNull() ?: 0.0,
             engineHours = binding.etEngineHours.text.toString().toDoubleOrNull() ?: 0.0,
-            fuelConsumption = calculateFuelConsumption()
+            fuelConsumption = calculateFuelConsumption(newDistance)
         )
+
+        val delta = (newDistance - oldDistance).toInt()
 
         statisticsViewModel.updateTrip(updatedTrip).observe(viewLifecycleOwner) { success ->
             if (success) {
                 Toast.makeText(context, "Поездка обновлена", Toast.LENGTH_SHORT).show()
+                updateCarAndPartsMileage(carId, delta)
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(context, "Ошибка при обновлении", Toast.LENGTH_SHORT).show()
@@ -131,10 +129,9 @@ class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
         }
     }
 
-    private fun calculateFuelConsumption(): Double {
+    private fun calculateFuelConsumption(distance: Double): Double {
         val fuelUsed = binding.etFuelUsed.text.toString().toDoubleOrNull() ?: 0.0
-        val distance = binding.etDistance.text.toString().toDoubleOrNull() ?: 1.0
-        return (fuelUsed / distance) * 100
+        return if (distance > 0) (fuelUsed / distance) * 100 else 0.0
     }
 
     private fun setupButtons() {
@@ -147,10 +144,13 @@ class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
             .setTitle("Удаление поездки")
             .setMessage("Вы уверены, что хотите удалить эту поездку?")
             .setPositiveButton("Удалить") { _, _ ->
+                val oldDistanceInt = oldDistance.toInt()
+
                 statisticsViewModel.deleteTrip(carId, tripId)
                     .observe(viewLifecycleOwner) { success ->
                         if (success) {
                             Toast.makeText(context, "Поездка удалена", Toast.LENGTH_SHORT).show()
+                            updateCarAndPartsMileage(carId, -oldDistanceInt)
                             findNavController().popBackStack()
                         } else {
                             Toast.makeText(context, "Ошибка при удалении", Toast.LENGTH_SHORT)
@@ -162,6 +162,59 @@ class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
             .show()
     }
 
+    private fun updateCarAndPartsMileage(carId: String, deltaDistance: Int) {
+        val carsRef = FirebaseDatabase.getInstance().getReference("cars")
+        val carRef = carsRef.child(carId).child("mileage")
+
+        // ✅ Обновляем пробег авто через Transaction.Handler
+        carRef.runTransaction(object : Transaction.Handler {
+            override fun doTransaction(mutableData: MutableData): Transaction.Result {
+                val currentMileage = mutableData.getValue(Long::class.java) ?: 0L
+                mutableData.value = (currentMileage + deltaDistance).coerceAtLeast(0L)
+                return Transaction.success(mutableData)
+            }
+
+            override fun onComplete(
+                error: DatabaseError?,
+                committed: Boolean,
+                snapshot: DataSnapshot?
+            ) {
+                if (committed) {
+                    Log.d("TripDetailsFragment", "Пробег авто обновлён на $deltaDistance")
+                } else {
+                    Log.e("TripDetailsFragment", "Ошибка обновления пробега авто")
+                }
+            }
+        })
+
+        // ✅ Обновляем пробег деталей
+        val partsRef = carsRef.child(carId).child("parts")
+        partsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (partSnapshot in snapshot.children) {
+                    val part = partSnapshot.getValue(CarPart::class.java) ?: continue
+
+                    if (isTripAfterPartAdded(part.addedDate)) {
+                        val updatedCurrentMileage = part.currentMileage + deltaDistance
+                        partsRef.child(part.id).child("currentMileage")
+                            .setValue(updatedCurrentMileage.coerceAtLeast(0))
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("TripDetailsFragment", "Ошибка обновления деталей: ${error.message}")
+            }
+        })
+    }
+
+    private fun isTripAfterPartAdded(addedDateString: String): Boolean {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val addedDate = sdf.parse(addedDateString) ?: return false
+        val today = Date()
+        return addedDate.before(today)
+    }
+
     private fun formatDate(dateString: String): String {
         return try {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -169,7 +222,7 @@ class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
             val date = inputFormat.parse(dateString)
             outputFormat.format(date ?: Date())
         } catch (e: Exception) {
-            dateString // Возвращаем исходную строку, если не удалось распарсить
+            dateString
         }
     }
 

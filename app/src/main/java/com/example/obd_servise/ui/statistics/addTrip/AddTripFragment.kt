@@ -24,6 +24,8 @@ class AddTripFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var selectedDate: String = ""
+    private var isEditMode = false
+    private var oldDistance = 0.0 // Для хранения старого значения при редактировании
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -98,7 +100,6 @@ class AddTripFragment : Fragment() {
                 val fuelConsumption = (fuelUsed / distance) * 100
                 val fuelCost = fuelUsed * fuelPrice
 
-                // Создаем объект TripEntity
                 val newTrip = TripEntity(
                     id = FirebaseDatabase.getInstance().reference.child("trips").push().key ?: "",
                     carId = carId,
@@ -112,19 +113,12 @@ class AddTripFragment : Fragment() {
                     fuelPrice = fuelPrice
                 )
 
-                // Сохраняем поездку в Firebase
-                val tripRef = FirebaseDatabase.getInstance()
-                    .getReference("cars/$carId/trips/${newTrip.id}")
+                val tripRef =
+                    FirebaseDatabase.getInstance().getReference("cars/$carId/trips/${newTrip.id}")
 
                 tripRef.setValue(newTrip).addOnSuccessListener {
+                    updateCarAndPartsMileage(carId, distance.toInt())
                     Toast.makeText(requireContext(), "Поездка сохранена", Toast.LENGTH_SHORT).show()
-
-                    // Обновляем общий пробег автомобиля
-                    updateCarMileage(carId, distance.toInt())
-
-                    // Обновляем пробег всех подходящих комплектующих
-                    updatePartsAfterTripAdded(carId, distance.toInt())
-
                     findNavController().navigateUp()
                 }.addOnFailureListener { e ->
                     Log.e("AddTripFragment", "Ошибка сохранения поездки", e)
@@ -142,16 +136,25 @@ class AddTripFragment : Fragment() {
     }
 
     /**
+     * Универсальная функция для обновления общего пробега авто и деталей
+     */
+    private fun updateCarAndPartsMileage(carId: String, deltaDistance: Int) {
+        updateCarMileage(carId, deltaDistance)
+        updatePartsMileage(carId, deltaDistance)
+    }
+
+    /**
      * Обновляет общий пробег автомобиля
      */
-    private fun updateCarMileage(carId: String, tripDistance: Int) {
+    private fun updateCarMileage(carId: String, deltaDistance: Int) {
         val carRef =
             FirebaseDatabase.getInstance().getReference("cars").child(carId).child("mileage")
 
         carRef.runTransaction(object : Transaction.Handler {
             override fun doTransaction(mutableData: MutableData): Transaction.Result {
                 val currentMileage = mutableData.getValue(Long::class.java) ?: 0L
-                mutableData.value = currentMileage + tripDistance
+                val updatedMileage = (currentMileage + deltaDistance).coerceAtLeast(0L)
+                mutableData.value = updatedMileage
                 return Transaction.success(mutableData)
             }
 
@@ -161,7 +164,7 @@ class AddTripFragment : Fragment() {
                 dataSnapshot: DataSnapshot?
             ) {
                 if (committed) {
-                    Log.d("AddTripFragment", "Пробег авто успешно обновлён")
+                    Log.d("AddTripFragment", "Пробег авто обновлён на $deltaDistance")
                 } else {
                     Log.e("AddTripFragment", "Ошибка обновления пробега авто")
                 }
@@ -170,9 +173,9 @@ class AddTripFragment : Fragment() {
     }
 
     /**
-     * Обновляет пробег у всех комплектующих, которые были добавлены до этой поездки
+     * Обновляет пробег у всех подходящих комплектующих
      */
-    private fun updatePartsAfterTripAdded(carId: String, tripDistance: Int) {
+    private fun updatePartsMileage(carId: String, deltaDistance: Int) {
         val partsRef =
             FirebaseDatabase.getInstance().getReference("cars").child(carId).child("parts")
 
@@ -182,7 +185,8 @@ class AddTripFragment : Fragment() {
                     val part = partSnapshot.getValue(CarPart::class.java) ?: continue
 
                     if (isTripAfterPartAdded(part.addedDate)) {
-                        val updatedCurrentMileage = part.currentMileage + tripDistance
+                        val updatedCurrentMileage =
+                            (part.currentMileage + deltaDistance).coerceAtLeast(0)
                         partsRef.child(part.id).child("currentMileage")
                             .setValue(updatedCurrentMileage)
                             .addOnFailureListener { e ->
@@ -209,7 +213,6 @@ class AddTripFragment : Fragment() {
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val addedDate = sdf.parse(addedDateString) ?: return false
         val today = Date()
-
         return addedDate.before(today)
     }
 
