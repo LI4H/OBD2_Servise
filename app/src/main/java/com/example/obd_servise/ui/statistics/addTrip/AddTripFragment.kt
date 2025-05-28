@@ -36,20 +36,6 @@ class AddTripFragment : Fragment() {
         setupDatePicker()
         binding.saveTripButton.setOnClickListener { saveTrip() }
 
-        // Принудительно активируем подсказку для всех полей
-//        listOf(
-//            binding.dateInputLayout,
-//            binding.distanceInputLayout,
-//            binding.fuelInputLayout,
-//            binding.hoursInputLayout
-//        ).forEach { layout ->
-//            layout.post {
-//                // Эти строки гарантируют, что подсказка будет видна всегда
-//                layout.isHintAnimationEnabled = false
-//                layout.hint = layout.hint // Принудительное обновление
-//                layout.boxBackgroundMode = TextInputLayout.BOX_BACKGROUND_OUTLINE
-//            }
-//        }
     }
 
     private fun getSelectedCarId(onResult: (String?) -> Unit) {

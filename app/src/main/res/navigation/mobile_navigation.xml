@@ -54,8 +54,8 @@
         android:label="Комплектующие"
         tools:layout="@layout/fragment_car_parts">
         <action
-            android:id="@+id/action_carPartsFragment_to_carPartInfoFragment"
-            app:destination="@id/carPartInfoFragment" />
+            android:id="@+id/action_carPartsFragment_to_addCarPartFragment"
+            app:destination="@id/addCarPartFragment" />
     </fragment>
 
 
@@ -87,13 +87,6 @@
         <action
             android:id="@+id/action_carInputFragment_to_carServiceInfoFragment"
             app:destination="@id/nav_carServiceInfoFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/carPartInfoFragment"
-        android:name="com.example.obd_servise.ui.car.CarPartsFragment"
-        android:label="Комплектующие инфо"
-        tools:layout="@layout/fragment_car_part_info">
-
     </fragment>
 
 
@@ -131,5 +124,13 @@
             android:name="carId"
             app:argType="string" />
     </fragment>
-
+    <fragment
+        android:id="@+id/addCarPartFragment"
+        android:name="com.example.obd_servise.ui.car.AddCarPartFragment"
+        android:label="Добавить комплектующую"
+        tools:layout="@layout/fragment_add_car_part">
+        <argument
+            android:name="carId"
+            app:argType="string" />
+    </fragment>
 </navigation>

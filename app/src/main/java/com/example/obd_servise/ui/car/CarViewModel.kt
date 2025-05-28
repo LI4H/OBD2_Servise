@@ -9,13 +9,16 @@ import com.google.firebase.database.*
 data class Car(
     val id: String = "",
     val name: String = "",
+    val brand: String = "",
+    val model: String = "",
+    val year: Int = 0,
+    val vin: String = "",
+    val licensePlate: String = "",
     val mileage: Int = 0,
     val fuelPrice: Float = 0f,
     val fuelType: String = "",
     val consumption: Float = 0f,
-    val oilFilterKm: Int = 0,
-    val cabinFilterKm: Int = 0,
-    val nextServiceKm: Int = 0,
+
     @get:PropertyName("isSelected") @set:PropertyName("isSelected")
     var isSelected: Int = 0, // 🔥 Новое поле
     val trips: Map<String, TripEntity>? = null
@@ -29,15 +32,23 @@ class CarViewModel : ViewModel() {
 
     var isSelected: Int = 0
     var name: String = ""
+    var brand: String = ""
+    var model: String = ""
+    var year: Int = 0
+    var vin: String = ""
+    var licensePlate: String = ""
+
     var mileage: Int = 0
     var fuelPrice: Float = 0f
     var fuelType: String = ""
     var consumption: Float = 0f
-
-    var oilFilterKm: Int = 0
-    var cabinFilterKm: Int = 0
-    var nextServiceKm: Int = 0
-
+    fun updateCarData(brand: String, model: String, year: Int, vin: String, licensePlate: String) {
+        this.brand = brand
+        this.model = model
+        this.year = year
+        this.vin = vin
+        this.licensePlate = licensePlate
+    }
     // --- Firebase ---
     private val dbRef = FirebaseDatabase.getInstance().getReference("cars")
 
@@ -99,13 +110,15 @@ class CarViewModel : ViewModel() {
     private fun createCarFromViewModel(): Car {
         return Car(
             name = name,
+            brand = brand,
+            model = model,
+            year = year,
+            vin = vin,
+            licensePlate = licensePlate,
             mileage = mileage,
             fuelPrice = fuelPrice,
             fuelType = fuelType,
             consumption = consumption,
-            oilFilterKm = oilFilterKm,
-            cabinFilterKm = cabinFilterKm,
-            nextServiceKm = nextServiceKm,
             isSelected = isSelected
         )
     }

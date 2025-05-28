@@ -70,13 +70,16 @@ class CarInputFragment : Fragment() {
 
                 // Запоминаем данные во ViewModel для последующего обновления
                 carViewModel.name = carData.name
+                carViewModel.brand = carData.brand
+                carViewModel.model = carData.model
+                carViewModel.year = carData.year
+                carViewModel.vin = carData.vin
+                carViewModel.licensePlate = carData.licensePlate
+
                 carViewModel.mileage = carData.mileage
                 carViewModel.fuelPrice = carData.fuelPrice
                 carViewModel.consumption = carData.consumption
                 carViewModel.fuelType = carData.fuelType
-                carViewModel.oilFilterKm = carData.oilFilterKm
-                carViewModel.cabinFilterKm = carData.cabinFilterKm
-                carViewModel.nextServiceKm = carData.nextServiceKm
             }
         }
 

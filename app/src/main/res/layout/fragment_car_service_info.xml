@@ -11,27 +11,50 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:id="@+id/inputOilFilterKm"
-            android:hint="Пробег последней замены масляного фильтра"
-            android:inputType="number"
+            android:id="@+id/inputCarBrand"
+            android:hint="Марка автомобиля"
+            android:inputType="textCapWords"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textColorHint="@color/grey2" />
 
         <EditText
-            android:id="@+id/inputCabinFilterKm"
-            android:hint="Пробег последней замены салонного фильтра"
-            android:inputType="number"
+            android:id="@+id/inputCarModel"
+            android:hint="Модель автомобиля"
+            android:inputType="textCapWords"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textColorHint="@color/grey2" />
 
         <EditText
-            android:id="@+id/inputNextServiceKm"
-            android:hint="Пробег следующего ТО"
+            android:id="@+id/inputYear"
+            android:hint="Год выпуска"
             android:inputType="number"
+            android:maxLength="4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textColorHint="@color/grey2" />
+
+        <EditText
+            android:id="@+id/inputVin"
+            android:hint="VIN-номер (17 символов)"
+            android:inputType="textCapCharacters"
+            android:maxLength="17"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textColorHint="@color/grey2" />
+
+        <EditText
+            android:id="@+id/inputLicensePlate"
+            android:hint="Номерной знак"
+            android:inputType="textCapCharacters"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
@@ -43,9 +66,7 @@
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-
-            />
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/buttonAddCar"
@@ -53,7 +74,6 @@
             android:layout_marginTop="24dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
 
     </LinearLayout>
 </ScrollView>
