@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.obd_servise.databinding.FragmentCarPartsBinding
 import com.example.obd_servise.databinding.ItemCarPartBinding
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -24,11 +24,21 @@ data class CarPart(
     val name: String = "",
     val recommendedMileage: Int = 0,
     val currentMileage: Int = 0,
-    val condition: String = "normal",
     val addedDate: String = "",
     val price: Double = 0.0,
     val notificationsEnabled: Boolean = false
-)
+) {
+    val condition: String
+        get() {
+            if (recommendedMileage == 0) return "normal"
+            val percentage = (currentMileage.toDouble() / recommendedMileage) * 100
+            return when {
+                percentage < 75 -> "normal"
+                percentage <= 100 -> "warning"
+                else -> "critical"
+            }
+        }
+}
 
 class CarPartsFragment : Fragment() {
 
@@ -82,55 +92,59 @@ class CarPartsFragment : Fragment() {
     }
 
     private fun fetchCarParts() {
-        // Ищем carId через isSelected == 1 вместо переданного аргумента
         val carsRef = FirebaseDatabase.getInstance().getReference("cars")
+        carsRef.orderByChild("isSelected").equalTo(1.0).get()
+            .addOnSuccessListener { snapshot ->
+                val selectedCarSnapshot = snapshot.children.firstOrNull() ?: run {
+                    Toast.makeText(
+                        requireContext(),
+                        "Не найден выбранный автомобиль",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@addOnSuccessListener
+                }
 
-        carsRef.orderByChild("isSelected").equalTo(1.0).get().addOnSuccessListener { snapshot ->
-            val selectedCarSnapshot = snapshot.children.firstOrNull() ?: run {
-                Toast.makeText(
-                    requireContext(),
-                    "Не найден выбранный автомобиль",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@addOnSuccessListener
-            }
+                val carId = selectedCarSnapshot.key ?: run {
+                    Toast.makeText(
+                        requireContext(),
+                        "Не удалось получить ID автомобиля",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@addOnSuccessListener
+                }
 
-            val carId = selectedCarSnapshot.key ?: run {
-                Toast.makeText(
-                    requireContext(),
-                    "Не удалось получить ID автомобиля",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@addOnSuccessListener
-            }
-
-            // Теперь мы знаем carId — можно загружать детали
-            val partsRef =
-                FirebaseDatabase.getInstance().getReference("cars").child(carId).child("parts")
-
-            partsRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    allParts.clear()
-                    for (partSnapshot in snapshot.children) {
-                        val part = partSnapshot.getValue(CarPart::class.java)
-                        if (part != null) {
-                            allParts.add(part)
-                        } else {
-                            Log.e("CarPartsFragment", "Ошибка парсинга детали: ${partSnapshot.key}")
+                val partsRef =
+                    FirebaseDatabase.getInstance().getReference("cars").child(carId).child("parts")
+                partsRef.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        allParts.clear()
+                        for (partSnapshot in snapshot.children) {
+                            val part = partSnapshot.getValue(CarPart::class.java)
+                            if (part != null) {
+                                allParts.add(part)
+                            } else {
+                                Log.e(
+                                    "CarPartsFragment",
+                                    "Ошибка парсинга детали: ${partSnapshot.key}"
+                                )
+                            }
                         }
+                        updateDisplayedParts(allParts)
                     }
-                    updateDisplayedParts(allParts)
-                }
 
-                override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(requireContext(), "Ошибка загрузки деталей", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            })
-        }.addOnFailureListener { error ->
-            Log.e("CarPartsFragment", "Ошибка получения выбранного авто", error)
-            Toast.makeText(requireContext(), "Ошибка поиска авто", Toast.LENGTH_SHORT).show()
-        }
+                    override fun onCancelled(error: DatabaseError) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Ошибка загрузки деталей",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })
+            }
+            .addOnFailureListener { error ->
+                Log.e("CarPartsFragment", "Ошибка получения выбранного авто", error)
+                Toast.makeText(requireContext(), "Ошибка поиска авто", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun filterParts(query: String) {
@@ -185,6 +199,16 @@ class CarPartsAdapter(private val parts: List<CarPart>) :
                 partRecommendedMileageTextView.text =
                     "Рекомендуемый пробег: ${part.recommendedMileage} км"
                 partPriceTextView.text = "Стоимость: ${part.price} бел. руб."
+
+                // Установка цвета в зависимости от состояния
+                val backgroundRes = when (part.condition) {
+                    "normal" -> android.R.color.holo_green_light
+                    "warning" -> android.R.color.holo_orange_light
+                    "critical" -> android.R.color.holo_red_light
+                    else -> android.R.color.white
+                }
+
+                partContainer.setBackgroundResource(backgroundRes)
             }
         }
     }
@@ -202,5 +226,5 @@ class CarPartsAdapter(private val parts: List<CarPart>) :
         holder.bind(parts[position])
     }
 
-    override fun getItemCount() = parts.size
+    override fun getItemCount(): Int = parts.size
 }

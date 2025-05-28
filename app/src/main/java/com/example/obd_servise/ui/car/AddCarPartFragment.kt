@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.obd_servise.databinding.FragmentAddCarPartBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.DatabaseReference
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -19,7 +20,7 @@ class AddCarPartFragment : Fragment() {
     private var _binding: FragmentAddCarPartBinding? = null
     private val binding get() = _binding!!
     private lateinit var auth: FirebaseAuth
-    private lateinit var database: FirebaseDatabase
+    private lateinit var database: DatabaseReference
     private var selectedCarId: String? = null
 
     override fun onCreateView(
@@ -35,7 +36,7 @@ class AddCarPartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         auth = FirebaseAuth.getInstance()
-        database = FirebaseDatabase.getInstance()
+        database = FirebaseDatabase.getInstance().reference
         selectedCarId = arguments?.getString("carId")
 
         // Установка обработчиков для кнопок
@@ -64,81 +65,69 @@ class AddCarPartFragment : Fragment() {
             binding.nameInputLayout.error = null
         }
 
-        val condition = calculateCondition(currentMileage, recommendedMileage)
+        // condition рассчитывается автоматически
         val addedDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
-        // Получаем ссылку на все автомобили
+        // Ищем выбранный автомобиль
         val carsRef = FirebaseDatabase.getInstance().getReference("cars")
-
-        // Ищем автомобиль с isSelected == 1
-        carsRef.orderByChild("isSelected").equalTo(1.0).get().addOnSuccessListener { snapshot ->
-            val selectedCarSnapshot = snapshot.children.firstOrNull() ?: run {
-                Toast.makeText(
-                    requireContext(),
-                    "Не найден выбранный автомобиль",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@addOnSuccessListener
-            }
-
-            val carId = selectedCarSnapshot.key ?: run {
-                Toast.makeText(
-                    requireContext(),
-                    "Не удалось получить ID автомобиля",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@addOnSuccessListener
-            }
-
-            // Теперь мы знаем carId — можно сохранять деталь
-            val database = FirebaseDatabase.getInstance()
-            val carPartsRef = database.getReference("cars").child(carId).child("parts")
-            val partId = carPartsRef.push().key ?: return@addOnSuccessListener
-
-            val carPart = CarPart(
-                id = partId,
-                name = name,
-                recommendedMileage = recommendedMileage,
-                currentMileage = currentMileage,
-                condition = condition,
-                addedDate = addedDate,
-                price = price,
-                notificationsEnabled = notificationsEnabled
-            )
-
-            val partRef = carPartsRef.child(partId)
-
-            partRef.setValue(carPart)
-                .addOnSuccessListener {
-                    Toast.makeText(requireContext(), "Комплектующая добавлена", Toast.LENGTH_SHORT)
-                        .show()
-                    findNavController().navigateUp()
-                }
-                .addOnFailureListener { e ->
-                    Log.e("AddCarPartFragment", "Ошибка сохранения", e)
-                    Toast.makeText(requireContext(), "Ошибка при сохранении", Toast.LENGTH_SHORT)
-                        .show()
+        carsRef.orderByChild("isSelected").equalTo(1.0).get()
+            .addOnSuccessListener { snapshot ->
+                val selectedCarSnapshot = snapshot.children.firstOrNull() ?: run {
+                    Toast.makeText(
+                        requireContext(),
+                        "Не найден выбранный автомобиль",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@addOnSuccessListener
                 }
 
-        }.addOnFailureListener { error ->
-            Log.e("AddCarPartFragment", "Ошибка поиска выбранного авто", error)
-            Toast.makeText(requireContext(), "Ошибка поиска авто", Toast.LENGTH_SHORT).show()
-        }
-    }
+                val carId = selectedCarSnapshot.key ?: run {
+                    Toast.makeText(
+                        requireContext(),
+                        "Не удалось получить ID автомобиля",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@addOnSuccessListener
+                }
 
-    private fun calculateCondition(current: Int, recommended: Int): String {
-        if (recommended == 0) return "normal"
-        val percentage = (current.toDouble() / recommended) * 100
-        return when {
-            percentage < 75 -> "normal"
-            percentage in 75.0..100.0 -> "warning"
-            else -> "critical"
-        }
-    }
+                // Теперь мы знаем carId — можно сохранять деталь
+                val carPartsRef = FirebaseDatabase.getInstance().getReference("cars")
+                    .child(carId)
+                    .child("parts")
+                val partId = carPartsRef.push().key ?: return@addOnSuccessListener
 
-    // Обработчик для кнопки "Отмена"
-    fun onCancelClick(view: View) {
-        parentFragmentManager.popBackStack()
+                val carPart = CarPart(
+                    id = partId,
+                    name = name,
+                    recommendedMileage = recommendedMileage,
+                    currentMileage = currentMileage,
+                    addedDate = addedDate,
+                    price = price,
+                    notificationsEnabled = notificationsEnabled
+                )
+
+                carPartsRef.child(partId).setValue(carPart)
+                    .addOnSuccessListener {
+                        Toast.makeText(
+                            requireContext(),
+                            "Комплектующая добавлена",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        findNavController().navigateUp()
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("AddCarPartFragment", "Ошибка сохранения", e)
+                        Toast.makeText(
+                            requireContext(),
+                            "Ошибка при сохранении",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+            }
+            .addOnFailureListener { error ->
+                Log.e("AddCarPartFragment", "Ошибка поиска авто", error)
+                Toast.makeText(requireContext(), "Ошибка поиска авто", Toast.LENGTH_SHORT).show()
+            }
     }
 
     override fun onDestroyView() {
