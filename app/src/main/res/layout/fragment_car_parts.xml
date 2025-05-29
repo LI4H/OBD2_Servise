@@ -60,14 +60,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/addPartButton"
-            android:layout_width="150dp"
-            android:layout_height="40dp"
-            android:textSize="13sp"
-            android:text="Добавить"
-            android:layout_marginHorizontal="20dp"
-            android:background="@drawable/btn1" />
 
         <Button
             android:id="@+id/changeViewButton"
@@ -76,6 +68,17 @@
             android:textSize="13sp"
             android:layout_marginHorizontal="20dp"
             android:text="Изменить вид"
+            android:textColor="@color/white"
+            android:background="@drawable/btn2_selected"
+            app:backgroundTint="@color/white" />
+        <Button
+            android:id="@+id/addPartButton"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:textSize="13sp"
+            android:text="Добавить"
+            android:textColor="@color/black"
+            android:layout_marginHorizontal="20dp"
             android:background="@drawable/btn1" />
     </LinearLayout>
 

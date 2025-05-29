@@ -33,25 +33,17 @@ class CarInputFragment : Fragment() {
 
         val adapter = ArrayAdapter(requireContext(), R.layout.spinner_selected_item, fuelTypes)
         adapter.setDropDownViewResource(R.layout.spinner_item)
-        binding.inputFuelTypeSpinner.adapter = adapter
-
-        // Обработка выбора топлива
-        binding.inputFuelTypeSpinner.setSelection(0)
+        binding.inputFuelTypeDropdown.setAdapter(adapter)
+        binding.inputFuelTypeDropdown.setText(fuelTypes[0], false)
         updateHintsBasedOnFuel(fuelTypes[0])
 
-        binding.inputFuelTypeSpinner.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    updateHintsBasedOnFuel(fuelTypes[position])
-                }
 
-                override fun onNothingSelected(parent: AdapterView<*>) {}
-            }
+        binding.inputFuelTypeDropdown.setOnItemClickListener { _, _, position, _ ->
+            updateHintsBasedOnFuel(fuelTypes[position])
+        }
+        binding.buttonCancel.setOnClickListener {
+            findNavController().popBackStack() // Вернуться на предыдущий экран
+        }
 
         // Если есть carId, значит редактирование
         carId?.takeIf { it.isNotEmpty() }?.let { id ->
@@ -64,7 +56,7 @@ class CarInputFragment : Fragment() {
 
                 val fuelIndex = fuelTypes.indexOf(carData.fuelType)
                 if (fuelIndex >= 0) {
-                    binding.inputFuelTypeSpinner.setSelection(fuelIndex)
+                    binding.inputFuelTypeDropdown.setText(fuelTypes[fuelIndex], false)
                     updateHintsBasedOnFuel(carData.fuelType)
                 }
 
@@ -123,7 +115,7 @@ class CarInputFragment : Fragment() {
             carViewModel.name = name
             carViewModel.mileage = mileageText.toInt()
             carViewModel.fuelPrice = priceText.toFloat()
-            carViewModel.fuelType = binding.inputFuelTypeSpinner.selectedItem.toString()
+            carViewModel.fuelType = binding.inputFuelTypeDropdown.text.toString()
             carViewModel.consumption = consumptionText.toFloat()
 
             // Навигация — во втором фрагменте будет понятно, что это редактирование, если есть carId

@@ -40,6 +40,12 @@ class AddTripFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupDatePicker()
         binding.saveTripButton.setOnClickListener { saveTrip() }
+
+
+        // Находим кнопку отмены по ID и устанавливаем обработчик
+        view.findViewById<View>(com.example.obd_servise.R.id.cancelButton)?.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
     }
 
     private fun getSelectedCarId(onResult: (String?) -> Unit) {
@@ -215,6 +221,7 @@ class AddTripFragment : Fragment() {
         val today = Date()
         return addedDate.before(today)
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

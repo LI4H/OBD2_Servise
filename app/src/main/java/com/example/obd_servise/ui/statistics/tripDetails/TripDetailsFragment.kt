@@ -61,7 +61,9 @@ class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
                 { _, year, month, dayOfMonth ->
                     calendar.set(year, month, dayOfMonth)
                     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    binding.tvDate.text = formatDate(dateFormat.format(calendar.time))
+
+                    binding.tvDate.setText(formatDate(dateFormat.format(calendar.time)))
+
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -80,7 +82,7 @@ class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
             oldDistance = trip.distance // <-- Запоминаем старое значение distance
 
             binding.apply {
-                tvDate.text = formatDate(trip.date)
+                tvDate.setText(trip.date.toString())
                 etDistance.setText(trip.distance.toString())
                 etAvgSpeed.setText(trip.avgSpeed.toString())
                 etFuelUsed.setText(trip.fuelUsed.toString())
@@ -215,16 +217,20 @@ class TripDetailsFragment : Fragment(R.layout.fragment_trip_details) {
         return addedDate.before(today)
     }
 
-    private fun formatDate(dateString: String): String {
+    private fun formatDate(dateString: String?): String {
+        if (dateString.isNullOrBlank()) return "Неизвестно"
+
         return try {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val outputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
             val date = inputFormat.parse(dateString)
             outputFormat.format(date ?: Date())
         } catch (e: Exception) {
-            dateString
+            Log.e("TripDetailsFragment", "Ошибка форматирования даты: ${e.message}")
+            dateString // Показываем как есть, если ошибка
         }
     }
+
 
     private fun showErrorAndGoBack(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()

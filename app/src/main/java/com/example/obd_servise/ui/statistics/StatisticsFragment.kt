@@ -1,10 +1,13 @@
 package com.example.obd_servise.ui.statistics
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -115,10 +118,17 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
             )
 
             radioButtons.forEach { radio ->
-                radio.setBackgroundResource(
-                    if (radio.isChecked) R.drawable.btn2_selected else R.drawable.btn2_ne_selected
-                )
+                if (radio.isChecked) {
+                    radio.setBackgroundResource(R.drawable.btn2_selected)
+                    radio.backgroundTintList =
+                        ColorStateList.valueOf(getThemeColor(com.google.android.material.R.attr.colorPrimary))
+                } else {
+                    radio.setBackgroundResource(R.drawable.btn2_ne_selected)
+                    radio.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+                }
             }
+
+
             // Обновляем данные при изменении фильтра
             carViewModel.getSelectedCar { selectedCar ->
                 selectedCar?.let { car ->
@@ -129,6 +139,13 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
         // Установка фильтра по умолчанию (7 дней)
         binding.radio7Days.isChecked = true
+    }
+
+    private fun getThemeColor(attrResId: Int): Int {
+        val typedValue = TypedValue()
+        val theme = requireContext().theme
+        theme.resolveAttribute(attrResId, typedValue, true)
+        return typedValue.data
     }
 
     private fun filterTripsByPeriod(trips: List<TripEntity>): List<TripEntity> {

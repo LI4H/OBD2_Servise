@@ -36,7 +36,7 @@ class CarServiceInfoFragment : Fragment() {
 
         if (isEditing) {
             binding.buttonAddCar.text = "Применить изменения"
-            binding.buttonDeleteCar.visibility = View.VISIBLE
+            binding.buttonDeleteCar.visibility = View.GONE
 
             carId?.let { id ->
                 carViewModel.loadCarById(id) { carData ->
@@ -55,7 +55,9 @@ class CarServiceInfoFragment : Fragment() {
                     )
                 }
             }
-
+            binding.buttonBack.setOnClickListener {
+                findNavController().popBackStack()
+            }
             binding.buttonAddCar.setOnClickListener {
                 updateCar(carId!!)
             }

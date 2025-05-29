@@ -1,7 +1,10 @@
 package com.example.obd_servise.ui.statistics.allTrips
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
@@ -82,9 +85,14 @@ class AllTripsFragment : Fragment(R.layout.fragment_all_trips) {
 
             updateDateInputsVisibility()
             radioButtons.forEach { radio ->
-                radio.setBackgroundResource(
-                    if (radio.isChecked) R.drawable.btn2_selected else R.drawable.btn2_ne_selected
-                )
+                if (radio.isChecked) {
+                    radio.setBackgroundResource(R.drawable.btn2_selected)
+                    radio.backgroundTintList =
+                        ColorStateList.valueOf(getThemeColor(com.google.android.material.R.attr.colorPrimary))
+                } else {
+                    radio.setBackgroundResource(R.drawable.btn2_ne_selected)
+                    radio.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+                }
             }
 
 
@@ -101,6 +109,12 @@ class AllTripsFragment : Fragment(R.layout.fragment_all_trips) {
 
     }
 
+    private fun getThemeColor(attrResId: Int): Int {
+        val typedValue = TypedValue()
+        val theme = requireContext().theme
+        theme.resolveAttribute(attrResId, typedValue, true)
+        return typedValue.data
+    }
     private fun updateDateInputsVisibility() {
         binding.apply {
             etSearchDate.visibility =

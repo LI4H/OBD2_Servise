@@ -1,79 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="?attr/colorPrimaryVariant">
+    android:background="?attr/colorPrimaryVariant"
+    android:fillViewport="true">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="24dp">
 
-        <EditText
-            android:id="@+id/inputCarBrand"
-            android:hint="Марка автомобиля"
-            android:inputType="textCapWords"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+        <!-- Марка -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/brandInputLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textColorHint="@color/grey2" />
+            android:textColorHint="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint">
 
-        <EditText
-            android:id="@+id/inputCarModel"
-            android:hint="Модель автомобиля"
-            android:inputType="textCapWords"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputCarBrand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Марка автомобиля"
+                android:inputType="textCapWords"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Модель -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/modelInputLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textColorHint="@color/grey2" />
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/brandInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint">
 
-        <EditText
-            android:id="@+id/inputYear"
-            android:hint="Год выпуска"
-            android:inputType="number"
-            android:maxLength="4"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputCarModel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Модель автомобиля"
+                android:inputType="textCapWords"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Год выпуска -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/yearInputLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textColorHint="@color/grey2" />
+            app:layout_constraintTop_toBottomOf="@id/modelInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="5dp"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint">
 
-        <EditText
-            android:id="@+id/inputVin"
-            android:hint="VIN-номер (17 символов)"
-            android:inputType="textCapCharacters"
-            android:maxLength="17"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputYear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Год выпуска"
+                android:inputType="number"
+                android:maxLength="4"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- VIN-номер -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/vinInputLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textColorHint="@color/grey2" />
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/yearInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint">
 
-        <EditText
-            android:id="@+id/inputLicensePlate"
-            android:hint="Номерной знак"
-            android:inputType="textCapCharacters"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputVin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="VIN-номер (17 символов)"
+                android:inputType="textCapCharacters"
+                android:maxLength="17"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Номерной знак -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/licensePlateInputLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textColorHint="@color/grey2" />
+            android:layout_marginTop="5dp"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vinInputLayout">
 
-        <Button
-            android:id="@+id/buttonDeleteCar"
-            android:text="Удалить авто"
-            android:layout_marginTop="16dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputLicensePlate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -"
+                android:hint="Номерной знак"
+                android:inputType="textCapCharacters"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/buttonsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
 
-        <Button
+            android:orientation="horizontal"
+            android:gravity="bottom"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="20dp">
+            <!-- Кнопки -->
+            <com.google.android.material.button.MaterialButton
+
+                android:id="@+id/buttonBack"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="16dp"
+                android:text="Назад"
+                android:textColor="@color/white"
+                android:background="@drawable/btn2_selected"
+                app:backgroundTint="@color/white"
+                app:strokeWidth="1dp" />
+
+            <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonAddCar"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="16dp"
             android:text="Добавить авто"
-            android:layout_marginTop="24dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+                android:textColor="@color/black"
+                android:background="@drawable/btn1"
+                app:backgroundTint="?attr/colorPrimary"
+                app:strokeWidth="1dp" />
     </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonDeleteCar"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/btn2_selected"
+            android:text="Удалить авто"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:backgroundTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/licensePlateInputLayout"
+            app:strokeWidth="1dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

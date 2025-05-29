@@ -1,79 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:fillViewport="true"
     android:background="?attr/colorPrimaryVariant">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:padding="24dp">
 
-        <EditText
-            android:id="@+id/inputName"
-            android:hint="Название авто"
-            android:layout_width="match_parent"
+        <!-- Название авто -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nameInputLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textColorHint="@color/grey2"
-            android:inputType="textCapWords"
-            android:textSize="20sp"
-
-            />
-
-        <EditText
-            android:id="@+id/inputMileage"
-            android:hint="Пробег (км)"
-            android:inputType="number"
-            android:textColor="@color/white"
-            android:textColorHint="@color/grey2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/inputFuelPrice"
-            android:hint="Цена топлива (Р/л)"
-            android:textColor="@color/white"
-            android:textColorHint="@color/grey2"
-            android:inputType="numberDecimal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:text="Тип топлива:"
-
-            android:paddingStart="4dp"
-            android:textSize="18sp"
-            android:textColor="@color/grey2"
-            android:textColorHint="@color/grey2"
-            android:layout_height="wrap_content" />
-
-        <Spinner
-            android:id="@+id/inputFuelTypeSpinner"
-            android:layout_width="match_parent"
-            android:textColor="@color/white"
-            android:outlineAmbientShadowColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Название авто"
+                android:inputType="textCapWords"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Пробег -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/mileageInputLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:popupBackground="@drawable/spinner_dropdown_background" />
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/nameInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint">
 
-        <EditText
-            android:id="@+id/inputConsumption"
-            android:hint="Расход на 100 км"
-            android:inputType="numberDecimal"
-            android:textColor="@color/white"
-            android:textColorHint="@color/grey2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputMileage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Пробег (км)"
+                android:inputType="number"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/buttonNext"
-            android:text="Продолжить"
-            android:layout_marginTop="24dp"
+        <!-- Цена топлива -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fuelPriceInputLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/mileageInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputFuelPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:inputType="numberDecimal"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Расход топлива -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/consumptionInputLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/fuelPriceInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputConsumption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:inputType="numberDecimal"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Спиннер топлива -->
+
+        <!-- Тип топлива (Material Spinner) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fuelTypeDropdownLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/consumptionInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint"
+            android:background="@color/colorPrimaryVariant"
+            android:backgroundTint="@color/colorPrimaryVariant">
+
+            <AutoCompleteTextView
+                android:id="@+id/inputFuelTypeDropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Тип топлива"
+                android:textColor="@color/white"
+                android:popupBackground="@color/colorPrimaryVariant"
+                android:backgroundTint="@color/colorPrimaryVariant"
+
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Кнопки -->
+        <LinearLayout
+            android:id="@+id/buttonsContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="20dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonCancel"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="16dp"
+                android:text="Отмена"
+                android:textColor="@color/white"
+                android:background="@drawable/btn2_selected"
+                app:backgroundTint="@color/white"
+                app:strokeWidth="1dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonNext"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="16dp"
+                android:text="Продолжить"
+                android:textColor="@color/black"
+                android:background="@drawable/btn1"
+                app:backgroundTint="?attr/colorPrimary"
+                app:strokeWidth="1dp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

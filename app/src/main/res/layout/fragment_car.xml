@@ -1,43 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.car.CarFragment"
+    android:fillViewport="true"
     android:background="?attr/colorPrimaryVariant">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/linearLayoutCars"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_marginBottom="10dp"
         android:layout_margin="8dp"
         android:background="@drawable/edittext_border"
         android:scrollbars="vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/fabAddCar" />
+        app:layout_constraintBottom_toTopOf="@id/buttons" />
 
+        <LinearLayout
+            android:id="@+id/buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:orientation="horizontal"
+            android:gravity="center"
 
-    <Button
-        android:id="@+id/fabAddCar"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/ic_add"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+            android:weightSum="2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fabDelCar"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="20dp"
+                android:text="Удалить"
+                android:textColor="@color/white"
+                android:background="@drawable/btn2_selected"
+                app:backgroundTint="@color/white"
+                app:strokeWidth="1dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fabAddCar"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="20dp"
+                android:text="Добавить автомобиль"
+
+                android:textColor="@color/black"
+                android:background="@drawable/btn1"
+                app:backgroundTint="?attr/colorPrimary"
+
+                app:strokeWidth="1dp" />
+        </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
