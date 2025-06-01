@@ -13,7 +13,12 @@
     <action
         android:id="@+id/action_homeFragment_to_deviceSelectionFragment"
         app:destination="@id/deviceSelectionFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_carFragment"
+            app:destination="@id/nav_car" />
        </fragment>
+
+
     <fragment
         android:id="@+id/nav_dynamics"
         android:name="com.example.obd_servise.ui.dynamics.DynamicsFragment"
@@ -95,9 +100,7 @@
         android:name="com.example.obd_servise.ui.car.CarServiceInfoFragment"
         android:label="@string/menu_car_servise_info"
         tools:layout="@layout/fragment_car_service_info" />
-    <action
-        android:id="@+id/carFragment"
-        app:destination="@id/nav_car" />
+
     <fragment
         android:id="@+id/addTripFragment"
         android:name="com.example.obd_servise.ui.statistics.addTrip.AddTripFragment"

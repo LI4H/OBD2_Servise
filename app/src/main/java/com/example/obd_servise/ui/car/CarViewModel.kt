@@ -1,5 +1,6 @@
 package com.example.obd_servise.ui.car
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -123,16 +124,19 @@ class CarViewModel : ViewModel() {
         )
     }
     fun getSelectedCar(callback: (Car?) -> Unit) {
+        Log.d("CarViewModel", "Getting selected car")
         dbRef.orderByChild("isSelected").equalTo(1.0)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val car = snapshot.children.firstOrNull()?.getValue(Car::class.java)
+                    Log.d("CarViewModel", "Selected car: ${car?.name ?: "null"}")
                     car?.let {
                         callback(it.copy(id = snapshot.children.first().key ?: ""))
                     } ?: callback(null)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
+                    Log.e("CarViewModel", "Error getting selected car: ${error.message}")
                     callback(null)
                 }
             })

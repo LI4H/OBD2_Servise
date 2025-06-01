@@ -16,7 +16,7 @@ import com.example.obd_servise.obd_connection.bluetooth.ObdManager
 import com.example.obd_servise.R
 
 class HomeViewModel : ViewModel() {
-
+    var shouldNavigateToCarFragment: Boolean = false
     private val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     private val _connectionStatus = MutableLiveData<Boolean>()
     val connectionStatus: LiveData<Boolean> get() = _connectionStatus
