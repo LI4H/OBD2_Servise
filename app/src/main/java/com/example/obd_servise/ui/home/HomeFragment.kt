@@ -44,6 +44,11 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import android.content.BroadcastReceiver
+import android.os.Handler
+import android.os.Looper
+import androidx.core.os.postDelayed
+import kotlin.random.Random
+
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -59,11 +64,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private var clickLock = false
     private val clickDebouncePeriod = 500L // 0.5 секунды
 
+    private val demoHandler = Handler(Looper.getMainLooper())
+    private var demoRunnable: Runnable? = null
+    private var startTime = System.currentTimeMillis()
+    private var isDemo2Mode = false
+
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
-// Регистрируем BroadcastReceiver для батареи
+
+        // Регистрируем BroadcastReceiver для батареи
         val batteryFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         requireActivity().registerReceiver(object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -85,12 +96,78 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         fetchComponents()
     }
 
-    private fun setupComponentsRecyclerView() {
-        componentsAdapter = ComponentsAdapter(componentsList)
-        binding.componentsRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = componentsAdapter
-            setHasFixedSize(true)
+
+    private fun updateMiniStats(speed: Int, rpm: Int, temp: Int) {
+        // Check if binding is available
+        if (_binding == null) return
+
+        binding.miniSpeedText.text = if (speed >= 0) speed.toString() else "--"
+        binding.miniRpmText.text = if (rpm >= 0) rpm.toString() else "--"
+        binding.miniTempText.text = if (temp >= 0) temp.toString() else "--"
+    }
+
+    private fun updateUI(isDemo: Boolean?, elmState: ConnectionState?, ecuState: ConnectionState?) {
+        when {
+            isDemo == true -> {
+                binding.connectBtn.visibility = View.GONE
+                binding.demoBtn.visibility = View.GONE
+                binding.exitDemoBtn.visibility = View.VISIBLE
+                binding.exitConnectBtn.visibility = View.GONE
+                binding.statusELM.text = getString(R.string.demoBtn)
+                binding.statusECU.text = getString(R.string.demoBtn)
+
+                // Запускаем DEMO режим для показателей
+                startDemoMode()
+            }
+
+            elmState == ConnectionState.CONNECTED && ecuState == ConnectionState.CONNECTED -> {
+                binding.connectBtn.visibility = View.GONE
+                binding.demoBtn.visibility = View.GONE
+                binding.exitDemoBtn.visibility = View.GONE
+                binding.exitConnectBtn.visibility = View.VISIBLE
+                binding.statusELM.text = getString(R.string.connected_to_elm)
+                binding.statusECU.text = getString(R.string.connected_to_ecu)
+
+                // Запускаем DEMO2 режим (имитация холостого хода)
+                startDemo2Mode()
+            }
+
+            elmState == ConnectionState.CONNECTED && ecuState != ConnectionState.CONNECTED -> {
+                binding.connectBtn.visibility = View.GONE
+                binding.demoBtn.visibility = View.GONE
+                binding.exitDemoBtn.visibility = View.GONE
+                binding.exitConnectBtn.visibility = View.GONE
+                binding.statusELM.text = getString(R.string.connected_to_elm)
+                binding.statusECU.text = getString(R.string.connecting_to_ecu)
+
+                // Показываем нулевые значения при частичном подключении
+                updateMiniStats(0, 0, 0)
+            }
+
+            elmState != ConnectionState.CONNECTED && ecuState == ConnectionState.CONNECTED -> {
+                binding.connectBtn.visibility = View.GONE
+                binding.demoBtn.visibility = View.GONE
+                binding.exitDemoBtn.visibility = View.GONE
+                binding.exitConnectBtn.visibility = View.GONE
+                binding.statusELM.text = getString(R.string.connecting_to_elm)
+                binding.statusECU.text = getString(R.string.connected_to_ecu)
+
+                // Показываем нулевые значения при частичном подключении
+                updateMiniStats(0, 0, 0)
+            }
+
+            else -> {
+                binding.connectBtn.visibility = View.VISIBLE
+                binding.demoBtn.visibility = View.VISIBLE
+                binding.exitDemoBtn.visibility = View.GONE
+                binding.exitConnectBtn.visibility = View.GONE
+                binding.statusELM.text = getString(R.string.statusELM)
+                binding.statusECU.text = getString(R.string.statusECU)
+
+                // Останавливаем демо-режим и показываем "--"
+                stopDemoMode()
+                updateMiniStats(-1, -1, -1)
+            }
         }
     }
 
@@ -115,6 +192,65 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
     }
+
+    private fun startDemoMode() {
+        stopDemoMode() // Останавливаем предыдущий режим
+        isDemo2Mode = false
+
+        // Имитация движения по трассе (~120 км/ч)
+        demoRunnable = object : Runnable {
+            override fun run() {
+                val baseSpeed = 120
+                val speedVariation = Random.nextInt(-10, 10)
+                val currentSpeed = baseSpeed + speedVariation
+
+                val baseRpm = 2500
+                val rpmVariation = Random.nextInt(-200, 200)
+                val currentRpm = baseRpm + rpmVariation
+
+                val engineTemp = 90 + Random.nextInt(-2, 2)
+
+                updateMiniStats(currentSpeed, currentRpm, engineTemp)
+                demoHandler.postDelayed(this, 1000)
+            }
+        }
+        demoHandler.post(demoRunnable!!)
+    }
+
+    private fun startDemo2Mode() {
+        stopDemoMode() // Останавливаем предыдущий режим
+        isDemo2Mode = true
+
+        // Имитация холостого хода
+        demoRunnable = object : Runnable {
+            override fun run() {
+                val baseRpm = 800
+                val rpmNoise = Random.nextInt(-20, 20)
+                val currentRpm = baseRpm + rpmNoise
+                val engineTemp = 70 + Random.nextInt(-2, 2)
+
+                updateMiniStats(0, currentRpm, engineTemp)
+                demoHandler.postDelayed(this, 1000)
+            }
+        }
+        demoHandler.post(demoRunnable!!)
+    }
+
+    private fun stopDemoMode() {
+        demoHandler.removeCallbacksAndMessages(null)
+        demoRunnable = null
+    }
+
+
+    private fun setupComponentsRecyclerView() {
+        componentsAdapter = ComponentsAdapter(componentsList)
+        binding.componentsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            adapter = componentsAdapter
+            setHasFixedSize(true)
+        }
+    }
+
 
     private fun setupMiniChart() {
         miniChart.apply {
@@ -320,11 +456,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             )
         }
     }
-    private fun updateMiniStats(speed: Int, rpm: Int, temp: Int) {
-        binding.miniSpeedText.text = speed.toString()
-        binding.miniRpmText.text = rpm.toString()
-        binding.miniTempText.text = temp.toString()
-    }
+
 
     private fun updatePhoneBattery(level: Int) {
         binding.phoneBatteryText.text = "$level%"
@@ -375,64 +507,30 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun updateUI(isDemo: Boolean?, elmState: ConnectionState?, ecuState: ConnectionState?) {
-        when {
-            isDemo == true -> {
-                binding.connectBtn.visibility = View.GONE
-                binding.demoBtn.visibility = View.GONE
-                binding.exitDemoBtn.visibility = View.VISIBLE
-                binding.exitConnectBtn.visibility = View.GONE
-                binding.statusELM.text = getString(R.string.demoBtn)
-                binding.statusECU.text = getString(R.string.demoBtn)
-            }
-
-            elmState == ConnectionState.CONNECTED && ecuState == ConnectionState.CONNECTED -> {
-                binding.connectBtn.visibility = View.GONE
-                binding.demoBtn.visibility = View.GONE
-                binding.exitDemoBtn.visibility = View.GONE
-                binding.exitConnectBtn.visibility = View.VISIBLE
-                binding.statusELM.text = getString(R.string.connected_to_elm)
-                binding.statusECU.text = getString(R.string.connected_to_ecu)
-            }
-
-            elmState == ConnectionState.CONNECTED && ecuState != ConnectionState.CONNECTED -> {
-                binding.connectBtn.visibility = View.GONE
-                binding.demoBtn.visibility = View.GONE
-                binding.exitDemoBtn.visibility = View.GONE
-                binding.exitConnectBtn.visibility = View.GONE
-                binding.statusELM.text = getString(R.string.connected_to_elm)
-                binding.statusECU.text = getString(R.string.connecting_to_ecu)
-            }
-
-            elmState != ConnectionState.CONNECTED && ecuState == ConnectionState.CONNECTED -> {
-                binding.connectBtn.visibility = View.GONE
-                binding.demoBtn.visibility = View.GONE
-                binding.exitDemoBtn.visibility = View.GONE
-                binding.exitConnectBtn.visibility = View.GONE
-                binding.statusELM.text = getString(R.string.connecting_to_elm)
-                binding.statusECU.text = getString(R.string.connected_to_ecu)
-            }
-
-            else -> {
-                binding.connectBtn.visibility = View.VISIBLE
-                binding.demoBtn.visibility = View.VISIBLE
-                binding.exitDemoBtn.visibility = View.GONE
-                binding.exitConnectBtn.visibility = View.GONE
-                binding.statusELM.text = getString(R.string.statusELM)
-                binding.statusECU.text = getString(R.string.statusECU)
-            }
-        }
+    override fun onPause() {
+        super.onPause()
+        stopDemoMode()
     }
-
     override fun onResume() {
         super.onResume()
         Log.d("Navigation", "HomeFragment onResume")
         loadSelectedCar()
+
+        // Restart demo mode if needed
+        if (homeViewModel.isDemoActive.value == true) {
+            startDemoMode()
+        } else if (sharedViewModel.elmStatus.value == ConnectionState.CONNECTED &&
+            sharedViewModel.ecuStatus.value == ConnectionState.CONNECTED
+        ) {
+            startDemo2Mode()
+        }
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        demoHandler.removeCallbacksAndMessages(null) // Stop all handlers
+        _binding = null // Clear the binding
     }
 
     inner class ComponentsAdapter(private val parts: List<CarPart>) :

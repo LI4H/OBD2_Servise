@@ -83,32 +83,45 @@
 //        obdManager.disconnect()
 //    }
 //}
-
 package com.example.obd_servise.ui.dynamics
 
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.obd_servise.R
+
+import com.example.obd_servise.obd_connection.bluetooth.SharedViewModel
+import com.example.obd_servise.ui.car.Car
+import com.example.obd_servise.ui.car.CarViewModel
+import com.example.obd_servise.ui.connection.ConnectionState
+import com.example.obd_servise.ui.home.HomeViewModel
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.math.sin
 import kotlin.random.Random
 
 class DynamicsFragment : Fragment() {
     // UI элементы
+    private lateinit var carNameText: TextView
+    private lateinit var carBrandText: TextView
+    private lateinit var carModelText: TextView
+    private lateinit var carMileageText: TextView
+    private lateinit var carFuelTypeText: TextView
+    private lateinit var carVinText: TextView
+    private lateinit var statusText: TextView
+
     private lateinit var speedTextView: TextView
     private lateinit var rpmTextView: TextView
     private lateinit var tempTextView: TextView
@@ -119,27 +132,44 @@ class DynamicsFragment : Fragment() {
     private lateinit var speedProgress: com.google.android.material.progressindicator.LinearProgressIndicator
     private lateinit var lineChart: LineChart
 
-    // Демо-режим
-    private var isDemoMode = true
+    // ViewModels
+    private lateinit var carViewModel: CarViewModel
+    private lateinit var sharedViewModel: SharedViewModel
+    private lateinit var homeViewModel: HomeViewModel
+
+    // Состояния
     private val demoHandler = Handler(Looper.getMainLooper())
     private var demoRunnable: Runnable? = null
-
-    // Данные для графика
     private val chartData = mutableListOf<Entry>()
     private var timeCounter = 0f
     private val maxDataPoints = 100
+    private var startTime = System.currentTimeMillis()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = inflater.inflate(R.layout.fragment_dynamics, container, false)
         initViews(view)
         return view
     }
 
     private fun initViews(view: View) {
+        // Инициализация ViewModels
+        carViewModel = ViewModelProvider(requireActivity()).get(CarViewModel::class.java)
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
+
+        // Инициализация UI элементов
+        carNameText = view.findViewById(R.id.carNameText)
+        carBrandText = view.findViewById(R.id.carBrandText)
+        carModelText = view.findViewById(R.id.carModelText)
+        carMileageText = view.findViewById(R.id.carMileageText)
+        carFuelTypeText = view.findViewById(R.id.carFuelTypeText)
+        carVinText = view.findViewById(R.id.carVinText)
+        statusText = view.findViewById(R.id.statusText)
+
         speedTextView = view.findViewById(R.id.speedTextView)
         rpmTextView = view.findViewById(R.id.rpmTextView)
         tempTextView = view.findViewById(R.id.tempTextView)
@@ -151,70 +181,188 @@ class DynamicsFragment : Fragment() {
         lineChart = view.findViewById(R.id.metricsGraph)
 
         setupChart()
+        setupObservers()
+        loadCarData()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // Проверяем аргументы на наличие demoMode
-        arguments?.let {
-            isDemoMode = it.getBoolean("demoMode", false)
+    private fun setupObservers() {
+        // Наблюдаем за состоянием демо-режима
+        homeViewModel.isDemoActive.observe(viewLifecycleOwner) { isDemo ->
+            updateConnectionStatus(
+                isDemo,
+                sharedViewModel.elmStatus.value,
+                sharedViewModel.ecuStatus.value
+            )
         }
 
-        if (isDemoMode) {
-            startDemoMode()
-        } else {
-            // Здесь можно добавить реальное подключение к OBD
+        // Наблюдаем за состоянием подключения к ELM327
+        sharedViewModel.elmStatus.observe(viewLifecycleOwner) { elmState ->
+            updateConnectionStatus(
+                homeViewModel.isDemoActive.value == true,
+                elmState,
+                sharedViewModel.ecuStatus.value
+            )
         }
+
+        // Наблюдаем за состоянием подключения к ЭБУ
+        sharedViewModel.ecuStatus.observe(viewLifecycleOwner) { ecuState ->
+            updateConnectionStatus(
+                homeViewModel.isDemoActive.value == true,
+                sharedViewModel.elmStatus.value,
+                ecuState
+            )
+        }
+    }
+
+    private fun updateConnectionStatus(
+        isDemo: Boolean?,
+        elmState: ConnectionState?,
+        ecuState: ConnectionState?
+    ) {
+        when {
+            isDemo == true -> {
+                // Демо-режим активен
+                statusText.text = "DEMO"
+                statusText.setTextColor(Color.YELLOW)
+                startDemoMode()
+            }
+
+            elmState == ConnectionState.CONNECTED && ecuState == ConnectionState.CONNECTED -> {
+                // Полное подключение
+                statusText.text = "CONNECTED"
+                statusText.setTextColor(Color.GREEN)
+                startConnectedMode()
+            }
+
+            else -> {
+                // Нет подключения
+                statusText.text = "DISCONNECTED"
+                statusText.setTextColor(Color.RED)
+                showDisconnectedState()
+            }
+        }
+    }
+
+    private fun loadCarData() {
+        carViewModel.getSelectedCar { car ->
+            if (car != null) {
+                updateCarInfo(car)
+            } else {
+                Log.d("DynamicsFragment", "No selected car found")
+            }
+        }
+    }
+
+    private fun updateCarInfo(car: Car) {
+        carNameText.text = car.name
+        carBrandText.text = "Brand: ${car.brand}"
+        carModelText.text = "Model: ${car.model}"
+        carMileageText.text = "Mileage: ${car.mileage} km"
+        carFuelTypeText.text = "Fuel: ${car.fuelType}"
+        carVinText.text = "VIN: ${car.vin}"
+    }
+
+    private fun showDisconnectedState() {
+        demoHandler.removeCallbacksAndMessages(null)
+
+        speedTextView.text = "--"
+        rpmTextView.text = "--"
+        tempTextView.text = "--°C"
+        fuelTextView.text = "--%"
+        voltageTextView.text = "--V"
+        accelerationTextView.text = "-- м/с²"
+        speedProgress.progress = 0
+        uptimeTextView.text = "00:00:00"
+
+        chartData.clear()
+        lineChart.clear()
+    }
+
+    private fun startConnectedMode() {
+        demoHandler.removeCallbacksAndMessages(null)
+
+        // Здесь должна быть логика реального подключения к OBD
+        // Пока используем демо-режим как заглушку
+        startDemo2Mode()
     }
 
     private fun startDemoMode() {
-        // Имитация работы двигателя на холостом ходу
+        demoHandler.removeCallbacksAndMessages(null)
+
+        // Имитация движения по трассе (~120 км/ч)
         demoRunnable = object : Runnable {
             override fun run() {
-                updateDemoData()
-                demoHandler.postDelayed(this, 1000) // Обновляем каждую секунду
+                val baseSpeed = 120
+                val speedVariation = Random.nextInt(-10, 10)
+                val currentSpeed = baseSpeed + speedVariation
+
+                val baseRpm = 2500
+                val rpmVariation = Random.nextInt(-200, 200)
+                val currentRpm = baseRpm + rpmVariation
+
+                val engineTemp = 90 + Random.nextDouble(-2.0, 2.0)
+                val voltage = 13.8 + Random.nextDouble(-0.2, 0.2)
+                val fuelLevel = 65.0 - (System.currentTimeMillis() % 10000) / 10000.0 * 0.1
+                val acceleration = 0.1 + Random.nextDouble(-0.2, 0.2)
+
+                speedTextView.text = currentSpeed.toString()
+                rpmTextView.text = currentRpm.toString()
+                tempTextView.text = "%.1f°C".format(engineTemp)
+                fuelTextView.text = "%.1f%%".format(fuelLevel)
+                voltageTextView.text = "%.1fV".format(voltage)
+                accelerationTextView.text = "%.1f м/с²".format(acceleration)
+                speedProgress.progress = (currentSpeed * 100 / 220)
+                updateUptime()
+
+                demoHandler.postDelayed(this, 1000)
             }
         }
         demoHandler.post(demoRunnable!!)
 
-        // Запускаем обновление графика каждые 500мс
+        // Обновление графика
         demoHandler.post(object : Runnable {
             override fun run() {
-                updateChartData()
+                updateChartData(2500f, 500f)
                 demoHandler.postDelayed(this, 500)
             }
         })
     }
 
-    private fun updateDemoData() {
-        // Имитация параметров двигателя на холостом ходу
-        val baseRpm = 800
-        val rpmNoise = (Random.nextDouble(-20.0, 20.0)).toInt()
-        val currentRpm = baseRpm + rpmNoise
+    private fun startDemo2Mode() {
+        // Имитация холостого хода (как было ранее)
+        demoRunnable = object : Runnable {
+            override fun run() {
+                val baseRpm = 800
+                val rpmNoise = Random.nextInt(-20, 20)
+                val currentRpm = baseRpm + rpmNoise
+                val engineTemp = 70 + Random.nextDouble(-2.0, 2.0)
+                val voltage = 13.8 + Random.nextDouble(-0.2, 0.2)
+                val fuelLevel = 85.0 - (System.currentTimeMillis() % 10000) / 10000.0 * 0.1
 
-        // Температура двигателя (медленно растет до рабочей)
-        val engineTemp = 70 + Random.nextDouble(-2.0, 2.0)
+                speedTextView.text = "0"
+                rpmTextView.text = currentRpm.toString()
+                tempTextView.text = "%.1f°C".format(engineTemp)
+                fuelTextView.text = "%.1f%%".format(fuelLevel)
+                voltageTextView.text = "%.1fV".format(voltage)
+                accelerationTextView.text = "0.0 м/с²"
+                speedProgress.progress = 0
+                updateUptime()
 
-        // Напряжение бортовой сети
-        val voltage = 13.8 + Random.nextDouble(-0.2, 0.2)
+                demoHandler.postDelayed(this, 1000)
+            }
+        }
+        demoHandler.post(demoRunnable!!)
 
-        // Уровень топлива (медленно уменьшается)
-        val fuelLevel = 85.0 - (System.currentTimeMillis() % 10000) / 10000.0 * 0.1
+        demoHandler.post(object : Runnable {
+            override fun run() {
+                updateChartData(800f, 50f) // Базовые значения для DEMO2 режима
+                demoHandler.postDelayed(this, 500)
+            }
+        })
+    }
 
-        // Обновляем UI
-        speedTextView.text = "0"
-        rpmTextView.text = "$currentRpm"
-        tempTextView.text = "%.1f°C".format(engineTemp)
-        fuelTextView.text = "%.1f%%".format(fuelLevel)
-        voltageTextView.text = "%.1fV".format(voltage)
-        accelerationTextView.text = "0.0 м/с²"
-
-        // Прогресс бар (0% так как скорость 0)
-        speedProgress.progress = 0
-
-        // Время работы (формат HH:MM:SS)
-        val uptimeSeconds = (System.currentTimeMillis() / 1000).toInt()
+    private fun updateUptime() {
+        val uptimeSeconds = ((System.currentTimeMillis() - startTime) / 1000).toInt()
         val hours = uptimeSeconds / 3600
         val minutes = (uptimeSeconds % 3600) / 60
         val seconds = uptimeSeconds % 60
@@ -243,79 +391,49 @@ class DynamicsFragment : Fragment() {
         leftAxis.setDrawGridLines(true)
         leftAxis.gridColor = Color.parseColor("#333333")
         leftAxis.textColor = Color.WHITE
-        leftAxis.axisMinimum = 700f
-        leftAxis.axisMaximum = 900f
+        leftAxis.axisMinimum = 0f
 
         lineChart.axisRight.isEnabled = false
-
-        // Инициализируем пустые данные
-        val dataSet = LineDataSet(null, "RPM").apply {
+        lineChart.data = LineData(LineDataSet(null, "RPM").apply {
             color = Color.GREEN
             setCircleColor(Color.GREEN)
             lineWidth = 2f
             circleRadius = 3f
             setDrawCircleHole(false)
             setDrawValues(false)
-        }
-        lineChart.data = LineData(dataSet)
+        })
     }
 
-    private fun updateChartData() {
-        // Генерируем демо-данные для графика (имитация RPM)
-        val rpmValue = 800 + sin(timeCounter * 0.1) * 20 + Random.nextFloat() * 10
+    private fun updateChartData(baseValue: Float, variationRange: Float) {
+        val value =
+            baseValue + sin(timeCounter * 0.1) * variationRange / 2 + Random.nextFloat() * variationRange / 2
+        chartData.add(Entry(timeCounter, value.toFloat()))
 
-        // Добавляем новую точку
-        chartData.add(Entry(timeCounter, rpmValue.toFloat()))
-
-        // Удаляем старые точки, если их слишком много
         if (chartData.size > maxDataPoints) {
             chartData.removeAt(0)
         }
 
-        // Получаем или создаем набор данных
-        val dataSet = if (lineChart.data != null && lineChart.data.dataSetCount > 0) {
-            lineChart.data.getDataSetByIndex(0) as LineDataSet
-        } else {
-            LineDataSet(chartData, "RPM").apply {
-                color = Color.GREEN
-                setCircleColor(Color.GREEN)
-                lineWidth = 2f
-                circleRadius = 3f
-                setDrawCircleHole(false)
-                setDrawValues(false)
-            }
-        }
-
-        // Обновляем данные
+        val dataSet = lineChart.data.getDataSetByIndex(0) as LineDataSet
         dataSet.values = chartData
         dataSet.notifyDataSetChanged()
-
-        if (lineChart.data == null) {
-            lineChart.data = LineData(dataSet)
-        } else {
-            lineChart.data.notifyDataChanged()
-        }
-
+        lineChart.data.notifyDataChanged()
         lineChart.notifyDataSetChanged()
         lineChart.invalidate()
 
-        // Увеличиваем счетчик времени
+        lineChart.axisLeft.axisMaximum = baseValue + variationRange * 1.5f
+        lineChart.axisLeft.axisMinimum = maxOf(0f, baseValue - variationRange * 1.5f)
+
         timeCounter += 0.5f
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // Останавливаем демо-режим при закрытии фрагмента
         demoHandler.removeCallbacksAndMessages(null)
     }
 
     companion object {
-        fun newInstance(demoMode: Boolean = false): DynamicsFragment {
-            return DynamicsFragment().apply {
-                arguments = Bundle().apply {
-                    putBoolean("demoMode", demoMode)
-                }
-            }
+        fun newInstance(): DynamicsFragment {
+            return DynamicsFragment()
         }
     }
 }

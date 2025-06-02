@@ -49,8 +49,7 @@
                 android:layout_below="@id/carNameText"
                 android:orientation="horizontal"
 
-                android:gravity="center_vertical"
-                android:layout_marginBottom="2dp">
+                android:gravity="center_vertical">
 
                 <TextView
                     android:id="@+id/carBrandText"
@@ -110,7 +109,7 @@
                 android:textColor="@color/white"
                 android:textSize="12sp" />
 
-            <!-- Статусы подключения -->
+            <!-- Статус подключения -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -127,42 +126,18 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ECU:"
+                        android:text="STATUS:"
                         android:textColor="@color/white"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/statusECU"
+                        android:id="@+id/statusText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="DISCONNECTED"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:fontFamily="monospace" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="ELM:"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/statusELM"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="DISCONNECTED"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="12sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:fontFamily="monospace" />
                 </LinearLayout>
@@ -350,12 +325,12 @@
         android:layout_margin="4dp"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardElevation="0dp"
-        app:strokeColor="?attr/colorPrimary"
-        app:strokeWidth="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/criticalPanel">
+        app:layout_constraintTop_toBottomOf="@id/criticalPanel"
+        app:strokeColor="?attr/colorPrimary"
+        app:strokeWidth="2dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -365,32 +340,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:letterSpacing="0.2"
                 android:text="PERFORMANCE METRICS"
                 android:textColor="@color/white"
-                android:textSize="10sp"
-                android:letterSpacing="0.2"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
+                android:textSize="10sp" />
 
             <!-- Заменяем View на LineChart -->
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/metricsGraph"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
-                android:layout_above="@id/graphLegend" />
+                android:layout_marginTop="16dp" />
 
-            <TextView
-                android:id="@+id/graphLegend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="8dp"
-                android:text="SPEED | RPM | ACCEL"
-                android:textColor="@color/white"
-                android:textSize="8sp"
-                android:letterSpacing="0.1" />
+
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -399,9 +363,10 @@
         android:id="@+id/additionalMetrics"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:orientation="vertical"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/bg_cyber_panel"
+        android:orientation="vertical"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -409,18 +374,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:letterSpacing="0.1"
             android:text="SYSTEM METRICS"
             android:textColor="@color/white"
-            android:textSize="10sp"
-            android:letterSpacing="0.1"
-            android:layout_marginBottom="8dp" />
+            android:textSize="10sp" />
 
         <!-- Ускорение -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="4dp">
+            android:layout_marginBottom="4dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -434,18 +399,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
+                android:fontFamily="monospace"
                 android:text="0.0 м/с²"
                 android:textColor="?attr/colorPrimary"
-                android:textSize="10sp"
-                android:fontFamily="monospace" />
+                android:textSize="10sp" />
         </LinearLayout>
 
         <!-- Напряжение -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="4dp">
+            android:layout_marginBottom="4dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -459,10 +424,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
+                android:fontFamily="monospace"
                 android:text="12.6V"
                 android:textColor="?attr/colorPrimary"
-                android:textSize="10sp"
-                android:fontFamily="monospace" />
+                android:textSize="10sp" />
         </LinearLayout>
 
         <!-- Время работы -->
@@ -483,10 +448,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
+                android:fontFamily="monospace"
                 android:text="00:00:00"
                 android:textColor="?attr/colorPrimary"
-                android:textSize="10sp"
-                android:fontFamily="monospace" />
+                android:textSize="10sp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
