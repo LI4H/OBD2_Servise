@@ -82,5 +82,20 @@
         <item name="btn3right">@drawable/btn3_selector_red_right</item><!-- отредактировать! -->
     </style>
 
+    <style name="Theme.OBD_Servise.Black" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/grey2</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/white</item>
+        <item name="colorSecondaryVariant">@color/grey</item>
+        <item name="colorOnSecondary">@color/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
+        <item name="navIconColor">@color/nav_icon_color_black</item>
+        <item name="menuItemBackground">@drawable/menu_item_background_black
+        </item><!-- отредактировать! -->
+        <item name="btn3left">@drawable/btn3_selector_red_left</item><!-- отредактировать! -->
+        <item name="btn3right">@drawable/btn3_selector_red_right</item><!-- отредактировать! -->
+
+    </style>
 </resources>

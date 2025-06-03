@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
             "yellow" -> setTheme(R.style.Theme_OBD_Servise_Yellow)
             "green" -> setTheme(R.style.Theme_OBD_Servise_Green)
             "violet" -> setTheme(R.style.Theme_OBD_Servise_Violet)
+            "black" -> setTheme(R.style.Theme_OBD_Servise_Black)
 
         }
         super.onCreate(savedInstanceState)

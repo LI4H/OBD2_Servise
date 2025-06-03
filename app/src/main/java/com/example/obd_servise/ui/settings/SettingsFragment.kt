@@ -234,6 +234,7 @@ class SettingsFragment : Fragment() {
             "yellow" -> binding.radioYellow.isChecked = true
             "green" -> binding.radioGreen.isChecked = true
             "violet" -> binding.radioViolet.isChecked = true
+            "black" -> binding.radioBlack.isChecked = true
         }
 
         binding.radioGroupTheme.setOnCheckedChangeListener { _, checkedId ->
@@ -242,6 +243,7 @@ class SettingsFragment : Fragment() {
                 binding.radioYellow.id -> "yellow"
                 binding.radioGreen.id -> "green"
                 binding.radioViolet.id -> "violet"
+                binding.radioBlack.id -> "black"
                 else -> "classic"
             }
 

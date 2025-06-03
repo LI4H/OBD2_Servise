@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:height="45dp"
+        android:left="15dp"
+        android:right="15dp"
+        android:bottom="5dp">
+        <bitmap
+            android:src="@drawable/btn_status_selected_grey"
+            android:gravity="fill" />
+    </item>
+</layer-list>
