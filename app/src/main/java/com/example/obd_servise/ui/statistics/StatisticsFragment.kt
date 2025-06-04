@@ -1,10 +1,13 @@
 package com.example.obd_servise.ui.statistics
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -12,6 +15,7 @@ import com.example.obd_servise.R
 import com.example.obd_servise.databinding.FragmentStatisticsBinding
 import com.example.obd_servise.ui.car.CarViewModel
 import com.example.obd_servise.ui.home.HomeViewModel
+import com.example.obd_servise.ui.statistics.TripEntity
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
@@ -114,10 +118,17 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
             )
 
             radioButtons.forEach { radio ->
-                radio.setBackgroundResource(
-                    if (radio.isChecked) R.drawable.btn2_selected else R.drawable.btn2_ne_selected
-                )
+                if (radio.isChecked) {
+                    radio.setBackgroundResource(R.drawable.btn2_selected)
+                    radio.backgroundTintList =
+                        ColorStateList.valueOf(getThemeColor(com.google.android.material.R.attr.colorPrimary))
+                } else {
+                    radio.setBackgroundResource(R.drawable.btn2_ne_selected)
+                    radio.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+                }
             }
+
+
             // Обновляем данные при изменении фильтра
             carViewModel.getSelectedCar { selectedCar ->
                 selectedCar?.let { car ->
@@ -128,6 +139,13 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
         // Установка фильтра по умолчанию (7 дней)
         binding.radio7Days.isChecked = true
+    }
+
+    private fun getThemeColor(attrResId: Int): Int {
+        val typedValue = TypedValue()
+        val theme = requireContext().theme
+        theme.resolveAttribute(attrResId, typedValue, true)
+        return typedValue.data
     }
 
     private fun filterTripsByPeriod(trips: List<TripEntity>): List<TripEntity> {
@@ -231,14 +249,60 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
             statsChart.setNoDataText("Нет данных за выбранный период")
             return
         }
-        // Фильтруем поездки - удаляем те, где все параметры нулевые
-        val filteredTrips = trips.filter { trip ->
-            trip.distance > 0 || trip.fuelUsed > 0 || trip.avgSpeed > 0 ||
-                    trip.fuelConsumption > 0 || trip.fuelCost > 0 || trip.engineHours > 0
-        }
-        // Обратный порядок для отображения (от старых к новым)
+
+        // Сортируем поездки по дате (от старых к новым)
         val sortedTrips = trips.sortedBy { it.date }
 
+        // Создаем карту для хранения границ месяцев и годов
+        val monthBoundaries =
+            mutableMapOf<String, Pair<Int, Int>>() // monthYear to (firstIndex, lastIndex)
+        val yearBoundaries =
+            mutableMapOf<String, Pair<Int, Int>>()  // year to (firstIndex, lastIndex)
+
+        sortedTrips.forEachIndexed { index, trip ->
+            val (year, month, _) = trip.date.split("-")
+            val monthYear = "$year-$month"
+
+            // Обновляем границы месяцев
+            if (!monthBoundaries.containsKey(monthYear)) {
+                monthBoundaries[monthYear] = index to index
+            } else {
+                val (first, _) = monthBoundaries[monthYear]!!
+                monthBoundaries[monthYear] = first to index
+            }
+
+            // Обновляем границы годов
+            if (!yearBoundaries.containsKey(year)) {
+                yearBoundaries[year] = index to index
+            } else {
+                val (first, _) = yearBoundaries[year]!!
+                yearBoundaries[year] = first to index
+            }
+        }
+
+        // Настройка форматирования оси X
+        statsChart.xAxis.valueFormatter = object : ValueFormatter() {
+            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                val index = value.toInt()
+                if (index !in sortedTrips.indices) return ""
+
+                val trip = sortedTrips[index]
+                val (year, month, day) = trip.date.split("-")
+                val monthYear = "$year-$month"
+
+                // Проверяем границы
+                val isFirstInMonth = monthBoundaries[monthYear]?.first == index
+                val isLastInMonth = monthBoundaries[monthYear]?.second == index
+                val isFirstInYear = yearBoundaries[year]?.first == index
+                val isLastInYear = yearBoundaries[year]?.second == index
+
+                return when {
+                    isFirstInYear || isLastInYear -> "$day ${getMonthName(month.toInt())} $year"
+                    isFirstInMonth || isLastInMonth -> "$day ${getMonthName(month.toInt())}"
+                    else -> day
+                }
+            }
+        }
         // Создание наборов данных
         val createDataSet = { entries: List<Entry>, color: Int, label: String ->
             LineDataSet(entries, label).apply {
@@ -291,26 +355,6 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         // Настройка осей
         statsChart.apply {
             // Форматирование дат для нижней оси X (дни)
-            xAxis.valueFormatter = object : ValueFormatter() {
-                override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                    val index = value.toInt()
-                    return if (index in sortedTrips.indices) {
-                        formatDay(sortedTrips[index].date)
-                    } else ""
-                }
-            }
-
-            // Форматирование для верхней оси X (месяцы)
-            (xAxis as XAxis).apply {
-                valueFormatter = object : ValueFormatter() {
-                    override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                        val index = value.toInt()
-                        return if (index in sortedTrips.indices) {
-                            formatMonth(sortedTrips[index].date)
-                        } else ""
-                    }
-                }
-            }
 
             data = LineData(dataSets)
             notifyDataSetChanged()
@@ -327,28 +371,6 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         }
     }
 
-    //
-//        // Настройка осей
-//        statsChart.apply {
-//            xAxis.valueFormatter = IndexAxisValueFormatter(sortedTrips.map { formatDate(it.date) })
-//            xAxis.labelCount = minOf(sortedTrips.size, 10) // Не более 10 меток
-//
-//            data = LineData(dataSets)
-//            notifyDataSetChanged()
-//
-//
-//            // Устанавливаем масштаб графика, если много данных
-//            if (sortedTrips.size > 10) {
-//                val scaleX = sortedTrips.size / 10f
-//                statsChart.viewPortHandler.setMaximumScaleX(scaleX)
-//                statsChart.setVisibleXRangeMaximum(10f)
-//                statsChart.moveViewToX(sortedTrips.size.toFloat())
-//            }
-//
-//
-//            invalidate()
-//        }
-//    }
     private fun formatDay(dateString: String): String {
         return try {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -358,7 +380,23 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
             dateString
         }
     }
-
+    private fun getMonthName(month: Int): String {
+        return when (month) {
+            1 -> "янв"
+            2 -> "фев"
+            3 -> "мар"
+            4 -> "апр"
+            5 -> "май"
+            6 -> "июн"
+            7 -> "июл"
+            8 -> "авг"
+            9 -> "сен"
+            10 -> "окт"
+            11 -> "ноя"
+            12 -> "дек"
+            else -> ""
+        }
+    }
     private fun formatMonth(dateString: String): String {
         return try {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())

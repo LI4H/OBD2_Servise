@@ -30,6 +30,7 @@ firebaseDatabaseKtx = "21.0.0"
 screenshotValidationJunitEngine = "0.0.1-alpha09"
 roomCommonJvm = "2.7.1"
 roomRuntimeAndroid = "2.7.1"
+firebaseAuthKtx = "23.2.1"
 
 [libraries]
 
@@ -64,6 +65,7 @@ firebase-database-ktx = { group = "com.google.firebase", name = "firebase-databa
 screenshot-validation-junit-engine = { group = "com.android.tools.screenshot", name = "screenshot-validation-junit-engine", version.ref = "screenshotValidationJunitEngine" }
 androidx-room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
 androidx-room-runtime-android = { group = "androidx.room", name = "room-runtime-android", version.ref = "roomRuntimeAndroid" }
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -2,38 +2,456 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dynamics_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimaryVariant">
+    android:background="@color/black"
+    tools:context=".ui.dynamics.DynamicsFragment"
 
-    <TextView
-        android:id="@+id/speedTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
-        android:text="Speed - 0.0"
-        android:textColor="@color/white"
-        android:textSize="20dp"
+    >
+    <!-- Блок информации об автомобиле с статусами подключения -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/carInfoCard"
+        android:layout_width="0dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardElevation="0dp"
+        app:strokeColor="?attr/colorPrimary"
+        app:strokeWidth="2dp"
+        app:layout_constraintEnd_toStartOf="@+id/speedIndicator"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/carNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CAR NAME"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Первая строка - Название и марка -->
+            <LinearLayout
+                android:id="@+id/titleRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/carNameText"
+                android:orientation="horizontal"
+
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/carBrandText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="Brand: BMW"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/carModelText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/titleRow"
+                    android:layout_marginStart="8dp"
+                    android:text="Model: X5"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+
+            </LinearLayout>
+
+            <!-- Вторая строка - Модель -->
+
+
+            <!-- Третья строка - Пробег -->
+            <TextView
+                android:id="@+id/carMileageText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titleRow"
+                android:layout_marginTop="2dp"
+                android:text="Mileage: 15000 km"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <!-- Четвертая строка - Топливо -->
+            <TextView
+                android:id="@+id/carFuelTypeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/carMileageText"
+                android:layout_marginTop="2dp"
+                android:text="Fuel: Gasoline"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <!-- Пятая строка - VIN -->
+            <TextView
+                android:id="@+id/carVinText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/carFuelTypeText"
+                android:layout_marginTop="2dp"
+                android:text="VIN: CH47N4-2077-42"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <!-- Статус подключения -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical"
+                android:layout_marginTop="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="STATUS:"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/statusText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="DISCONNECTED"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:fontFamily="monospace" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <!-- Индикатор скорости (1/3 ширины) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/speedIndicator"
+        android:layout_width="120dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardElevation="0dp"
+        app:strokeColor="?attr/colorPrimary"
+        app:strokeWidth="2dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <!-- Цифровой индикатор скорости -->
+            <TextView
+                android:id="@+id/speedTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="48sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace" />
+
+            <TextView
+                android:id="@+id/speedUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/speedTextView"
+                android:text="км/ч"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <!-- Прогресс-бар скорости -->
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/speedProgress"
+                android:layout_width="100dp"
+                android:layout_height="8dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="16dp"
+                style="@style/Widget.Material3.LinearProgressIndicator"
+                android:progress="0"
+                app:trackColor="@color/white"
+                app:indicatorColor="?attr/colorPrimary"
+                app:trackThickness="4dp" />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Панель критических показателей (горизонтальная) -->
+    <LinearLayout
+        android:id="@+id/criticalPanel"
+        android:layout_width="0dp"
+
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_cyber_panel"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/carInfoCard">
+
+        <!-- RPM индикатор -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RPM:"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:letterSpacing="0.1" />
+
+            <TextView
+                android:id="@+id/rpmTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="0"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+
+        <!-- Температура -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="24dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="@color/white"
+            android:alpha="0.2" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TEMP:"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:letterSpacing="0.1" />
+
+            <TextView
+                android:id="@+id/tempTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="--°C"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+
+        <!-- Разделитель -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="24dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="@color/white"
+            android:alpha="0.2" />
+
+        <!-- Топливо -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FUEL:"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:letterSpacing="0.1" />
+
+            <TextView
+                android:id="@+id/fuelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="--%"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- График динамики (нижняя половина экрана) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/graphCard"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="4dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rpmTextView"
-        app:layout_constraintVertical_bias="0.215" />
+        app:layout_constraintTop_toBottomOf="@id/criticalPanel"
+        app:strokeColor="?attr/colorPrimary"
+        app:strokeWidth="2dp">
 
-    <TextView
-        android:id="@+id/rpmTextView"
-        android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:letterSpacing="0.2"
+                android:text="PERFORMANCE METRICS"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+            <!-- Заменяем View на LineChart -->
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/metricsGraph"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp" />
+
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Блок дополнительных метрик (правый нижний угол) -->
+    <LinearLayout
+        android:id="@+id/additionalMetrics"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:text="rpm - 0.0"
-        android:textColor="@color/white"
-        android:textSize="20dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/bg_cyber_panel"
+        android:orientation="vertical"
+        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.149" />
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:letterSpacing="0.1"
+            android:text="SYSTEM METRICS"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
 
+        <!-- Ускорение -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ACC:"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/accelerationTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:fontFamily="monospace"
+                android:text="0.0 м/с²"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <!-- Напряжение -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VOLT:"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/voltageTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:fontFamily="monospace"
+                android:text="12.6V"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <!-- Время работы -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UPTIME:"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/uptimeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:fontFamily="monospace"
+                android:text="00:00:00"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

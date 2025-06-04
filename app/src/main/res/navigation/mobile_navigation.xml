@@ -13,7 +13,12 @@
     <action
         android:id="@+id/action_homeFragment_to_deviceSelectionFragment"
         app:destination="@id/deviceSelectionFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_carFragment"
+            app:destination="@id/nav_car" />
        </fragment>
+
+
     <fragment
         android:id="@+id/nav_dynamics"
         android:name="com.example.obd_servise.ui.dynamics.DynamicsFragment"
@@ -49,6 +54,17 @@
             app:destination="@id/carInputFragment" />
     </fragment>
     <fragment
+        android:id="@+id/nav_car_parts"
+        android:name="com.example.obd_servise.ui.car.CarPartsFragment"
+        android:label="Комплектующие"
+        tools:layout="@layout/fragment_car_parts">
+        <action
+            android:id="@+id/action_carPartsFragment_to_addCarPartFragment"
+            app:destination="@id/addCarPartFragment" />
+    </fragment>
+
+
+    <fragment
         android:id="@+id/nav_info"
         android:name="com.example.obd_servise.ui.info.InfoFragment"
         android:label="@string/menu_info"
@@ -77,22 +93,22 @@
             android:id="@+id/action_carInputFragment_to_carServiceInfoFragment"
             app:destination="@id/nav_carServiceInfoFragment" />
     </fragment>
+
+
     <fragment
         android:id="@+id/nav_carServiceInfoFragment"
         android:name="com.example.obd_servise.ui.car.CarServiceInfoFragment"
         android:label="@string/menu_car_servise_info"
         tools:layout="@layout/fragment_car_service_info" />
-    <action
-        android:id="@+id/carFragment"
-        app:destination="@id/nav_car" />
+
     <fragment
         android:id="@+id/addTripFragment"
-        android:name="com.example.obd_servise.ui.statistics.AddTripFragment"
+        android:name="com.example.obd_servise.ui.statistics.addTrip.AddTripFragment"
         android:label="AddTripFragment"
         tools:layout="@layout/fragment_add_trip" />
     <fragment
         android:id="@+id/allTripsFragment"
-        android:name="com.example.obd_servise.ui.statistics.AllTripsFragment"
+        android:name="com.example.obd_servise.ui.statistics.allTrips.AllTripsFragment"
         android:label="Мои поездки"
         tools:layout="@layout/fragment_all_trips">
     <action
@@ -101,7 +117,7 @@
     </fragment>
     <fragment
         android:id="@+id/tripDetailsFragment"
-        android:name="com.example.obd_servise.ui.statistics.TripDetailsFragment"
+        android:name="com.example.obd_servise.ui.statistics.tripDetails.TripDetailsFragment"
         android:label="Детали поездки"
         tools:layout="@layout/fragment_trip_details">
         <argument
@@ -111,5 +127,13 @@
             android:name="carId"
             app:argType="string" />
     </fragment>
-
+    <fragment
+        android:id="@+id/addCarPartFragment"
+        android:name="com.example.obd_servise.ui.car.AddCarPartFragment"
+        android:label="Добавить комплектующую"
+        tools:layout="@layout/fragment_add_car_part">
+        <argument
+            android:name="carId"
+            app:argType="string" />
+    </fragment>
 </navigation>

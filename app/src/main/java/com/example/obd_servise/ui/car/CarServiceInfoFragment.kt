@@ -1,6 +1,7 @@
 package com.example.obd_servise.ui.car
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -8,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.obd_servise.R
 import com.example.obd_servise.databinding.FragmentCarServiceInfoBinding
+import java.util.Calendar
 
 class CarServiceInfoFragment : Fragment() {
 
@@ -27,26 +29,35 @@ class CarServiceInfoFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         carId = arguments?.getString("carId")
         isEditing = !carId.isNullOrEmpty()
 
         if (isEditing) {
             binding.buttonAddCar.text = "Применить изменения"
-            binding.buttonDeleteCar.visibility = View.VISIBLE
+            binding.buttonDeleteCar.visibility = View.GONE
 
             carId?.let { id ->
                 carViewModel.loadCarById(id) { carData ->
-                    binding.inputOilFilterKm.setText(carData.oilFilterKm.toString())
-                    binding.inputCabinFilterKm.setText(carData.cabinFilterKm.toString())
-                    binding.inputNextServiceKm.setText(carData.nextServiceKm.toString())
+                    binding.inputCarBrand.setText(carData.brand)
+                    binding.inputCarModel.setText(carData.model)
+                    binding.inputYear.setText(carData.year.toString())
+                    binding.inputVin.setText(carData.vin)
+                    binding.inputLicensePlate.setText(carData.licensePlate)
 
-                    // Обновление ViewModel
-                    carViewModel.oilFilterKm = carData.oilFilterKm
-                    carViewModel.cabinFilterKm = carData.cabinFilterKm
-                    carViewModel.nextServiceKm = carData.nextServiceKm
+                    carViewModel.updateCarData(
+                        carData.brand,
+                        carData.model,
+                        carData.year,
+                        carData.vin,
+                        carData.licensePlate
+                    )
                 }
             }
-
+            binding.buttonBack.setOnClickListener {
+                findNavController().popBackStack()
+            }
             binding.buttonAddCar.setOnClickListener {
                 updateCar(carId!!)
             }
@@ -58,10 +69,10 @@ class CarServiceInfoFragment : Fragment() {
                         Toast.makeText(requireContext(), "Авто удалено", Toast.LENGTH_SHORT).show()
                         findNavController().popBackStack(R.id.nav_car, false)
                     },
-                    onFailure = {
+                    onFailure = { e ->
                         Toast.makeText(
                             requireContext(),
-                            "Ошибка удаления: ${it.message}",
+                            "Ошибка удаления: ${e.message}",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -69,7 +80,6 @@ class CarServiceInfoFragment : Fragment() {
             }
 
         } else {
-            // Новый автомобиль — кнопка только "Добавить"
             binding.buttonDeleteCar.visibility = View.GONE
             binding.buttonAddCar.setText(R.string.buttonAddCar)
 
@@ -81,30 +91,44 @@ class CarServiceInfoFragment : Fragment() {
 
     private fun validateInputs(): Boolean {
         clearErrors()
-
-        val oilFilterKmText = binding.inputOilFilterKm.text.toString().trim()
-        val cabinFilterKmText = binding.inputCabinFilterKm.text.toString().trim()
-        val nextServiceKmText = binding.inputNextServiceKm.text.toString().trim()
-
         var isValid = true
 
-        if (oilFilterKmText.isEmpty()) {
-            binding.inputOilFilterKm.error = "Введите пробег замены масляного фильтра"
+        val brand = binding.inputCarBrand.text.toString().trim()
+        val model = binding.inputCarModel.text.toString().trim()
+        val yearStr = binding.inputYear.text.toString().trim()
+        val vin = binding.inputVin.text.toString().trim()
+
+        if (TextUtils.isEmpty(brand)) {
+            binding.inputCarBrand.error = "Введите марку автомобиля"
             isValid = false
         }
 
-        if (cabinFilterKmText.isEmpty()) {
-            binding.inputCabinFilterKm.error = "Введите пробег замены салонного фильтра"
+        if (TextUtils.isEmpty(model)) {
+            binding.inputCarModel.error = "Введите модель автомобиля"
             isValid = false
         }
 
-        if (nextServiceKmText.isEmpty()) {
-            binding.inputNextServiceKm.error = "Введите пробег следующего ТО"
+        if (TextUtils.isEmpty(yearStr)) {
+            binding.inputYear.error = "Введите год выпуска"
+            isValid = false
+        } else {
+            val year = yearStr.toIntOrNull()
+            if (year == null || year < 1900 || year > Calendar.getInstance().get(Calendar.YEAR)) {
+                binding.inputYear.error = "Некорректный год"
+                isValid = false
+            }
+        }
+
+        if (TextUtils.isEmpty(vin)) {
+            binding.inputVin.error = "Введите VIN-номер"
+            isValid = false
+        } else if (vin.length != 17) {
+            binding.inputVin.error = "VIN должен содержать 17 символов"
             isValid = false
         }
 
         if (!isValid) {
-            Toast.makeText(requireContext(), "Пожалуйста, заполните все поля", Toast.LENGTH_SHORT)
+            Toast.makeText(requireContext(), "Пожалуйста, исправьте ошибки", Toast.LENGTH_SHORT)
                 .show()
         }
 
@@ -112,9 +136,13 @@ class CarServiceInfoFragment : Fragment() {
     }
 
     private fun fillViewModelFromInputs() {
-        carViewModel.oilFilterKm = binding.inputOilFilterKm.text.toString().trim().toInt()
-        carViewModel.cabinFilterKm = binding.inputCabinFilterKm.text.toString().trim().toInt()
-        carViewModel.nextServiceKm = binding.inputNextServiceKm.text.toString().trim().toInt()
+        val brand = binding.inputCarBrand.text.toString().trim()
+        val model = binding.inputCarModel.text.toString().trim()
+        val year = binding.inputYear.text.toString().trim().toInt()
+        val vin = binding.inputVin.text.toString().trim()
+        val licensePlate = binding.inputLicensePlate.text.toString().trim()
+
+        carViewModel.updateCarData(brand, model, year, vin, licensePlate)
     }
 
     private fun createCar() {
@@ -127,8 +155,9 @@ class CarServiceInfoFragment : Fragment() {
                 Toast.makeText(requireContext(), "Авто добавлено", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack(R.id.nav_car, false)
             },
-            onFailure = {
-                Toast.makeText(requireContext(), "Ошибка: ${it.message}", Toast.LENGTH_SHORT).show()
+            onFailure = { e ->
+                Toast.makeText(requireContext(), "Ошибка: ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         )
     }
@@ -144,16 +173,18 @@ class CarServiceInfoFragment : Fragment() {
                 Toast.makeText(requireContext(), "Изменения сохранены", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack(R.id.nav_car, false)
             },
-            onFailure = {
-                Toast.makeText(requireContext(), "Ошибка: ${it.message}", Toast.LENGTH_SHORT).show()
+            onFailure = { e ->
+                Toast.makeText(requireContext(), "Ошибка: ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         )
     }
 
     private fun clearErrors() {
-        binding.inputOilFilterKm.error = null
-        binding.inputCabinFilterKm.error = null
-        binding.inputNextServiceKm.error = null
+        binding.inputCarBrand.error = null
+        binding.inputCarModel.error = null
+        binding.inputYear.error = null
+        binding.inputVin.error = null
     }
 
     override fun onDestroyView() {

@@ -15,4 +15,3 @@ data class TripEntity(
     // Пустой конструктор для Firebase
     constructor() : this("", "", "", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 }
-

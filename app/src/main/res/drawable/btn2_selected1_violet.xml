@@ -6,7 +6,7 @@
         android:right="15dp"
         android:bottom="5dp">
         <bitmap
-            android:src="@drawable/btn_status_selected"
+            android:src="@drawable/btn_status_selected_violet"
             android:gravity="fill" />
     </item>
 </layer-list><!--    btn_status_selected_violet-->

@@ -1,42 +1,68 @@
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    android:padding="5dp"
+    android:background="@drawable/error_item_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="11dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Дата - основной заголовок -->
         <TextView
             android:id="@+id/tvDate"
+            android:hint="3124432"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
 
-        <TextView
-            android:id="@+id/tvDistance"
-            android:layout_width="wrap_content"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Группа показателей -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp" />
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp">
 
-        <TextView
-            android:id="@+id/tvFuelUsed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp" />
+            <!-- Расстояние -->
+            <TextView
+                android:id="@+id/tvDistance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="3124432"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
+            <!-- Расход топлива -->
+            <TextView
+                android:id="@+id/tvFuelUsed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="3124432"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Стоимость топлива -->
         <TextView
             android:id="@+id/tvFuelCost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp" />
-
+            android:hint="3124432"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
     </LinearLayout>
-
-</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

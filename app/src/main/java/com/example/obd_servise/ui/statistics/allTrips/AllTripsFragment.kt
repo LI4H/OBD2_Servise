@@ -1,9 +1,15 @@
-package com.example.obd_servise.ui.statistics
+package com.example.obd_servise.ui.statistics.allTrips
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatSpinner
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -11,12 +17,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.obd_servise.R
 import com.example.obd_servise.databinding.FragmentAllTripsBinding
 import com.example.obd_servise.ui.car.CarViewModel
-import com.google.android.material.datepicker.CalendarConstraints
+import com.example.obd_servise.ui.statistics.StatisticsViewModel
+import com.example.obd_servise.ui.statistics.TripEntity
+import com.example.obd_servise.ui.statistics.TripsAdapter
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 @AndroidEntryPoint
 class AllTripsFragment : Fragment(R.layout.fragment_all_trips) {
@@ -55,16 +65,36 @@ class AllTripsFragment : Fragment(R.layout.fragment_all_trips) {
     }
 
     private fun setupFilterModeSelector() {
-        binding.filterGroup.setOnCheckedChangeListener { _, checkedId ->
+        binding.filterGroup.setOnCheckedChangeListener { group, checkedId ->
             dateFilterMode = when (checkedId) {
-                R.id.radio_all -> DateFilterMode.ALL_TIME
-                R.id.radio_day -> DateFilterMode.SINGLE_DAY
-                R.id.radio_month -> DateFilterMode.MONTH
-                R.id.radio_year -> DateFilterMode.YEAR
-                R.id.radio_range -> DateFilterMode.RANGE
+                binding.radioAll.id -> DateFilterMode.ALL_TIME
+                binding.radioDay.id -> DateFilterMode.SINGLE_DAY
+                binding.radioMonth.id -> DateFilterMode.MONTH
+                binding.radioYear.id -> DateFilterMode.YEAR
+                binding.radioRange.id -> DateFilterMode.RANGE
                 else -> DateFilterMode.MONTH
             }
+
+            val radioButtons = listOf(
+                binding.radioAll,
+                binding.radioDay,
+                binding.radioMonth,
+                binding.radioYear,
+                binding.radioRange
+            )
+
             updateDateInputsVisibility()
+            radioButtons.forEach { radio ->
+                if (radio.isChecked) {
+                    radio.setBackgroundResource(R.drawable.btn2_selected)
+                    radio.backgroundTintList =
+                        ColorStateList.valueOf(getThemeColor(com.google.android.material.R.attr.colorPrimary))
+                } else {
+                    radio.setBackgroundResource(R.drawable.btn2_ne_selected)
+                    radio.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+                }
+            }
+
 
             // Применяем фильтр сразу при переключении режима (кроме диапазона)
             when (dateFilterMode) {
@@ -74,18 +104,24 @@ class AllTripsFragment : Fragment(R.layout.fragment_all_trips) {
                 else -> {}
             }
         }
+        // Установка фильтра по умолчанию
+        binding.radioMonth.isChecked = true
 
-//        // Устанавливаем месяц по умолчанию как выбранный
-        //    binding.radio_month.isChecked = true
     }
 
+    private fun getThemeColor(attrResId: Int): Int {
+        val typedValue = TypedValue()
+        val theme = requireContext().theme
+        theme.resolveAttribute(attrResId, typedValue, true)
+        return typedValue.data
+    }
     private fun updateDateInputsVisibility() {
         binding.apply {
-            tilSearchDate.visibility =
+            etSearchDate.visibility =
                 if (dateFilterMode == DateFilterMode.SINGLE_DAY) View.VISIBLE else View.GONE
-            tilMonthYear.visibility =
+            etMonthYear.visibility =
                 if (dateFilterMode == DateFilterMode.MONTH) View.VISIBLE else View.GONE
-            tilYear.visibility =
+            etYear.visibility =
                 if (dateFilterMode == DateFilterMode.YEAR) View.VISIBLE else View.GONE
             rangeDateContainer.visibility =
                 if (dateFilterMode == DateFilterMode.RANGE) View.VISIBLE else View.GONE
@@ -120,33 +156,62 @@ class AllTripsFragment : Fragment(R.layout.fragment_all_trips) {
     }
 
     private fun showMonthYearPicker() {
-        // Создаем диалог для выбора года
-        val years = (2020..2030).toList()
-        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        val calendar = Calendar.getInstance()
+        val currentYear = calendar.get(Calendar.YEAR)
+        val currentMonth = calendar.get(Calendar.MONTH) // 0-based
+
+        val years = (currentYear - 50..currentYear + 50).toList()
+        val months = arrayOf(
+            "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+            "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+        )
+
+        val dialogView = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            val layoutParam = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(64, 32, 64, 32) }
+            layoutParams = layoutParam
+
+            val spinnerYear = AppCompatSpinner(requireContext()).apply {
+                adapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_dropdown_item,
+                    years
+                )
+                setSelection(years.indexOf(currentYear)) // <-- Правильный вызов
+            }
+
+            val spinnerMonth = AppCompatSpinner(requireContext()).apply {
+                adapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_dropdown_item,
+                    months
+                )
+                setSelection(currentMonth) // <-- Правильный вызов
+            }
+
+            addView(spinnerYear)
+            addView(spinnerMonth)
+        }
 
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Выберите год")
-            .setItems(years.map { it.toString() }.toTypedArray()) { _, which ->
-                val selectedYear = years[which]
+            .setTitle("Выберите месяц и год")
+            .setView(dialogView)
+            .setPositiveButton("OK") { _, _ ->
+                val spinnerYear = dialogView.getChildAt(0) as AppCompatSpinner
+                val spinnerMonth = dialogView.getChildAt(1) as AppCompatSpinner
 
-                // После выбора года показываем выбор месяца
-                val months = arrayOf(
-                    "Январь", "Февраль", "Март", "Апрель",
-                    "Май", "Июнь", "Июль", "Август",
-                    "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
-                )
+                val selectedYear = spinnerYear.selectedItem as Int
+                val selectedMonthIndex = spinnerMonth.selectedItemPosition + 1 // Месяц от 1 до 12
 
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Выберите месяц")
-                    .setItems(months) { _, month ->
-                        val monthNumber = month + 1 // Месяцы с 1 до 12
-                        val monthYear = "$selectedYear-${monthNumber.toString().padStart(2, '0')}"
-                        selectedMonthYear = monthYear
-                        binding.etMonthYear.setText(monthYear)
-                        filterTripsByMonth(monthYear)
-                    }
-                    .show()
+                val monthYear = "$selectedYear-${selectedMonthIndex.toString().padStart(2, '0')}"
+                selectedMonthYear = monthYear
+                binding.etMonthYear.setText(monthYear)
+                filterTripsByMonth(monthYear)
             }
+            .setNegativeButton("Отмена", null)
             .show()
     }
 

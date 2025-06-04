@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
             "yellow" -> setTheme(R.style.Theme_OBD_Servise_Yellow)
             "green" -> setTheme(R.style.Theme_OBD_Servise_Green)
             "violet" -> setTheme(R.style.Theme_OBD_Servise_Violet)
+            "black" -> setTheme(R.style.Theme_OBD_Servise_Black)
 
         }
         super.onCreate(savedInstanceState)
@@ -70,6 +71,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_statistics,
                 R.id.nav_errors,
                 R.id.nav_car,
+                R.id.nav_car_parts,
                 R.id.nav_info,
                 R.id.nav_settings
             ), drawerLayout

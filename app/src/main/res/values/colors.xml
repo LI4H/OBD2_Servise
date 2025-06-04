@@ -9,6 +9,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#121212</color>
+
+    <color name="green_light">#00FF00</color>
+    <color name="orange_light">#FF5722</color>
+    <color name="red_light">#CD2D37</color>
     <!--    cyberpunk colors classic-->
     <color name="colorPrimary">#CD2D37</color>
     <color name="colorPrimaryVariant">#060B04</color>
@@ -41,5 +45,6 @@
     <color name="yellow">#FFEB3B</color>
     <color name="red">#E91E63</color>
     <color name="purple">#673AB7</color>
-    <color name="green">#8BC34A</color>
+    <color name="green">#00FF00</color>
+
 </resources>

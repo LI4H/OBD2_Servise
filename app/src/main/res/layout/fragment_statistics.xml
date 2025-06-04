@@ -85,7 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="5dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="3dp"
         android:fillViewport="true"
         android:scrollbars="none"
         app:layout_constraintEnd_toEndOf="parent"
@@ -103,7 +103,7 @@
                 android:id="@+id/radio_all_time"
                 android:layout_width="100dp"
                 android:layout_height="35dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginEnd="3dp"
                 android:background="@drawable/btn2_ne_selected"
                 android:button="@null"
                 android:gravity="center"
@@ -115,7 +115,7 @@
                 android:id="@+id/radio_7_days"
                 android:layout_width="100dp"
                 android:layout_height="35dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginEnd="3dp"
                 android:background="@drawable/btn2_ne_selected"
                 android:button="@null"
                 android:gravity="center"
@@ -127,7 +127,7 @@
                 android:id="@+id/radio_14_days"
                 android:layout_width="100dp"
                 android:layout_height="35dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginEnd="3dp"
                 android:background="@drawable/btn2_ne_selected"
                 android:button="@null"
                 android:gravity="center"
@@ -139,7 +139,7 @@
                 android:id="@+id/radio_30_days"
                 android:layout_width="100dp"
                 android:layout_height="35dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginEnd="3dp"
                 android:background="@drawable/btn2_ne_selected"
                 android:button="@null"
                 android:gravity="center"
@@ -151,7 +151,7 @@
                 android:id="@+id/radio_90_days"
                 android:layout_width="100dp"
                 android:layout_height="35dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginEnd="3dp"
                 android:background="@drawable/btn2_ne_selected"
                 android:button="@null"
                 android:gravity="center"
@@ -163,7 +163,7 @@
                 android:id="@+id/radio_360_days"
                 android:layout_width="100dp"
                 android:layout_height="35dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginEnd="3dp"
                 android:background="@drawable/btn2_ne_selected"
                 android:button="@null"
                 android:gravity="center"
@@ -173,58 +173,58 @@
         </RadioGroup>
     </HorizontalScrollView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="280dp"
-        android:layout_marginBottom="100dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView">
-        <!-- График -->
+
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/stats_chart"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="15dp"
             android:background="@drawable/edittext_border"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.444"
+            app:layout_constraintTop_toBottomOf="@id/horizontalScrollView"
+            app:layout_constraintBottom_toTopOf="@+id/buttons"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
-            app:layout_constraintVertical_bias="0.444" />
-    </LinearLayout>
+            app:layout_constraintEnd_toEndOf="parent" />
+
 
     <LinearLayout
+        android:id="@+id/buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal"
-        android:layout_marginBottom="12dp"
+        android:gravity="center"
+        android:paddingHorizontal="24dp"
+        android:weightSum="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <Button
             android:id="@+id/btn_my_trips"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
-            android:layout_marginEnd="6dp"
+            android:textSize="14sp"
+            android:layout_marginHorizontal="16dp"
             android:text="Мои поездки"
-            android:backgroundTint="?attr/colorPrimary"
-            android:textColor="?attr/colorOnPrimary" />
+            android:textColor="@color/white"
+            android:background="@drawable/btn2_ne_selected"
+            app:backgroundTint="?attr/colorPrimary" />
 
         <Button
             android:id="@+id/btn_add_trip"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
-            android:layout_marginStart="6dp"
+            android:textSize="14sp"
+            android:layout_marginHorizontal="16dp"
             android:text="Добавить поездку"
-            android:backgroundTint="?attr/colorPrimary"
-            android:textColor="?attr/colorOnPrimary" />
+            android:textColor="@color/black"
+            android:background="@drawable/btn1"
+            app:backgroundTint="?attr/colorPrimary"
+            app:strokeWidth="1dp" />
     </LinearLayout>
 
     <!--    android:textColor="?attr/colorPrimary"-->

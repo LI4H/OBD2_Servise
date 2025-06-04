@@ -3,46 +3,80 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:fillViewport="true"
+    android:background="?attr/colorPrimaryVariant">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:padding="24dp">
 
-        <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp" />
-
+        <!-- Дата -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/distanceContainer"
-            android:layout_width="match_parent"
+            android:id="@+id/DateLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint"
+            android:layout_marginBottom="5dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tvDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Дата поездки"
+                android:focusable="false"
+                android:clickable="true"
+                android:inputType="none"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <!-- Дистанция -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/distanceLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/DateLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etDistance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Дистанция (км)"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Средняя скорость -->
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
+            android:id="@+id/avgSpeedLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/distanceLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etAvgSpeed"
@@ -50,16 +84,24 @@
                 android:layout_height="wrap_content"
                 android:hint="Средняя скорость (км/ч)"
                 android:inputType="numberDecimal"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black" />
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Топливо использовано -->
+        <!-- Использовано топлива -->
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
+            android:id="@+id/fuelUsedLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/avgSpeedLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etFuelUsed"
@@ -67,34 +109,49 @@
                 android:layout_height="wrap_content"
                 android:hint="Использовано топлива (л)"
                 android:inputType="numberDecimal"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black" />
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
         </com.google.android.material.textfield.TextInputLayout>
-
 
         <!-- Стоимость топлива -->
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
+            android:id="@+id/fuelCostLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/fuelUsedLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etFuelCost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Стоимость топлива (₽)"
+                android:hint="Стоимость топлива (бел.руб)"
                 android:inputType="numberDecimal"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black" />
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Моточасы -->
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
+            android:id="@+id/engineHoursLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/fuelCostLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/text_input_stroke"
+            app:hintTextColor="@color/text_input_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEngineHours"
@@ -102,36 +159,49 @@
                 android:layout_height="wrap_content"
                 android:hint="Моточасы"
                 android:inputType="numberDecimal"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black" />
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/edit_text_cursor" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
+        <!-- Кнопки -->
         <LinearLayout
+            android:id="@+id/actionButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:orientation="horizontal"
-            android:layout_marginTop="16dp">
+            android:gravity="center"
+            android:weightSum="2"
 
-            <Button
-                android:id="@+id/btnSave"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:text="Сохранить"
-                android:backgroundTint="?attr/colorPrimary"
-                android:textColor="?attr/colorOnPrimary" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDelete"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp"
+                android:layout_marginHorizontal="16dp"
                 android:text="Удалить"
-                android:backgroundTint="?attr/colorPrimary"
-                android:textColor="?attr/colorOnPrimary" />
+                android:textColor="@color/white"
+                android:background="@drawable/btn2_selected"
+                app:backgroundTint="@color/white"
+                app:strokeWidth="1dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="16dp"
+                android:text="Сохранить"
+                android:textColor="@color/black"
+                android:background="@drawable/btn1"
+                app:backgroundTint="?attr/colorPrimary"
+                app:strokeWidth="1dp" />
         </LinearLayout>
-    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
