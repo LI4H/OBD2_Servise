@@ -21,8 +21,8 @@ import com.example.obd_servise.databinding.FragmentSettingsBinding
 import com.example.obd_servise.ui.car.CarViewModel
 import java.util.Locale
 
-class SettingsFragment : Fragment() {
 
+class SettingsFragment : Fragment() {
     private lateinit var carViewModel: CarViewModel
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
@@ -30,50 +30,68 @@ class SettingsFragment : Fragment() {
 
     private var currentSectionIndex = 0
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Инициализация ViewModel в onCreate
+        settingsViewModel = ViewModelProvider(this)[SettingsViewModel::class.java]
+        carViewModel = ViewModelProvider(this)[CarViewModel::class.java]
+    }
+
     private val sectionLayouts by lazy {
         listOf(
-            binding.layoutTheme,
-            binding.layoutLanguage,
-            binding.layoutStatistics,
-            binding.layoutNotifications
+            binding.layoutStatistics,    // 0 - Статистика
+            binding.layoutTheme,         // 1 - Темы
+            binding.layoutLanguage,      // 2 - Язык
+            binding.layoutNotifications  // 3 - Уведомления
         )
     }
 
     private val sectionTitles by lazy {
         listOf("Тема", "Язык", "Статистика", "Уведомления")
     }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        settingsViewModel = ViewModelProvider(this)[SettingsViewModel::class.java]
-        carViewModel = ViewModelProvider(this)[CarViewModel::class.java]
-
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         val root = binding.root
 
+        // Инициализация SharedPreferences после создания ViewModel
         settingsViewModel.initSharedPreferences(requireContext())
 
-        setupLanguageSelection()
-        setupThemeSelection()
-        setupCarSelection()
-        setupSectionNavigation()
-
-        currentSectionIndex = settingsViewModel.getLastSectionIndex()
-        showSection(currentSectionIndex)
-
-        //
-        setupNotificationSettings()
+        // Настройка интерфейса
+        setupUI()
 
         return root
     }
 
+    private fun setupUI() {
+        currentSectionIndex = settingsViewModel.getLastSectionIndex()
+        setupSectionNavigation()
+        showSection(currentSectionIndex)
+        setupLanguageSelection()
+        setupThemeSelection()
+        setupCarSelection()
+        setupNotificationSettings()
+    }
+
     private fun setupNotificationSettings() {
+
+        Log.d(
+            "SettingsFragment",
+            "Initial notifications enabled: ${settingsViewModel.getNotificationsEnabled()}"
+        )
         // Инициализация текущих настроек
-        binding.switchNotificationsEnabled.isChecked = settingsViewModel.getNotificationsEnabled()
-        updateNotificationOptionsVisibility()
+        binding.switchNotificationsEnabled.setOnCheckedChangeListener { _, isChecked ->
+            Log.d("SettingsFragment", "Notifications switch changed to: $isChecked")
+            settingsViewModel.setNotificationsEnabled(isChecked)
+            Log.d(
+                "SettingsFragment",
+                "Value after save: ${settingsViewModel.getNotificationsEnabled()}"
+            )
+            updateNotificationOptionsVisibility()
+        }
 
         val currentMethods = settingsViewModel.getNotificationMethods()
         binding.checkboxPhone.isChecked = currentMethods.contains("phone")
@@ -86,6 +104,10 @@ class SettingsFragment : Fragment() {
         binding.switchNotificationsEnabled.setOnCheckedChangeListener { _, isChecked ->
             settingsViewModel.setNotificationsEnabled(isChecked)
             updateNotificationOptionsVisibility()
+        }
+
+        binding.switchSelectedCarOnly.setOnCheckedChangeListener { _, isChecked ->
+            settingsViewModel.setSelectedCarOnly(isChecked)
         }
 
         binding.checkboxPhone.setOnCheckedChangeListener { _, isChecked ->
@@ -120,11 +142,14 @@ class SettingsFragment : Fragment() {
     private fun updateNotificationOptionsVisibility() {
         val isEnabled = binding.switchNotificationsEnabled.isChecked
         binding.notificationOptionsContainer.visibility = if (isEnabled) View.VISIBLE else View.GONE
+        binding.selectedCarOnlyContainer.visibility = if (isEnabled) View.VISIBLE else View.GONE
 
         // Отключаем/включаем чекбоксы в зависимости от состояния переключателя
         binding.checkboxPhone.isEnabled = isEnabled
         binding.checkboxEmail.isEnabled = isEnabled
+        binding.switchSelectedCarOnly.isEnabled = isEnabled
     }
+
 
     private fun updateEmailInputVisibility() {
         binding.emailInputContainer.visibility =
@@ -164,49 +189,34 @@ class SettingsFragment : Fragment() {
         private const val NOTIFICATION_PERMISSION_REQUEST_CODE = 1001
     }
     private fun setupSectionNavigation() {
-        binding.btnLeft.setOnClickListener {
-            currentSectionIndex =
-                (currentSectionIndex - 1 + sectionLayouts.size) % sectionLayouts.size
+        // Устанавливаем начальную выбранную кнопку
+        when (currentSectionIndex) {
+            0 -> binding.radioStatistics.isChecked = true
+            1 -> binding.radioTheme.isChecked = true
+            2 -> binding.radioLanguage.isChecked = true
+            3 -> binding.radioNotifications.isChecked = true
+        }
+
+        binding.navigationRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            currentSectionIndex = when (checkedId) {
+                binding.radioStatistics.id -> 0    // Статистика
+                binding.radioTheme.id -> 1        // Темы
+                binding.radioLanguage.id -> 2     // Язык
+                binding.radioNotifications.id -> 3 // Уведомления
+                else -> 0
+            }
             showSection(currentSectionIndex)
         }
-
-        binding.btnCenter.setOnClickListener {
-            // Центр — это текущая секция, ничего не делаем
-        }
-
-        binding.btnRight.setOnClickListener {
-            currentSectionIndex = (currentSectionIndex + 1) % sectionLayouts.size
-            showSection(currentSectionIndex)
-        }
-
-        showSectionButtons(currentSectionIndex)
     }
 
-
     private fun showSection(index: Int) {
-        sectionLayouts.forEachIndexed { i, layout ->
-            layout.visibility = if (i == index) View.VISIBLE else View.GONE
-        }
+        binding.layoutStatistics.visibility = if (index == 0) View.VISIBLE else View.GONE
+        binding.layoutTheme.visibility = if (index == 1) View.VISIBLE else View.GONE
+        binding.layoutLanguage.visibility = if (index == 2) View.VISIBLE else View.GONE
+        binding.layoutNotifications.visibility = if (index == 3) View.VISIBLE else View.GONE
 
         currentSectionIndex = index
         settingsViewModel.setLastSectionIndex(index)
-        showSectionButtons(index)
-    }
-
-    private fun showSectionButtons(index: Int) {
-        val total = sectionTitles.size
-        val leftIndex = (index - 1 + total) % total
-        val rightIndex = (index + 1) % total
-
-        with(binding) {
-            btnLeft.text = sectionTitles[leftIndex]
-            btnLeft.visibility = View.VISIBLE
-
-            btnCenter.text = sectionTitles[index]
-
-            btnRight.text = sectionTitles[rightIndex]
-            btnRight.visibility = View.VISIBLE
-        }
     }
 
 

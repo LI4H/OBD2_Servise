@@ -1,5 +1,6 @@
 package com.example.obd_servise.ui.car
 
+import NotificationManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,11 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.obd_servise.databinding.FragmentCarPartsBinding
 import com.example.obd_servise.databinding.ItemCarPartBinding
+import com.example.obd_servise.ui.settings.SettingsViewModel
 import com.google.firebase.database.*
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
@@ -41,7 +44,7 @@ data class CarPart(
 }
 
 class CarPartsFragment : Fragment() {
-
+    private lateinit var notificationManager: NotificationManager
     private var _binding: FragmentCarPartsBinding? = null
     private val binding get() = _binding!!
     private lateinit var carPartsAdapter: CarPartsAdapter
@@ -50,19 +53,26 @@ class CarPartsFragment : Fragment() {
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
     private var selectedCarId: String? = null
-
+    private lateinit var carViewModel: CarViewModel
+    private lateinit var settingsViewModel: SettingsViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        carViewModel = ViewModelProvider(requireActivity()).get(CarViewModel::class.java)
+        settingsViewModel = ViewModelProvider(requireActivity()).get(SettingsViewModel::class.java)
+
+
+
         _binding = FragmentCarPartsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        notificationManager = NotificationManager(requireContext(), carViewModel, settingsViewModel)
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
         selectedCarId = arguments?.getString("carId")
@@ -112,11 +122,15 @@ class CarPartsFragment : Fragment() {
                     ).show()
                     return@addOnSuccessListener
                 }
-
+                val carName = selectedCarSnapshot.child("name").getValue(String::class.java) ?: ""
                 val partsRef =
                     FirebaseDatabase.getInstance().getReference("cars").child(carId).child("parts")
                 partsRef.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
+                        val parts =
+                            snapshot.children.mapNotNull { it.getValue(CarPart::class.java) }
+                        updateDisplayedParts(parts)
+                        notificationManager.checkAndSendNotifications(parts, carId, carName)
                         allParts.clear()
                         for (partSnapshot in snapshot.children) {
                             val part = partSnapshot.getValue(CarPart::class.java)

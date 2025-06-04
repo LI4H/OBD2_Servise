@@ -158,7 +158,9 @@ class CarViewModel : ViewModel() {
             onFailure(it)
         }
     }
-
+    fun isCarSelected(carId: String): Boolean {
+        return carList.value?.firstOrNull { it.id == carId }?.isSelected == 1
+    }
     fun deleteCarFromFirebase(
         carId: String,
         onSuccess: () -> Unit,

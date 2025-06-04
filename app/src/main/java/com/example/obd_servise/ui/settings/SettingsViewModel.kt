@@ -18,16 +18,24 @@ import kotlinx.coroutines.withContext
 class SettingsViewModel : ViewModel() {
 
     private var sharedPreferences: SharedPreferences? = null
-
+    private val PREF_SELECTED_CAR_ONLY = "selected_car_only"
     //----------------------------------------------------------------------------------------
     fun getNotificationsEnabled(): Boolean {
-        return sharedPreferences?.getBoolean("notifications_enabled", false) ?: false
+        return sharedPreferences?.getBoolean("notifications_enabled", true) ?: true
     }
 
     fun setNotificationsEnabled(enabled: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            sharedPreferences?.edit()?.putBoolean("notifications_enabled", enabled)?.apply()
-        }
+        sharedPreferences?.edit()?.putBoolean("notifications_enabled", enabled)?.apply()
+        // Или используйте commit() для синхронного сохранения:
+        // sharedPreferences?.edit()?.putBoolean("notifications_enabled", enabled)?.commit()
+    }
+
+    fun setSelectedCarOnly(enabled: Boolean) {
+        sharedPreferences?.edit()?.putBoolean(PREF_SELECTED_CAR_ONLY, enabled)?.apply()
+    }
+
+    fun getSelectedCarOnly(): Boolean {
+        return sharedPreferences?.getBoolean(PREF_SELECTED_CAR_ONLY, false) == true
     }
 
     fun getNotificationMethods(): Set<String> {
